@@ -4,6 +4,7 @@ using ClinicaEscolaBase.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace ClinicaEscolaBase.Controllers;
 
@@ -28,6 +29,85 @@ public class AtendimentoController : Controller
         return View(atendimentos);
     }
 
+    public async Task<IActionResult> Create(Guid pacienteId)
+{
+    // Buscamos o paciente e incluímos o prontuário na mesma consulta
+    var paciente = await _context.Pacientes
+        .Include(p => p.Prontuario)
+        .FirstOrDefaultAsync(p => p.Id == pacienteId);
+
+    // Verificação 1: Paciente existe?
+    if (paciente == null) return NotFound("Paciente não encontrado.");
+
+    // Verificação 2: Prontuário existe?
+    if (paciente.Prontuario == null)
+    {
+        TempData["Error"] = "O paciente não possui um prontuário cadastrado. Crie o prontuário primeiro.";
+        return RedirectToAction("Details", "Paciente", new { id = pacienteId });
+    }
+
+    // Preparando o objeto para a View
+    ViewBag.PacienteNome = paciente.NomeCompleto;
+    ViewBag.ProntuarioNumero = paciente.Prontuario.NumeroProntuario;
+
+    var atendimento = new Atendimento
+    {
+        PacienteId = paciente.Id,
+        ProntuarioId = paciente.Prontuario.Id, // Aqui não dará mais erro de int vs Guid
+        DataHoraInicio = DateTime.Now,
+        StatusAtendimento = StatusAtendimento.Agendado,
+        // AlunoId deve vir do sistema de login ou ser preenchido aqui
+        AlunoId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? ""
+    };
+
+    PopulateEnums();
+    return View(atendimento);
+}
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create([Bind("PacienteId,ProntuarioId,TipoAtendimento,DataHoraInicio,DataHoraFim,StatusAtendimento,Observacoes,AlunoId")] Atendimento atendimento)
+    {
+        // Se o AlunoId veio vazio da View, tentamos pegar do User logado novamente
+        if (string.IsNullOrEmpty(atendimento.AlunoId))
+        {
+            atendimento.AlunoId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "";
+        }
+
+        // REMOVER VALIDAÇÕES QUE IMPEDEM O SALVAMENTO
+        ModelState.Remove("Aluno");
+        ModelState.Remove("Paciente");
+        ModelState.Remove("Prontuario");
+        ModelState.Remove("DocumentosClinicos");
+        ModelState.Remove("Evolucoes");
+
+        if (ModelState.IsValid)
+        {
+            try 
+            {
+                _context.Add(atendimento);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Atendimento agendado com sucesso!";
+                return RedirectToAction("Details", "Paciente", new { id = atendimento.PacienteId });
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Erro ao salvar no banco: " + ex.Message);
+            }
+        }
+
+        // Se deu erro, recarrega os dados da tela
+        await LoadPatientInfoAsync(atendimento.PacienteId, atendimento.ProntuarioId);
+        PopulateEnums();
+        return View(atendimento);
+    }
+
+    private void PopulateEnums()
+    {
+        ViewData["TipoAtendimento"] = new SelectList(Enum.GetValues(typeof(TipoAtendimento)));
+        ViewData["StatusAtendimento"] = new SelectList(Enum.GetValues(typeof(StatusAtendimento)));
+    }
+
     public async Task<IActionResult> Details(int? id)
     {
         if (id == null)
@@ -38,6 +118,10 @@ public class AtendimentoController : Controller
         var atendimento = await _context.Atendimentos
             .Include(x => x.Paciente)
             .Include(x => x.Prontuario)
+            .Include(x => x.Aluno)
+            .Include(x => x.Supervisor)
+            .Include(x => x.Evolucoes)
+                .ThenInclude(e => e.CriadoPorUsuario)
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == id.Value);
 
@@ -49,61 +133,29 @@ public class AtendimentoController : Controller
         return View(atendimento);
     }
 
-    public async Task<IActionResult> Create(Guid pacienteId)
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AddEvolucao(int atendimentoId, string textoEvolucao, DateTime dataEvolucao)
     {
-        var paciente = await _context.Pacientes
-            .Include(x => x.Prontuario)
-            .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == pacienteId);
-
-        if (paciente == null)
+        var atendimento = await _context.Atendimentos.FindAsync(atendimentoId);
+        if (atendimento == null)
         {
             return NotFound();
         }
 
-        if (paciente.Prontuario == null)
+        var evolucao = new EvolucaoAtendimento
         {
-            TempData["Warning"] = "O paciente ainda não possui prontuário cadastrado.";
-            return RedirectToAction("Details", "Paciente", new { id = pacienteId });
-        }
-
-        ViewBag.PacienteNome = paciente.NomeCompleto;
-        ViewBag.ProntuarioNumero = paciente.Prontuario.NumeroProntuario;
-
-        var atendimento = new Atendimento
-        {
-            PacienteId = pacienteId,
-            ProntuarioId = paciente.Prontuario.Id,
-            DataHoraInicio = DateTime.Now,
-            StatusAtendimento = StatusAtendimento.Agendado
+            AtendimentoId = atendimentoId,
+            TextoEvolucao = textoEvolucao,
+            DataEvolucao = dataEvolucao,
+            CriadoPorUsuarioId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? ""
         };
 
-        PopulateEnums();
-        return View(atendimento);
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("PacienteId,ProntuarioId,TipoAtendimento,DataHoraInicio,DataHoraFim,StatusAtendimento,Observacoes")] Atendimento atendimento)
-    {
-        await LoadPatientInfoAsync(atendimento.PacienteId, atendimento.ProntuarioId);
-
-        if (!await ValidateForeignKeysAsync(atendimento))
-        {
-            PopulateEnums();
-            return View(atendimento);
-        }
-
-        if (!ModelState.IsValid)
-        {
-            PopulateEnums();
-            return View(atendimento);
-        }
-
-        _context.Add(atendimento);
+        _context.EvolucoesAtendimento.Add(evolucao);
         await _context.SaveChangesAsync();
 
-        return RedirectToAction("Details", "Paciente", new { id = atendimento.PacienteId });
+        TempData["Success"] = "Evolução adicionada com sucesso!";
+        return RedirectToAction("Details", new { id = atendimentoId });
     }
 
     public async Task<IActionResult> Edit(int? id)
@@ -132,11 +184,21 @@ public class AtendimentoController : Controller
             return BadRequest();
         }
 
-        if (!await ValidateForeignKeysAsync(atendimento))
+        // Verificar se há evoluções para permitir status 'Realizado'
+        if (atendimento.StatusAtendimento == StatusAtendimento.Realizado)
         {
-            PopulateEnums();
-            return View(atendimento);
+            var hasEvolucoes = await _context.EvolucoesAtendimento.AnyAsync(e => e.AtendimentoId == id);
+            if (!hasEvolucoes)
+            {
+                ModelState.AddModelError("StatusAtendimento", "Não é possível marcar como 'Realizado' sem evoluções registradas.");
+            }
         }
+
+        ModelState.Remove("Aluno");
+        ModelState.Remove("Paciente");
+        ModelState.Remove("Prontuario");
+        ModelState.Remove("DocumentosClinicos");
+        ModelState.Remove("Evolucoes");
 
         if (!ModelState.IsValid)
         {
@@ -198,29 +260,15 @@ public class AtendimentoController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    private void PopulateEnums()
-    {
-        ViewData["TipoAtendimento"] = new SelectList(Enum.GetValues(typeof(TipoAtendimento)));
-        ViewData["StatusAtendimento"] = new SelectList(Enum.GetValues(typeof(StatusAtendimento)));
-    }
-
-    private async Task<bool> LoadPatientInfoAsync(Guid pacienteId, int prontuarioId)
+    private async Task LoadPatientInfoAsync(Guid pacienteId, int prontuarioId)
     {
         var paciente = await _context.Pacientes
             .Include(x => x.Prontuario)
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == pacienteId);
 
-        if (paciente == null)
-        {
-            ViewBag.PacienteNome = string.Empty;
-            ViewBag.ProntuarioNumero = string.Empty;
-            return false;
-        }
-
-        ViewBag.PacienteNome = paciente.NomeCompleto;
-        ViewBag.ProntuarioNumero = paciente.Prontuario?.NumeroProntuario ?? string.Empty;
-        return true;
+        ViewBag.PacienteNome = paciente?.NomeCompleto ?? "Não encontrado";
+        ViewBag.ProntuarioNumero = paciente?.Prontuario?.NumeroProntuario ?? "N/A";
     }
 
     private async Task<bool> ValidateForeignKeysAsync(Atendimento atendimento)
