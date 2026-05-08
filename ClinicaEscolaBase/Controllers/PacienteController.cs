@@ -14,6 +14,7 @@ public class PacienteController : Controller
         _context = context;
     }
 
+    // LISTAGEM: Ordenada por nome para melhor UX
     public async Task<IActionResult> Index()
     {
         var pacientes = await _context.Pacientes
@@ -24,12 +25,10 @@ public class PacienteController : Controller
         return View(pacientes);
     }
 
+    // DETALHES: Carrega Prontuário e Atendimentos (Eager Loading)
     public async Task<IActionResult> Details(Guid? id)
     {
-        if (id == null)
-        {
-            return NotFound();
-        }
+        if (id == null) return NotFound();
 
         var paciente = await _context.Pacientes
             .Include(x => x.Prontuario)
@@ -37,10 +36,7 @@ public class PacienteController : Controller
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == id.Value);
 
-        if (paciente == null)
-        {
-            return NotFound();
-        }
+        if (paciente == null) return NotFound();
 
         return View(paciente);
     }
@@ -50,97 +46,102 @@ public class PacienteController : Controller
         return View();
     }
 
+    // CREATE: Com tratamento de erro e feedback
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(Paciente paciente)
     {
-        if (!ModelState.IsValid)
+        if (ModelState.IsValid)
         {
-            return View(paciente);
+            try 
+            {
+                paciente.Id = Guid.NewGuid();
+                _context.Add(paciente);
+                await _context.SaveChangesAsync();
+                
+                TempData["MensagemSucesso"] = "Paciente cadastrado com sucesso!";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception)
+            {
+                TempData["MensagemErro"] = "Erro técnico ao salvar. Verifique se o banco de dados está acessível.";
+                ModelState.AddModelError("", "Não foi possível salvar o paciente.");
+            }
         }
-
-        paciente.Id = Guid.NewGuid();
-        _context.Add(paciente);
-        await _context.SaveChangesAsync();
-
-        return RedirectToAction(nameof(Index));
+        return View(paciente);
     }
 
     public async Task<IActionResult> Edit(Guid? id)
     {
-        if (id == null)
-        {
-            return NotFound();
-        }
+        if (id == null) return NotFound();
 
         var paciente = await _context.Pacientes.FindAsync(id.Value);
-        if (paciente == null)
-        {
-            return NotFound();
-        }
+        if (paciente == null) return NotFound();
 
         return View(paciente);
     }
 
+    // EDIT: Proteção contra concorrência e erros de atualização
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(Guid id, Paciente paciente)
     {
-        if (id != paciente.Id)
-        {
-            return BadRequest();
-        }
+        if (id != paciente.Id) return BadRequest();
 
-        if (!ModelState.IsValid)
+        if (ModelState.IsValid)
         {
-            return View(paciente);
-        }
-
-        try
-        {
-            _context.Update(paciente);
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!PacienteExists(paciente.Id))
+            try
             {
-                return NotFound();
+                _context.Update(paciente);
+                await _context.SaveChangesAsync();
+                
+                TempData["MensagemSucesso"] = "Dados do paciente atualizados com sucesso!";
+                return RedirectToAction(nameof(Index));
             }
-            throw;
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!PacienteExists(paciente.Id)) return NotFound();
+                throw;
+            }
+            catch (Exception)
+            {
+                TempData["MensagemErro"] = "Ocorreu um erro ao atualizar o paciente no banco de dados.";
+            }
         }
-
-        return RedirectToAction(nameof(Index));
+        return View(paciente);
     }
 
     public async Task<IActionResult> Delete(Guid? id)
     {
-        if (id == null)
-        {
-            return NotFound();
-        }
+        if (id == null) return NotFound();
 
         var paciente = await _context.Pacientes
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == id.Value);
 
-        if (paciente == null)
-        {
-            return NotFound();
-        }
+        if (paciente == null) return NotFound();
 
         return View(paciente);
     }
 
+    // DELETE: Com feedback de exclusão
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(Guid id)
     {
-        var paciente = await _context.Pacientes.FindAsync(id);
-        if (paciente != null)
+        try 
         {
-            _context.Pacientes.Remove(paciente);
-            await _context.SaveChangesAsync();
+            var paciente = await _context.Pacientes.FindAsync(id);
+            if (paciente != null)
+            {
+                _context.Pacientes.Remove(paciente);
+                await _context.SaveChangesAsync();
+                TempData["MensagemSucesso"] = "Paciente removido com sucesso.";
+            }
+        }
+        catch (Exception)
+        {
+            TempData["MensagemErro"] = "Não é possível excluir este paciente pois ele possui registros vinculados.";
         }
 
         return RedirectToAction(nameof(Index));

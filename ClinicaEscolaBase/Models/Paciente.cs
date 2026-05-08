@@ -8,6 +8,7 @@ namespace ClinicaEscolaBase.Models;
 
 public class Paciente
 {
+    
     public Guid Id { get; set; }
     public string NomeCompleto { get; set; } = string.Empty;
     public DateTime? DataNascimento { get; set; }

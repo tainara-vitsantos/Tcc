@@ -4,131 +4,127 @@
     ViewData["Title"] = "Detalhes do Atendimento";
 }
 
-<h1>Detalhes do Atendimento</h1>
-
-<div class="row">
-    <!-- Informações do Atendimento -->
-    <div class="col-md-8">
-        <div class="card shadow-sm mb-4">
-            <div class="card-header">
-                <h5 class="mb-0">Informações do Atendimento</h5>
-            </div>
-            <div class="card-body">
-                <dl class="row mb-0">
-                    <dt class="col-sm-4">Paciente</dt>
-                    <dd class="col-sm-8">@Model.Paciente?.NomeCompleto</dd>
-
-                    <dt class="col-sm-4">Prontuário</dt>
-                    <dd class="col-sm-8">@Model.Prontuario?.NumeroProntuario</dd>
-
-                    <dt class="col-sm-4">Tipo de Atendimento</dt>
-                    <dd class="col-sm-8">@Model.TipoAtendimento</dd>
-
-                    <dt class="col-sm-4">Status</dt>
-                    <dd class="col-sm-8">
-                        @switch (Model.StatusAtendimento)
-                        {
-                            case ClinicaEscolaBase.Enums.StatusAtendimento.Agendado:
-                                <span class="badge bg-warning">Agendado</span>
-                                break;
-                            case ClinicaEscolaBase.Enums.StatusAtendimento.Realizado:
-                                <span class="badge bg-success">Realizado</span>
-                                break;
-                            case ClinicaEscolaBase.Enums.StatusAtendimento.Cancelado:
-                                <span class="badge bg-danger">Cancelado</span>
-                                break;
-                            default:
-                                <span class="badge bg-secondary">@Model.StatusAtendimento</span>
-                                break;
-                        }
-                    </dd>
-
-                    <dt class="col-sm-4">Data / Hora Início</dt>
-                    <dd class="col-sm-8">@Model.DataHoraInicio.ToString("dd/MM/yyyy HH:mm")</dd>
-
-                    <dt class="col-sm-4">Data / Hora Fim</dt>
-                    <dd class="col-sm-8">@Model.DataHoraFim?.ToString("dd/MM/yyyy HH:mm") ?? "Não registrado"</dd>
-
-                    <dt class="col-sm-4">Falta Justificada</dt>
-                    <dd class="col-sm-8">@(Model.FaltaJustificada ? "Sim" : "Não")</dd>
-
-                    <dt class="col-sm-4">Observações</dt>
-                    <dd class="col-sm-8">@(string.IsNullOrWhiteSpace(Model.Observacoes) ? "Nenhuma observação" : Model.Observacoes)</dd>
-                </dl>
-            </div>
-        </div>
-
-        <!-- Evoluções -->
-        <div class="card shadow-sm">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Evoluções</h5>
-                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#addEvolucaoForm">
-                    Adicionar Evolução
-                </button>
-            </div>
-            <div class="card-body">
-                <!-- Formulário para adicionar evolução -->
-                <div class="collapse mb-3" id="addEvolucaoForm">
-                    <form asp-action="AddEvolucao" method="post" class="border p-3 rounded">
-                        @Html.Hidden("atendimentoId", Model.Id)
-                        <div class="row gy-3">
-                            <div class="col-md-6">
-                                <label for="dataEvolucao" class="form-label">Data da Evolução</label>
-                                <input type="datetime-local" id="dataEvolucao" name="dataEvolucao" class="form-control" required />
-                            </div>
-                            <div class="col-12">
-                                <label for="textoEvolucao" class="form-label">Texto da Evolução</label>
-                                <textarea id="textoEvolucao" name="textoEvolucao" class="form-control" rows="4" placeholder="Descreva a evolução do atendimento..." required></textarea>
-                            </div>
-                            <div class="col-12">
-                                <button type="submit" class="btn btn-success">Salvar Evolução</button>
-                                <button type="button" class="btn btn-secondary ms-2" data-bs-toggle="collapse" data-bs-target="#addEvolucaoForm">Cancelar</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Lista de evoluções -->
-                @if (Model.Evolucoes.Any())
-                {
-                    <div class="list-group">
-                        @foreach (var evolucao in Model.Evolucoes.OrderByDescending(e => e.DataEvolucao))
-                        {
-                            <div class="list-group-item">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h6 class="mb-1">@evolucao.CriadoPorUsuario?.NomeCompleto</h6>
-                                    <small>@evolucao.DataEvolucao.ToString("dd/MM/yyyy HH:mm")</small>
-                                </div>
-                                <p class="mb-1">@evolucao.TextoEvolucao</p>
-                            </div>
-                        }
-                    </div>
-                }
-                else
-                {
-                    <div class="alert alert-info mb-0">
-                        Nenhuma evolução registrada para este atendimento.
-                    </div>
-                }
-            </div>
-        </div>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="fw-bold text-primary"><i class="bi bi-file-earmark-medical"></i> Detalhes do Atendimento</h1>
+        <span class="badge @(Model.StatusAtendimento == ClinicaEscolaBase.Enums.StatusAtendimento.Realizado ? "bg-success" : "bg-warning") fs-5 px-3 py-2">
+            @Model.StatusAtendimento
+        </span>
     </div>
 
-    <!-- Ações -->
-    <div class="col-md-4">
-        <div class="card shadow-sm">
-            <div class="card-header">
-                <h5 class="mb-0">Ações</h5>
+    <div class="row">
+        <!-- COLUNA DA ESQUERDA: INFORMAÇÕES DO ATENDIMENTO -->
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0 fw-bold">Informações Gerais</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4 text-muted">Paciente</dt>
+                        <dd class="col-sm-8 fw-bold text-primary">@Model.Paciente?.NomeCompleto</dd>
+
+                        <dt class="col-sm-4 text-muted">Prontuário</dt>
+                        <dd class="col-sm-8">@Model.Prontuario?.NumeroProntuario</dd>
+
+                        <dt class="col-sm-4 text-muted">Tipo de Atendimento</dt>
+                        <dd class="col-sm-8">@Model.TipoAtendimento</dd>
+
+                        <dt class="col-sm-4 text-muted">Data / Hora Início</dt>
+                        <dd class="col-sm-8">@Model.DataHoraInicio.ToString("dd/MM/yyyy HH:mm")</dd>
+
+                        <dt class="col-sm-4 text-muted">Data / Hora Fim</dt>
+                        <dd class="col-sm-8">@(Model.DataHoraFim?.ToString("dd/MM/yyyy HH:mm") ?? "Não registrado")</dd>
+
+                        <dt class="col-sm-4 text-muted">Falta Justificada</dt>
+                        <dd class="col-sm-8">@(Model.FaltaJustificada ? "Sim" : "Não")</dd>
+
+                        <dt class="col-sm-4 text-muted">Observações de Agendamento</dt>
+                        <dd class="col-sm-8">@(string.IsNullOrWhiteSpace(Model.Observacoes) ? "Nenhuma observação" : Model.Observacoes)</dd>
+                    </dl>
+                </div>
             </div>
-            <div class="card-body">
-                <div class="d-grid gap-2">
-                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Editar Atendimento</a>
-                    <a asp-action="Index" class="btn btn-secondary">Voltar para Lista</a>
-                    <a asp-controller="Paciente" asp-action="Details" asp-route-id="@Model.PacienteId" class="btn btn-outline-primary">Voltar ao Paciente</a>
-                    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger">Excluir Atendimento</a>
+
+            <!-- SEÇÃO DE EVOLUÇÕES -->
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-journal-text me-2"></i>Evoluções Clínicas</h5>
+                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#addEvolucaoForm">
+                        <i class="bi bi-plus-lg"></i> Adicionar Evolução
+                    </button>
+                </div>
+                <div class="card-body">
+                    <!-- Formulário para adicionar evolução (Colapsável) -->
+                    <div class="collapse mb-4" id="addEvolucaoForm">
+                        <form asp-action="AddEvolucao" method="post" class="bg-light p-3 rounded border">
+                            @Html.Hidden("atendimentoId", Model.Id)
+                            <div class="row gy-3">
+                                <div class="col-md-6">
+                                    <label for="dataEvolucao" class="form-label fw-bold">Data da Evolução</label>
+                                    <input type="datetime-local" id="dataEvolucao" name="dataEvolucao" 
+                                           class="form-control" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" required />
+                                </div>
+                                <div class="col-12">
+                                    <label for="textoEvolucao" class="form-label fw-bold">Relato Clínico</label>
+                                    <textarea id="textoEvolucao" name="textoEvolucao" class="form-control" rows="5" 
+                                              placeholder="Descreva detalhadamente o atendimento..." required></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-success"><i class="bi bi-save"></i> Salvar Evolução</button>
+                                    <button type="button" class="btn btn-link text-secondary" data-bs-toggle="collapse" data-bs-target="#addEvolucaoForm">Cancelar</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Lista de evoluções em formato de Timeline -->
+                    @if (Model.Evolucoes != null && Model.Evolucoes.Any())
+                    {
+                        <div class="list-group list-group-flush">
+                            @foreach (var evolucao in Model.Evolucoes.OrderByDescending(e => e.DataEvolucao))
+                            {
+                                <div class="list-group-item px-0 border-0 mb-3 ps-3 border-start border-3 border-primary">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1 fw-bold text-primary">@evolucao.CriadoPorUsuario?.NomeCompleto</h6>
+                                        <small class="text-muted">@evolucao.DataEvolucao.ToString("dd/MM/yyyy HH:mm")</small>
+                                    </div>
+                                    <p class="mb-1 text-dark" style="white-space: pre-wrap;">@evolucao.TextoEvolucao</p>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info mb-0">
+                            <i class="bi bi-info-circle me-2"></i>Nenhuma evolução registrada para este atendimento.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- COLUNA DA DIREITA: AÇÕES RÁPIDAS -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 sticky-top" style="top: 20px;">
+                <div class="card-header bg-white fw-bold">Ações</div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                            <i class="bi bi-pencil-square me-2"></i>Editar Agendamento
+                        </a>
+                        <a asp-controller="Paciente" asp-action="Details" asp-route-id="@Model.PacienteId" class="btn btn-outline-primary">
+                            <i class="bi bi-person-badge me-2"></i>Voltar ao Paciente
+                        </a>
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="bi bi-list-ul me-2"></i>Ver Todos Atendimentos
+                        </a>
+                        <hr />
+                        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger btn-sm">
+                            <i class="bi bi-trash me-2"></i>Excluir Registro
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-

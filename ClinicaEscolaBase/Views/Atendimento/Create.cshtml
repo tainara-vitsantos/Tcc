@@ -1,74 +1,111 @@
 @model ClinicaEscolaBase.Models.Atendimento
 
 @{
-    ViewData["Title"] = "Agendar Atendimento";
+    ViewData["Title"] = "Ficha de Atendimento";
 }
 
 <div class="container mt-4">
-    <h1>Agendar Atendimento</h1>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-primary">
+            <i class="bi bi-file-earmark-medical"></i> Detalhes do Atendimento
+        </h2>
+        <div>
+            <span class="badge @(Model.StatusAtendimento.ToString() == "Realizado" ? "bg-success" : "bg-warning text-dark") fs-6 px-3 py-2">
+                Status: @Model.StatusAtendimento
+            </span>
+        </div>
+    </div>
 
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <form asp-action="Create" method="post">
-                @* Sumário de Erros para ajudar no debug *@
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row">
+        <!-- COLUNA DA ESQUERDA: INFORMAÇÕES DO AGENDAMENTO -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-white fw-bold">Dados do Agendamento</div>
+                <div class="card-body">
+                    <p><strong>Paciente:</strong> <br /> @Model.Paciente?.NomeCompleto</p>
+                    <p><strong>Prontuário:</strong> @Model.Prontuario?.NumeroProntuario</p>
+                    <hr />
+                    <p><strong>Tipo:</strong> @Model.TipoAtendimento</p>
+                    <p><strong>Início:</strong> @Model.DataHoraInicio.ToString("dd/MM/yyyy HH:mm")</p>
+                    <p><strong>Fim:</strong> @(Model.DataHoraFim?.ToString("HH:mm") ?? "-")</p>
+                    <hr />
+                    <p><strong>Responsável:</strong> <br /> <small class="text-muted">@Model.Aluno?.NomeCompleto</small></p>
+                </div>
+            </div>
 
-                <div class="row gy-3">
-                    <div class="col-12">
-                        <div class="alert alert-info">
-                            <strong>Paciente:</strong> @ViewBag.PacienteNome<br />
-                            <strong>Prontuário:</strong> @ViewBag.ProntuarioNumero
+            <div class="d-grid gap-2">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                    <i class="bi bi-pencil"></i> Editar Agendamento
+                </a>
+                <a asp-controller="Paciente" asp-action="Details" asp-route-id="@Model.PacienteId" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Voltar para o Paciente
+                </a>
+            </div>
+        </div>
+
+        <!-- COLUNA DA DIREITA: EVOLUÇÕES CLÍNICAS -->
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                    <span class="fw-bold"><i class="bi bi-journal-text me-2"></i>Evoluções Clínicas</span>
+                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalEvolucao">
+                        <i class="bi bi-plus-lg"></i> Nova Evolução
+                    </button>
+                </div>
+                <div class="card-body">
+                    @if (Model.Evolucoes != null && Model.Evolucoes.Any())
+                    {
+                        <div class="timeline">
+                            @foreach (var evolucao in Model.Evolucoes.OrderByDescending(e => e.DataEvolucao))
+                            {
+                                <div class="border-start border-primary border-3 ps-3 mb-4">
+                                    <div class="d-flex justify-content-between">
+                                        <small class="fw-bold text-primary">@evolucao.DataEvolucao.ToString("dd/MM/yyyy HH:mm")</small>
+                                        <small class="text-muted">Por: @evolucao.CriadoPorUsuario?.UserName</small>
+                                    </div>
+                                    <p class="mt-2 mb-0 text-dark">@evolucao.TextoEvolucao</p>
+                                </div>
+                            }
                         </div>
-                    </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4 text-muted">
+                            <i class="bi bi-chat-left-dots fs-1 d-block mb-2"></i>
+                            Nenhuma evolução registrada para este atendimento.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-                    @* Campos Ocultos Essenciais *@
-                    <input type="hidden" asp-for="PacienteId" />
-                    <input type="hidden" asp-for="ProntuarioId" />
-                    <input type="hidden" asp-for="AlunoId" />
-
-                    <div class="col-md-6">
-                        <label asp-for="TipoAtendimento" class="form-label">Tipo de Atendimento</label>
-                        <select asp-for="TipoAtendimento" class="form-select" asp-items="@(ViewData["TipoAtendimento"] as SelectList)">
-                            <option value="">Selecione...</option>
-                        </select>
-                        <span asp-validation-for="TipoAtendimento" class="text-danger"></span>
+<!-- MODAL PARA NOVA EVOLUÇÃO -->
+<div class="modal fade" id="modalEvolucao" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="AddEvolucao" method="post">
+                <input type="hidden" name="atendimentoId" value="@Model.Id" />
+                <div class="modal-header">
+                    <h5 class="modal-title">Registrar Evolução</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Data/Hora da Nota</label>
+                        <input type="datetime-local" name="dataEvolucao" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" required />
                     </div>
-
-                    <div class="col-md-6">
-                        <label asp-for="StatusAtendimento" class="form-label">Status</label>
-                        <select asp-for="StatusAtendimento" class="form-select" asp-items="@(ViewData["StatusAtendimento"] as SelectList)">
-                        </select>
-                        <span asp-validation-for="StatusAtendimento" class="text-danger"></span>
+                    <div class="mb-3">
+                        <label class="form-label">Descrição Clínica</label>
+                        <textarea name="textoEvolucao" class="form-control" rows="6" placeholder="Relate o que foi trabalhado na sessão..." required></textarea>
                     </div>
-
-                    <div class="col-md-6">
-                        <label asp-for="DataHoraInicio" class="form-label">Data/Hora Início</label>
-                        <input asp-for="DataHoraInicio" type="datetime-local" class="form-control" />
-                        <span asp-validation-for="DataHoraInicio" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label asp-for="DataHoraFim" class="form-label">Data/Hora Fim (Opcional)</label>
-                        <input asp-for="DataHoraFim" type="datetime-local" class="form-control" />
-                        <span asp-validation-for="DataHoraFim" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-12">
-                        <label asp-for="Observacoes" class="form-label">Observações</label>
-                        <textarea asp-for="Observacoes" class="form-control" rows="3" placeholder="Detalhes do agendamento..."></textarea>
-                        <span asp-validation-for="Observacoes" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-12 mt-4">
-                        <button type="submit" class="btn btn-primary">Confirmar Agendamento</button>
-                        <a asp-controller="Paciente" asp-action="Details" asp-route-id="@Model.PacienteId" class="btn btn-outline-secondary ms-2">Voltar</a>
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Salvar Evolução</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
