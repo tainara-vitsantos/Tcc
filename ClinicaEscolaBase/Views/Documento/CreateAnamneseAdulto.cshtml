@@ -1,0 +1,208 @@
+@model ClinicaEscolaBase.ViewModels.AnamneseAdultoViewModel
+@{
+    ViewData["Title"] = "Anamnese Adulto";
+}
+
+<div class="container-fluid">
+    <h2>@ViewData["Title"] - @Model.PacienteNome</h2>
+
+    <form method="post" asp-action="CreateAnamneseAdulto">
+        <input type="hidden" asp-for="PacienteId" />
+
+        <!-- Seção 1: Dados do Atendimento -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5>Dados do Atendimento</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="FrequenciaAtendimento"></label>
+                            <input asp-for="FrequenciaAtendimento" class="form-control" />
+                            <span asp-validation-for="FrequenciaAtendimento" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="DataHoraAtendimento"></label>
+                            <input asp-for="DataHoraAtendimento" class="form-control" type="datetime-local" />
+                            <span asp-validation-for="DataHoraAtendimento" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção 2: Queixa e Sintomatologia -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5>Queixa e Sintomatologia</h5>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label asp-for="QueixaPrincipal"></label>
+                    <textarea asp-for="QueixaPrincipal" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="QueixaPrincipal" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="QueixaSecundaria"></label>
+                    <textarea asp-for="QueixaSecundaria" class="form-control" rows="2"></textarea>
+                    <span asp-validation-for="QueixaSecundaria" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Sintomas"></label>
+                    <textarea asp-for="Sintomas" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="Sintomas" class="text-danger"></span>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label asp-for="InicioPatologia"></label>
+                            <input asp-for="InicioPatologia" class="form-control" />
+                            <span asp-validation-for="InicioPatologia" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label asp-for="FrequenciaPatologia"></label>
+                            <input asp-for="FrequenciaPatologia" class="form-control" />
+                            <span asp-validation-for="FrequenciaPatologia" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label asp-for="IntensidadePatologia"></label>
+                            <input asp-for="IntensidadePatologia" class="form-control" />
+                            <span asp-validation-for="IntensidadePatologia" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TratamentosAnteriores"></label>
+                    <textarea asp-for="TratamentosAnteriores" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="TratamentosAnteriores" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Medicamentos"></label>
+                    <textarea asp-for="Medicamentos" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="Medicamentos" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção 3: História Pessoal -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5>História Pessoal</h5>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label asp-for="HistoriaInfancia"></label>
+                    <textarea asp-for="HistoriaInfancia" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="HistoriaInfancia" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Rotina"></label>
+                    <textarea asp-for="Rotina" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="Rotina" class="text-danger"></span>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Vicios"></label>
+                            <input asp-for="Vicios" class="form-control" />
+                            <span asp-validation-for="Vicios" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Hobbies"></label>
+                            <input asp-for="Hobbies" class="form-control" />
+                            <span asp-validation-for="Hobbies" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Trabalho"></label>
+                    <textarea asp-for="Trabalho" class="form-control" rows="2"></textarea>
+                    <span asp-validation-for="Trabalho" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção 4: Histórico Familiar -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5>Histórico Familiar</h5>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label asp-for="HistoricoFamiliarPais"></label>
+                    <textarea asp-for="HistoricoFamiliarPais" class="form-control" rows="2"></textarea>
+                    <span asp-validation-for="HistoricoFamiliarPais" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="HistoricoFamiliarIrmaos"></label>
+                    <textarea asp-for="HistoricoFamiliarIrmaos" class="form-control" rows="2"></textarea>
+                    <span asp-validation-for="HistoricoFamiliarIrmaos" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="HistoricoFamiliarConjuge"></label>
+                    <textarea asp-for="HistoricoFamiliarConjuge" class="form-control" rows="2"></textarea>
+                    <span asp-validation-for="HistoricoFamiliarConjuge" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="HistoricoFamiliarFilhos"></label>
+                    <textarea asp-for="HistoricoFamiliarFilhos" class="form-control" rows="2"></textarea>
+                    <span asp-validation-for="HistoricoFamiliarFilhos" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="HistoricoFamiliarLar"></label>
+                    <textarea asp-for="HistoricoFamiliarLar" class="form-control" rows="2"></textarea>
+                    <span asp-validation-for="HistoricoFamiliarLar" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="HistoriaPatologicaPregressa"></label>
+                    <textarea asp-for="HistoriaPatologicaPregressa" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="HistoriaPatologicaPregressa" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção 5: Exame Clínico -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5>Exame Clínico</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="ExameAparencia"></label>
+                            <input asp-for="ExameAparencia" class="form-control" />
+                            <span asp-validation-for="ExameAparencia" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="ExameComportamento"></label>
+                            <input asp-for="ExameComportamento" class="form-control" />
+                            <span asp-validation-for="ExameComportamento" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="HipoteseDiagnostica"></label>
+                    <textarea asp-for="HipoteseDiagnostica" class="form-control" rows="2"></textarea>
+                    <span asp-validation-for="HipoteseDiagnostica" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Salvar Anamnese</button>
+            <a asp-action="Details" asp-controller="Paciente" asp-route-id="@Model.PacienteId" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>

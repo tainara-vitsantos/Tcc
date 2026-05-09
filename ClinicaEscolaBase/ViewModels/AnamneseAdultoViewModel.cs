@@ -14,6 +14,9 @@ public class AnamneseAdultoViewModel
     [Required(ErrorMessage = "O ID do paciente é obrigatório")]
     public Guid PacienteId { get; set; }
 
+    [Display(Name = "Nome do Paciente")]
+    public string? PacienteNome { get; set; }
+
     [Required(ErrorMessage = "O ID do prontuário é obrigatório")]
     public int ProntuarioId { get; set; }
 

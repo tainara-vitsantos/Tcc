@@ -1,0 +1,130 @@
+@using ClinicaEscolaBase.Enums
+@using ClinicaEscolaBase.Controllers
+@model PaginatedList<ClinicaEscolaBase.Models.Auditoria>
+@{
+    ViewData["Title"] = "Trilha de Auditoria";
+}
+
+<div class="container-fluid">
+    <h2>@ViewData["Title"]</h2>
+
+    <!-- Filtros -->
+    <div class="card mb-3">
+        <div class="card-header">
+            <h5>Filtros</h5>
+        </div>
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-3">
+                    <label for="usuario" class="form-label">Usuário</label>
+                    <input type="text" class="form-control" id="usuario" name="usuario" value="@ViewData["Usuario"]">
+                </div>
+                <div class="col-md-3">
+                    <label for="entidade" class="form-label">Entidade</label>
+                    <input type="text" class="form-control" id="entidade" name="entidade" value="@ViewData["Entidade"]">
+                </div>
+                <div class="col-md-3">
+                    <label for="acao" class="form-label">Ação</label>
+                    <select class="form-control" id="acao" name="acao">
+                        <option value="">Todas</option>
+                        @foreach (var acao in Enum.GetValues(typeof(TipoAcaoAuditoria)))
+                        {
+                            <option value="@acao" selected="@(ViewData["Acao"]?.ToString() == acao.ToString())">@acao</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary me-2">Filtrar</button>
+                    <a href="@Url.Action("Index")" class="btn btn-secondary">Limpar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tabela de Auditoria -->
+    <div class="card">
+        <div class="card-header">
+            <h5>Registros de Auditoria (@Model.Count)</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Data/Hora</th>
+                            <th>Usuário</th>
+                            <th>Ação</th>
+                            <th>Entidade</th>
+                            <th>Registro ID</th>
+                            <th>Detalhes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.DataHora.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>@item.Usuario?.NomeCompleto</td>
+                                <td>
+                                    <span class="badge bg-@(GetBadgeClass(item.TipoAcao))">
+                                        @item.TipoAcao
+                                    </span>
+                                </td>
+                                <td>@item.Entidade</td>
+                                <td>@item.RegistroId</td>
+                                <td>
+                                    <a href="@Url.Action("Details", new { id = item.Id })" class="btn btn-sm btn-outline-primary">
+                                        Ver Detalhes
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Paginação -->
+            @if (Model.HasPreviousPage || Model.HasNextPage)
+            {
+                <nav aria-label="Navegação de páginas">
+                    <ul class="pagination justify-content-center">
+                        @if (Model.HasPreviousPage)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("Index", new { pageNumber = Model.PageIndex - 1, usuario = ViewData["Usuario"], entidade = ViewData["Entidade"], acao = ViewData["Acao"] })">Anterior</a>
+                            </li>
+                        }
+
+                        @for (int i = Math.Max(1, Model.PageIndex - 2); i <= Math.Min(Model.TotalPages, Model.PageIndex + 2); i++)
+                        {
+                            <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+                                <a class="page-link" href="@Url.Action("Index", new { pageNumber = i, usuario = ViewData["Usuario"], entidade = ViewData["Entidade"], acao = ViewData["Acao"] })">@i</a>
+                            </li>
+                        }
+
+                        @if (Model.HasNextPage)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("Index", new { pageNumber = Model.PageIndex + 1, usuario = ViewData["Usuario"], entidade = ViewData["Entidade"], acao = ViewData["Acao"] })">Próximo</a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            }
+        </div>
+    </div>
+</div>
+
+@{
+    string GetBadgeClass(TipoAcaoAuditoria acao)
+    {
+        return acao switch
+        {
+            TipoAcaoAuditoria.Insercao => "success",
+            TipoAcaoAuditoria.Atualizacao => "warning",
+            TipoAcaoAuditoria.ExclusaoLogica => "danger",
+            TipoAcaoAuditoria.Visualizacao => "info",
+            _ => "secondary"
+        };
+    }
+}

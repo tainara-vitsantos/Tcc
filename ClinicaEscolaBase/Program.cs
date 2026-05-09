@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Banco de Dados
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
 // Identity (Login / Usuários)

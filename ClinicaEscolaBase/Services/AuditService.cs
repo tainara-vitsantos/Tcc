@@ -23,7 +23,7 @@ public class AuditService
     /// <summary>
     /// Registra uma ação de auditoria.
     /// </summary>
-    public async Task LogAsync(
+    public Task LogAsync(
         string usuarioId,
         TipoAcaoAuditoria tipoAcao,
         string entidade,
@@ -55,6 +55,7 @@ public class AuditService
         };
 
         _context.Auditorias.Add(auditoria);
+        return Task.CompletedTask;
     }
 
     /// <summary>
