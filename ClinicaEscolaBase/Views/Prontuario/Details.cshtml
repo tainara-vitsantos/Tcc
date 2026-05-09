@@ -1,0 +1,105 @@
+@model ClinicaEscolaBase.Models.Prontuario
+
+@{
+    ViewData["Title"] = "Prontuário Clínico";
+}
+
+<div class="container mt-4">
+    <!-- Cabeçalho com Nome do Paciente e Status do Prontuário -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-0 text-primary">
+                <i class="bi bi-file-earmark-medical"></i> Prontuário: @Model.NumeroProntuario
+            </h2>
+            <p class="fs-5 text-muted">Paciente: <strong>@Model.Paciente?.NomeCompleto</strong></p>
+        </div>
+        <div>
+            <span class="badge @(Model.SituacaoProntuario == ClinicaEscolaBase.Enums.SituacaoProntuario.Ativo ? "bg-success" : "bg-danger") fs-6 px-3 py-2">
+                Status: @Model.SituacaoProntuario
+            </span>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Coluna Lateral: Resumo do Prontuário -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-white fw-bold">Informações de Abertura</div>
+                <div class="card-body">
+                    <p class="mb-1 text-muted small">Data da Primeira Consulta</p>
+                    <p class="fw-bold text-dark">@(Model.DataPrimeiraConsulta?.ToString("dd/MM/yyyy") ?? "Não registrada")</p>
+                    
+                    <hr />
+                    
+                    <p class="mb-1 text-muted small">Observações Gerais</p>
+                    <p class="text-dark small">@(Model.ObservacoesGerais ?? "Sem observações registradas.")</p>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2">
+                <a asp-controller="Atendimento" asp-action="Create" asp-route-pacienteId="@Model.PacienteId" class="btn btn-primary shadow-sm">
+                    <i class="bi bi-calendar-plus me-2"></i>Agendar Atendimento
+                </a>
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-warning">
+                    <i class="bi bi-pencil"></i> Editar Prontuário
+                </a>
+                <a asp-controller="Paciente" asp-action="Details" asp-route-id="@Model.PacienteId" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Voltar ao Paciente
+                </a>
+            </div>
+        </div>
+
+        <!-- Coluna Principal: Histórico de Atendimentos -->
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-light fw-bold">
+                    <i class="bi bi-clock-history me-2"></i>Histórico de Atendimentos
+                </div>
+                <div class="card-body">
+                    @if (Model.Atendimentos != null && Model.Atendimentos.Any())
+                    {
+                        <div class="list-group list-group-flush">
+                            @foreach (var atend in Model.Atendimentos.OrderByDescending(a => a.DataHoraInicio))
+                            {
+                                <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-3">
+                                    <div>
+                                        <h6 class="mb-0 fw-bold">@atend.DataHoraInicio.ToString("dd/MM/yyyy HH:mm")</h6>
+                                        <small class="text-muted">Tipo: @atend.TipoAtendimento</small>
+                                    </div>
+                                    <div class="text-end">
+                                        @{
+                                            var badgeClass = atend.StatusAtendimento switch
+                                            {
+                                                ClinicaEscolaBase.Enums.StatusAtendimento.Realizado => "bg-success",
+                                                ClinicaEscolaBase.Enums.StatusAtendimento.Agendado => "bg-info text-dark",
+                                                ClinicaEscolaBase.Enums.StatusAtendimento.Cancelado => "bg-danger",
+                                                _ => "bg-secondary"
+                                            };
+                                        }
+                                        <span class="badge @badgeClass mb-2 d-block">@atend.StatusAtendimento</span>
+                                        <a asp-controller="Atendimento" asp-action="Details" asp-route-id="@atend.Id" class="btn btn-sm btn-link text-primary p-0">Ver Evolução</a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5 text-muted">
+                            <i class="bi bi-calendar-x fs-1 d-block mb-3"></i>
+                            <p>Nenhum atendimento realizado para este prontuário ainda.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+            
+            <!-- Auditorias (Opcional, baseado na sua Model) -->
+            @if (Model.Auditorias != null && Model.Auditorias.Any())
+            {
+                <div class="mt-4 small text-muted">
+                    <p><i class="bi bi-shield-check"></i> Este prontuário possui registros de auditoria ativos.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

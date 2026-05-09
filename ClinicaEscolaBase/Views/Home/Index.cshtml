@@ -1,8 +1,69 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model IEnumerable<ClinicaEscolaBase.Models.Atendimento>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container-fluid px-4 mt-4">
+    <h2 class="fw-bold mb-4">Dashboard @(ViewBag.IsProfessor == true ? "do Supervisor" : "do Aluno")</h2>
+
+    <div class="row g-3 mb-4">
+        @if (ViewBag.IsProfessor == true)
+        {
+            <div class="col-md-3">
+                <div class="card bg-primary text-white border-0 shadow-sm p-3">
+                    <small>Total de Pacientes</small>
+                    <h3 class="fw-bold">@ViewBag.TotalPacientes</h3>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-success text-white border-0 shadow-sm p-3">
+                    <small>Atendimentos Hoje</small>
+                    <h3 class="fw-bold">@ViewBag.AtendimentosHoje</h3>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="col-md-3">
+                <div class="card bg-info text-white border-0 shadow-sm p-3">
+                    <small>Meus Pacientes</small>
+                    <h3 class="fw-bold">@ViewBag.MeusPacientes</h3>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-warning text-dark border-0 shadow-sm p-3">
+                    <small>Minha Agenda Hoje</small>
+                    <h3 class="fw-bold">@ViewBag.MeusAtendimentosHoje</h3>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0 fw-bold"><i class="bi bi-calendar-event me-2"></i>Próximos Atendimentos</h5>
+        </div>
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Paciente</th>
+                        <th>Data/Hora</th>
+                        @if (ViewBag.IsProfessor == true) { <th>Aluno Responsável</th> }
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td><strong>@item.Paciente?.NomeCompleto</strong></td>
+                            <td>@item.DataHoraInicio.ToString("dd/MM/yyyy HH:mm")</td>
+                            @if (ViewBag.IsProfessor == true) { <td>@item.Aluno?.NomeCompleto</td> }
+                            <td>
+                                <a asp-controller="Atendimento" asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Abrir</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

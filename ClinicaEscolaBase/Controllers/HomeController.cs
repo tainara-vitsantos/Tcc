@@ -1,21 +1,142 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using ClinicaEscolaBase.Models;
+using ClinicaEscolaBase.Data;
+using ClinicaEscolaBase.Enums;
+using ClinicaEscolaBase.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace ClinicaEscolaBase.Controllers;
 
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
+    private readonly ApplicationDbContext _context;
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly AuthorizationService _authorizationService;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(
+        ILogger<HomeController> logger,
+        ApplicationDbContext context,
+        UserManager<ApplicationUser> userManager,
+        AuthorizationService authorizationService)
     {
         _logger = logger;
+        _context = context;
+        _userManager = userManager;
+        _authorizationService = authorizationService;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
+        // Se não está autenticado, mostra página pública
+        if (!User.Identity?.IsAuthenticated ?? true)
+        {
+            return View("IndexPublico");
+        }
+
+        // Dashboard diferenciado por Role
+        if (User.IsInRole("Professor"))
+        {
+            return await DashboardProfessor();
+        }
+        else if (User.IsInRole("Aluno"))
+        {
+            return await DashboardAluno();
+        }
+
+        // Fallback
         return View();
+    }
+
+    /// <summary>
+    /// Dashboard do Professor: Visão global com estatísticas gerais.
+    /// </summary>
+    private async Task<IActionResult> DashboardProfessor()
+    {
+        // Estatísticas Globais
+        var totalPacientes = await _context.Pacientes.CountAsync();
+        var totalProntuariosAtivos = await _context.Prontuarios
+            .CountAsync(p => p.SituacaoProntuario == SituacaoProntuario.Ativo);
+        var atendimentosHoje = await _context.Atendimentos
+            .CountAsync(a => a.DataHoraInicio.Date == DateTime.Today);
+        var atendimentosRealizados = await _context.Atendimentos
+            .CountAsync(a => a.StatusAtendimento == StatusAtendimento.Realizado);
+
+        ViewBag.TotalPacientes = totalPacientes;
+        ViewBag.TotalProntuariosAtivos = totalProntuariosAtivos;
+        ViewBag.AtendimentosHoje = atendimentosHoje;
+        ViewBag.AtendimentosRealizados = atendimentosRealizados;
+
+        // Próximos atendimentos (global)
+        var proximosAtendimentos = await _context.Atendimentos
+            .Include(a => a.Paciente)
+            .Include(a => a.Aluno)
+            .Where(a => a.StatusAtendimento == StatusAtendimento.Agendado)
+            .OrderBy(a => a.DataHoraInicio)
+            .Take(10)
+            .ToListAsync();
+
+        // Atividade recente de auditoria
+        var auditoriasRecentes = await _context.Auditorias
+            .Include(a => a.Usuario)
+            .Include(a => a.Paciente)
+            .OrderByDescending(a => a.DataHora)
+            .Take(20)
+            .ToListAsync();
+
+        ViewBag.AuditoriasRecentes = auditoriasRecentes;
+        ViewBag.IsProfessor = true;
+
+        return View("Index", proximosAtendimentos);
+    }
+
+    /// <summary>
+    /// Dashboard do Aluno: Visão pessoal apenas de seus pacientes e atendimentos.
+    /// </summary>
+    private async Task<IActionResult> DashboardAluno()
+    {
+        var usuarioId = _userManager.GetUserId(User);
+        if (usuarioId == null) return Unauthorized();
+
+        // Estatísticas pessoais do aluno
+        var acessiblePacienteIds = await _authorizationService.GetAcessiblePacienteIdsAsync(usuarioId);
+
+        var meusPacientes = acessiblePacienteIds.Count;
+        var meusAtendimentosAgendados = await _context.Atendimentos
+            .CountAsync(a => a.AlunoId == usuarioId && a.StatusAtendimento == StatusAtendimento.Agendado);
+        var meusAtendimentosRealizados = await _context.Atendimentos
+            .CountAsync(a => a.AlunoId == usuarioId && a.StatusAtendimento == StatusAtendimento.Realizado);
+        var meusAtendimentosHoje = await _context.Atendimentos
+            .CountAsync(a => a.AlunoId == usuarioId && a.DataHoraInicio.Date == DateTime.Today);
+
+        ViewBag.MeusPacientes = meusPacientes;
+        ViewBag.MeusAtendimentosAgendados = meusAtendimentosAgendados;
+        ViewBag.MeusAtendimentosRealizados = meusAtendimentosRealizados;
+        ViewBag.MeusAtendimentosHoje = meusAtendimentosHoje;
+
+        // Meus próximos atendimentos
+        var meusProximosAtendimentos = await _context.Atendimentos
+            .Include(a => a.Paciente)
+            .Where(a => a.AlunoId == usuarioId && a.StatusAtendimento == StatusAtendimento.Agendado)
+            .OrderBy(a => a.DataHoraInicio)
+            .Take(10)
+            .ToListAsync();
+
+        // Meus pacientes recentemente atendidos
+        var meusPacientesRecentes = await _context.Atendimentos
+            .Include(a => a.Paciente)
+            .Where(a => a.AlunoId == usuarioId)
+            .OrderByDescending(a => a.DataHoraInicio)
+            .Take(5)
+            .ToListAsync();
+
+        ViewBag.MeusPacientesRecentes = meusPacientesRecentes;
+        ViewBag.IsAluno = true;
+
+        return View("Index", meusProximosAtendimentos);
     }
 
     public IActionResult Privacy()

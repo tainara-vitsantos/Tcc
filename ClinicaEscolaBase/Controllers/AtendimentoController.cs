@@ -1,6 +1,9 @@
 using ClinicaEscolaBase.Data;
 using ClinicaEscolaBase.Enums;
 using ClinicaEscolaBase.Models;
+using ClinicaEscolaBase.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -8,21 +11,37 @@ using System.Security.Claims;
 
 namespace ClinicaEscolaBase.Controllers;
 
+[Authorize]
 public class AtendimentoController : Controller
 {
     private readonly ApplicationDbContext _context;
+    private readonly AuthorizationService _authorizationService;
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly AuditService _auditService;
 
-    public AtendimentoController(ApplicationDbContext context)
+    public AtendimentoController(
+        ApplicationDbContext context,
+        AuthorizationService authorizationService,
+        UserManager<ApplicationUser> userManager,
+        AuditService auditService)
     {
         _context = context;
+        _authorizationService = authorizationService;
+        _userManager = userManager;
+        _auditService = auditService;
     }
 
-    // LISTAGEM GERAL
+    // 1. LISTAGEM GERAL
     public async Task<IActionResult> Index()
     {
+        var usuarioId = _userManager.GetUserId(User);
+        if (usuarioId == null) return Unauthorized();
+
+        // Alunos veem apenas seus atendimentos
         var atendimentos = await _context.Atendimentos
             .Include(x => x.Paciente)
             .Include(x => x.Prontuario)
+            .Where(a => User.IsInRole("Professor") || a.AlunoId == usuarioId)
             .AsNoTracking()
             .OrderByDescending(x => x.DataHoraInicio)
             .ToListAsync();
@@ -30,9 +49,40 @@ public class AtendimentoController : Controller
         return View(atendimentos);
     }
 
-    // GET: CREATE
+    // 2. DETALHES DO ATENDIMENTO
+    public async Task<IActionResult> Details(int? id)
+    {
+        if (id == null) return NotFound();
+
+        var usuarioId = _userManager.GetUserId(User);
+        if (usuarioId == null) return Unauthorized();
+
+        var atendimento = await _context.Atendimentos
+            .Include(a => a.Paciente)
+            .Include(a => a.Prontuario)
+            .Include(a => a.Evolucoes)
+                .ThenInclude(e => e.CriadoPorUsuario) 
+            .FirstOrDefaultAsync(m => m.Id == id);
+
+        if (atendimento == null) return NotFound();
+
+        // Validar autorização
+        if (!await _authorizationService.CanReadPacienteAsync(usuarioId, atendimento.PacienteId))
+            return Forbid();
+
+        return View(atendimento);
+    }
+
+    // 3. GET: CREATE
     public async Task<IActionResult> Create(Guid pacienteId)
     {
+        var usuarioId = _userManager.GetUserId(User);
+        if (usuarioId == null) return Unauthorized();
+
+        // Validar autorização
+        if (!await _authorizationService.CanWritePacienteAsync(usuarioId, pacienteId))
+            return Forbid();
+
         var paciente = await _context.Pacientes
             .Include(p => p.Prontuario)
             .FirstOrDefaultAsync(p => p.Id == pacienteId);
@@ -41,7 +91,7 @@ public class AtendimentoController : Controller
 
         if (paciente.Prontuario == null)
         {
-            TempData["MensagemErro"] = "O paciente não possui um prontuário cadastrado. Crie o prontuário primeiro.";
+            TempData["MensagemErro"] = "O paciente não possui um prontuário cadastrado.";
             return RedirectToAction("Details", "Paciente", new { id = pacienteId });
         }
 
@@ -54,83 +104,159 @@ public class AtendimentoController : Controller
             ProntuarioId = paciente.Prontuario.Id,
             DataHoraInicio = DateTime.Now,
             StatusAtendimento = StatusAtendimento.Agendado,
-            AlunoId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? ""
+            AlunoId = usuarioId // Preenchendo automaticamente
         };
 
         PopulateEnums();
         return View(atendimento);
     }
 
-    // POST: CREATE
+    // 4. POST: CREATE
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("PacienteId,ProntuarioId,TipoAtendimento,DataHoraInicio,DataHoraFim,StatusAtendimento,Observacoes,AlunoId")] Atendimento atendimento)
+    public async Task<IActionResult> Create([Bind("PacienteId,ProntuarioId,TipoAtendimento,DataHoraInicio,DataHoraFim,StatusAtendimento,Observacoes")] Atendimento atendimento)
     {
-        // Regra de Negócio: Data Fim deve ser posterior à Início
+        var usuarioId = _userManager.GetUserId(User);
+        if (usuarioId == null) return Unauthorized();
+
+        // Validar autorização
+        if (!await _authorizationService.CanWritePacienteAsync(usuarioId, atendimento.PacienteId))
+            return Forbid();
+
         if (atendimento.DataHoraFim.HasValue && atendimento.DataHoraFim <= atendimento.DataHoraInicio)
         {
             ModelState.AddModelError("DataHoraFim", "A data de término deve ser posterior à data de início.");
         }
 
-        if (string.IsNullOrEmpty(atendimento.AlunoId))
-        {
-            atendimento.AlunoId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "";
-        }
-
-        // Limpeza de validações automáticas de objetos complexos
         LimparValidacoesNavegacao();
 
         if (ModelState.IsValid)
         {
-            try 
-            {
-                _context.Add(atendimento);
-                await _context.SaveChangesAsync();
-                TempData["MensagemSucesso"] = "Atendimento agendado com sucesso!";
-                return RedirectToAction("Details", "Paciente", new { id = atendimento.PacienteId });
-            }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError("", "Erro ao salvar no banco: " + ex.Message);
-            }
+            atendimento.AlunoId = usuarioId; // Definir o usuário logado
+            _context.Add(atendimento);
+            await _context.SaveChangesAsync();
+
+            // Registrar auditoria
+            await _auditService.LogAsync(
+                usuarioId,
+                TipoAcaoAuditoria.Insercao,
+                nameof(Atendimento),
+                atendimento.Id.ToString(),
+                atendimento.PacienteId,
+                atendimento.ProntuarioId,
+                $"Atendimento criado: {atendimento.TipoAtendimento}");
+            await _auditService.SaveAuditAsync();
+
+            TempData["MensagemSucesso"] = "Atendimento agendado com sucesso!";
+            return RedirectToAction("Details", "Paciente", new { id = atendimento.PacienteId });
         }
 
-        // Repopular dados se houver erro
         await LoadPatientInfoAsync(atendimento.PacienteId);
         PopulateEnums(atendimento.TipoAtendimento, atendimento.StatusAtendimento);
         return View(atendimento);
     }
 
-    // ADICIONAR EVOLUÇÃO (DENTRO DE DETAILS)
+    // 5. REGISTRAR EVOLUÇÃO (FINALIZAR SESSÃO)
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> RegistrarEvolucao(int id, string relato)
+    {
+        var usuarioId = _userManager.GetUserId(User);
+        if (usuarioId == null) return Unauthorized();
+
+        var atendimento = await _context.Atendimentos.FindAsync(id);
+        
+        if (atendimento == null) return NotFound();
+
+        // Validar autorização
+        if (!await _authorizationService.CanWritePacienteAsync(usuarioId, atendimento.PacienteId))
+            return Forbid();
+
+        if (string.IsNullOrWhiteSpace(relato))
+        {
+            TempData["MensagemErro"] = "O relato da evolução não pode estar vazio.";
+            return RedirectToAction(nameof(Details), new { id = id });
+        }
+
+        var novaEvolucao = new EvolucaoAtendimento
+        {
+            AtendimentoId = id,
+            TextoEvolucao = relato,
+            DataEvolucao = DateTime.Now,
+            CriadoPorUsuarioId = usuarioId // Registrar quem criou
+        };
+
+        atendimento.StatusAtendimento = StatusAtendimento.Realizado;
+        atendimento.DataHoraFim = DateTime.Now;
+        
+        _context.EvolucoesAtendimento.Add(novaEvolucao);
+        _context.Update(atendimento);
+        
+        await _context.SaveChangesAsync();
+
+        // Registrar auditoria
+        await _auditService.LogAsync(
+            usuarioId,
+            TipoAcaoAuditoria.Insercao,
+            nameof(EvolucaoAtendimento),
+            novaEvolucao.Id.ToString(),
+            atendimento.PacienteId,
+            atendimento.ProntuarioId,
+            "Evolução de atendimento registrada");
+        await _auditService.SaveAuditAsync();
+
+        TempData["MensagemSucesso"] = "Atendimento finalizado!";
+        return RedirectToAction(nameof(Details), new { id = id });
+    }
+
+    // 6. ADICIONAR EVOLUÇÃO MANUAL
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddEvolucao(int atendimentoId, string textoEvolucao, DateTime dataEvolucao)
     {
+        var usuarioId = _userManager.GetUserId(User);
+        if (usuarioId == null) return Unauthorized();
+
+        var atendimento = await _context.Atendimentos.FindAsync(atendimentoId);
+        if (atendimento == null) return NotFound();
+
+        // Validar autorização
+        if (!await _authorizationService.CanWritePacienteAsync(usuarioId, atendimento.PacienteId))
+            return Forbid();
+
         if (string.IsNullOrWhiteSpace(textoEvolucao))
         {
             TempData["MensagemErro"] = "O texto da evolução não pode estar vazio.";
             return RedirectToAction("Details", new { id = atendimentoId });
         }
 
-        var atendimento = await _context.Atendimentos.FindAsync(atendimentoId);
-        if (atendimento == null) return NotFound();
-
         var evolucao = new EvolucaoAtendimento
         {
             AtendimentoId = atendimentoId,
             TextoEvolucao = textoEvolucao,
             DataEvolucao = dataEvolucao,
-            CriadoPorUsuarioId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? ""
+            CriadoPorUsuarioId = usuarioId // Registrar quem criou
         };
 
         _context.EvolucoesAtendimento.Add(evolucao);
         await _context.SaveChangesAsync();
 
-        TempData["MensagemSucesso"] = "Evolução adicionada com sucesso!";
+        // Registrar auditoria
+        await _auditService.LogAsync(
+            usuarioId,
+            TipoAcaoAuditoria.Insercao,
+            nameof(EvolucaoAtendimento),
+            evolucao.Id.ToString(),
+            atendimento.PacienteId,
+            atendimento.ProntuarioId,
+            "Evolução adicional registrada");
+        await _auditService.SaveAuditAsync();
+
+        TempData["MensagemSucesso"] = "Evolução adicionada!";
         return RedirectToAction("Details", new { id = atendimentoId });
     }
 
-    // MÉTODOS AUXILIARES (DRY - Don't Repeat Yourself)
+    // MÉTODOS AUXILIARES
     private void PopulateEnums(TipoAtendimento? tipo = null, StatusAtendimento? status = null)
     {
         ViewData["TipoAtendimento"] = new SelectList(Enum.GetValues(typeof(TipoAtendimento)), tipo);
@@ -139,11 +265,7 @@ public class AtendimentoController : Controller
 
     private async Task LoadPatientInfoAsync(Guid pacienteId)
     {
-        var paciente = await _context.Pacientes
-            .Include(x => x.Prontuario)
-            .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == pacienteId);
-
+        var paciente = await _context.Pacientes.Include(x => x.Prontuario).AsNoTracking().FirstOrDefaultAsync(x => x.Id == pacienteId);
         ViewBag.PacienteNome = paciente?.NomeCompleto ?? "Não encontrado";
         ViewBag.ProntuarioNumero = paciente?.Prontuario?.NumeroProntuario ?? "N/A";
     }
@@ -153,12 +275,7 @@ public class AtendimentoController : Controller
         ModelState.Remove("Aluno");
         ModelState.Remove("Paciente");
         ModelState.Remove("Prontuario");
-        ModelState.Remove("DocumentosClinicos");
         ModelState.Remove("Evolucoes");
-    }
-
-    private bool AtendimentoExists(int id)
-    {
-        return _context.Atendimentos.Any(x => x.Id == id);
+        ModelState.Remove("CriadoPorUsuario");
     }
 }

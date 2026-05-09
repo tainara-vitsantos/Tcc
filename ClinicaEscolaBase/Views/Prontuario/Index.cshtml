@@ -1,0 +1,40 @@
+@model IEnumerable<ClinicaEscolaBase.Models.Prontuario>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold"><i class="bi bi-archive"></i> Arquivo de Prontuários</h2>
+        <a asp-action="Create" class="btn btn-primary">Abrir Novo Prontuário</a>
+    </div>
+
+    <div class="table-responsive shadow-sm rounded">
+        <table class="table table-hover align-middle bg-white mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Nº Prontuário</th>
+                    <th>Paciente</th>
+                    <th>Abertura</th>
+                    <th>Situação</th>
+                    <th class="text-end">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model) {
+                <tr>
+                    <td class="fw-bold">@item.NumeroProntuario</td>
+                    <td>@item.Paciente?.NomeCompleto</td>
+                    <td>@item.DataPrimeiraConsulta?.ToString("dd/MM/yyyy")</td>
+                    <td>
+                        <span class="badge @(item.SituacaoProntuario == ClinicaEscolaBase.Enums.SituacaoProntuario.Ativo ? "bg-success" : "bg-secondary")">
+                            @item.SituacaoProntuario
+                        </span>
+                    </td>
+                    <td class="text-end">
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning">Editar</a>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info">Ver</a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

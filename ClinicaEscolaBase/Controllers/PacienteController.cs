@@ -1,23 +1,41 @@
 using ClinicaEscolaBase.Data;
 using ClinicaEscolaBase.Models;
+using ClinicaEscolaBase.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClinicaEscolaBase.Controllers;
 
+[Authorize]
 public class PacienteController : Controller
 {
     private readonly ApplicationDbContext _context;
+    private readonly AuthorizationService _authorizationService;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public PacienteController(ApplicationDbContext context)
+    public PacienteController(
+        ApplicationDbContext context,
+        AuthorizationService authorizationService,
+        UserManager<ApplicationUser> userManager)
     {
         _context = context;
+        _authorizationService = authorizationService;
+        _userManager = userManager;
     }
 
     // LISTAGEM: Ordenada por nome para melhor UX
     public async Task<IActionResult> Index()
     {
+        var usuarioId = _userManager.GetUserId(User);
+        if (usuarioId == null) return Unauthorized();
+
+        // Alunos veem apenas seus pacientes vinculados; Professores veem todos
+        var acessibleIds = await _authorizationService.GetAcessiblePacienteIdsAsync(usuarioId);
+
         var pacientes = await _context.Pacientes
+            .Where(p => acessibleIds.Contains(p.Id))
             .AsNoTracking()
             .OrderBy(x => x.NomeCompleto)
             .ToListAsync();
@@ -30,6 +48,13 @@ public class PacienteController : Controller
     {
         if (id == null) return NotFound();
 
+        var usuarioId = _userManager.GetUserId(User);
+        if (usuarioId == null) return Unauthorized();
+
+        // Validar autorização
+        if (!await _authorizationService.CanReadPacienteAsync(usuarioId, id.Value))
+            return Forbid();
+
         var paciente = await _context.Pacientes
             .Include(x => x.Prontuario)
             .Include(x => x.Atendimentos)
@@ -41,14 +66,16 @@ public class PacienteController : Controller
         return View(paciente);
     }
 
+    [Authorize(Roles = "Professor")]
     public IActionResult Create()
     {
         return View();
     }
 
-    // CREATE: Com tratamento de erro e feedback
+    // CREATE: Com tratamento de erro e feedback (Apenas Professores)
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Professor")]
     public async Task<IActionResult> Create(Paciente paciente)
     {
         if (ModelState.IsValid)
@@ -75,6 +102,13 @@ public class PacienteController : Controller
     {
         if (id == null) return NotFound();
 
+        var usuarioId = _userManager.GetUserId(User);
+        if (usuarioId == null) return Unauthorized();
+
+        // Validar autorização de escrita
+        if (!await _authorizationService.CanWritePacienteAsync(usuarioId, id.Value))
+            return Forbid();
+
         var paciente = await _context.Pacientes.FindAsync(id.Value);
         if (paciente == null) return NotFound();
 
@@ -87,6 +121,13 @@ public class PacienteController : Controller
     public async Task<IActionResult> Edit(Guid id, Paciente paciente)
     {
         if (id != paciente.Id) return BadRequest();
+
+        var usuarioId = _userManager.GetUserId(User);
+        if (usuarioId == null) return Unauthorized();
+
+        // Validar autorização de escrita
+        if (!await _authorizationService.CanWritePacienteAsync(usuarioId, id))
+            return Forbid();
 
         if (ModelState.IsValid)
         {
@@ -111,6 +152,7 @@ public class PacienteController : Controller
         return View(paciente);
     }
 
+    [Authorize(Roles = "Professor")]
     public async Task<IActionResult> Delete(Guid? id)
     {
         if (id == null) return NotFound();
@@ -124,9 +166,10 @@ public class PacienteController : Controller
         return View(paciente);
     }
 
-    // DELETE: Com feedback de exclusão
+    // DELETE: Com feedback de exclusão (Apenas Professores)
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Professor")]
     public async Task<IActionResult> DeleteConfirmed(Guid id)
     {
         try 
