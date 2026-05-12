@@ -24,6 +24,10 @@ public class AnamneseAdolescenteViewModel
     public int? AtendimentoId { get; set; }
 
     // ==================== SEÇÃO 1: DADOS ESCOLARES E PAIS ====================
+    [Display(Name = "Escolaridade")]
+    [StringLength(100)]
+    public string? Escolaridade { get; set; }
+
     [Display(Name = "Escola")]
     [StringLength(200)]
     public string? Escola { get; set; }

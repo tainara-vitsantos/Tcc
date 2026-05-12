@@ -121,6 +121,68 @@ public class AnamneseAdultoViewModel
     [StringLength(500)]
     public string? ExameComportamento { get; set; }
 
+    [Display(Name = "Atitude")]
+    [StringLength(500)]
+    public string? Atitude { get; set; }
+
+    [Display(Name = "Atitude do Entrevistador")]
+    [StringLength(500)]
+    public string? AtitudeEntrevistador { get; set; }
+
+    [Display(Name = "Orientação autoidentificatória")]
+    public bool OrientacaoAutoIdentificatoria { get; set; }
+
+    [Display(Name = "Orientação corporal")]
+    public bool OrientacaoCorporal { get; set; }
+
+    [Display(Name = "Orientação temporal")]
+    public bool OrientacaoTemporal { get; set; }
+
+    [Display(Name = "Orientação espacial")]
+    public bool OrientacaoEspacial { get; set; }
+
+    [Display(Name = "Orientação patológica")]
+    public bool OrientacaoPatologia { get; set; }
+
+    [Display(Name = "Observações da orientação")]
+    [StringLength(500)]
+    public string? ObservacoesOrientacao { get; set; }
+
+    [Display(Name = "Sensopercepção")]
+    [StringLength(500)]
+    public string? Sensopercepcao { get; set; }
+
+    [Display(Name = "Atenção - Vigilância")]
+    [StringLength(500)]
+    public string? AtencaoVigilancia { get; set; }
+
+    [Display(Name = "Atenção - Tenacidade")]
+    [StringLength(500)]
+    public string? AtencaoTenacidade { get; set; }
+
+    [Display(Name = "Memória")]
+    [StringLength(500)]
+    public string? Memoria { get; set; }
+
+    [Display(Name = "Inteligência")]
+    [StringLength(500)]
+    public string? Inteligencia { get; set; }
+
+    [Display(Name = "Velocidade do Pensamento")]
+    [StringLength(200)]
+    public string? PensamentoVelocidade { get; set; }
+
+    [Display(Name = "Conteúdo do Pensamento")]
+    [StringLength(2000)]
+    public string? ConteudoPensamento { get; set; }
+
+    [Display(Name = "Tendência suicida")]
+    public bool TendenciaSuicida { get; set; }
+
+    [Display(Name = "Humor")]
+    [StringLength(200)]
+    public string? Humor { get; set; }
+
     [Display(Name = "Hipótese Diagnóstica")]
     [StringLength(1000)]
     public string? HipoteseDiagnostica { get; set; }

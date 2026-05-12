@@ -5,7 +5,7 @@ namespace ClinicaEscolaBase.ViewModels;
 
 public class PacienteFormViewModel
 {
-    public int? Id { get; set; }
+    public Guid? Id { get; set; }
 
     [Required]
     [StringLength(200)]
@@ -13,6 +13,7 @@ public class PacienteFormViewModel
 
     [DataType(DataType.Date)]
     public DateTime? DataNascimento { get; set; }
+    public int? Idade { get; set; }
 
     [StringLength(30)]
     public string? Sexo { get; set; }
@@ -53,6 +54,9 @@ public class PacienteFormViewModel
     [StringLength(100)]
     public string? Cidade { get; set; }
 
+    [StringLength(100)]
+    public string? Estado { get; set; }
+
     [StringLength(20)]
     public string? CEP { get; set; }
 
@@ -67,6 +71,15 @@ public class PacienteFormViewModel
 
     [StringLength(200)]
     public string? NomeMae { get; set; }
+
+    public bool TratamentoPsicologico { get; set; }
+    public bool TratamentoNeurologico { get; set; }
+    public bool TratamentoPsiquiatrico { get; set; }
+    public bool TratamentoCardiologico { get; set; }
+    public bool Internacao { get; set; }
+
+    [StringLength(500)]
+    public string? MotivoInternacao { get; set; }
 
     public string? Observacoes { get; set; }
 }

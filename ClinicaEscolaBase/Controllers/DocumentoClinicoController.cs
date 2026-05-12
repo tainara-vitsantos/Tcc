@@ -148,6 +148,7 @@ public class DocumentoClinicoController : Controller
             viewModel.PacienteId,
             documento.ProntuarioId,
             TipoDocumentoClinico.AnamneseAdulto);
+        await _auditService.SaveAuditAsync();
 
         return RedirectToAction("Details", "Paciente", new { id = viewModel.PacienteId });
     }
@@ -229,6 +230,7 @@ public class DocumentoClinicoController : Controller
             viewModel.PacienteId,
             documento.ProntuarioId,
             TipoDocumentoClinico.AnamneseAdolescente);
+        await _auditService.SaveAuditAsync();
 
         return RedirectToAction("Details", "Paciente", new { id = viewModel.PacienteId });
     }

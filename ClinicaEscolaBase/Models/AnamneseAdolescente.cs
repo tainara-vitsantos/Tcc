@@ -3,6 +3,7 @@ namespace ClinicaEscolaBase.Models;
 public class AnamneseAdolescente
 {
     public int DocumentoClinicoId { get; set; }
+    public string? Escolaridade { get; set; }
     public string? Escola { get; set; }
     public string? PaiNome { get; set; }
     public int? PaiIdade { get; set; }

@@ -7,6 +7,7 @@
     <h2>@ViewData["Title"] - @Model.PacienteNome</h2>
 
     <form method="post" asp-action="CreateAnamneseAdulto">
+        @Html.AntiForgeryToken()
         <input type="hidden" asp-for="PacienteId" />
         <input type="hidden" asp-for="ProntuarioId" />
 

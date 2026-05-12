@@ -12,6 +12,21 @@ public class PlantaoPsicologicoViewModel
     [DataType(DataType.Date)]
     public DateTime? DataAtendimento { get; set; }
 
+    [StringLength(200)]
+    public string? ResponsavelNome { get; set; }
+
+    [StringLength(200)]
+    public string? NomeEstagiario { get; set; }
+
+    [StringLength(200)]
+    public string? NomeSupervisor { get; set; }
+
+    [StringLength(200)]
+    public string? AssinaturaAluno { get; set; }
+
+    [StringLength(200)]
+    public string? AssinaturaSupervisor { get; set; }
+
     public string? SinteseQueixaInicial { get; set; }
     public string? RelatoAtendimento { get; set; }
     public string? CondutaEncaminhamento { get; set; }

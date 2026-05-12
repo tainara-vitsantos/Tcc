@@ -112,6 +112,7 @@ public class AnexoController : Controller
             documento.PacienteId,
             documento.ProntuarioId,
             $"Anexo '{arquivo.FileName}' enviado para documento {documentoId}");
+        await _auditService.SaveAuditAsync();
 
         return Json(new
         {
@@ -157,6 +158,7 @@ public class AnexoController : Controller
             anexo.DocumentoClinico.PacienteId,
             anexo.DocumentoClinico.ProntuarioId,
             $"Download do anexo '{anexo.NomeOriginal}'" );
+        await _auditService.SaveAuditAsync();
 
         var memory = new MemoryStream();
         using (var stream = new FileStream(filePath, FileMode.Open))
@@ -211,6 +213,7 @@ public class AnexoController : Controller
             anexo.DocumentoClinico.PacienteId,
             anexo.DocumentoClinico.ProntuarioId,
             $"Anexo '{anexo.NomeOriginal}' removido");
+        await _auditService.SaveAuditAsync();
 
         return Json(new { success = true, message = "Anexo removido com sucesso." });
     }

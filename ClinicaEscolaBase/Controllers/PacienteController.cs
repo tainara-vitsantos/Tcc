@@ -1,6 +1,8 @@
 using ClinicaEscolaBase.Data;
+using ClinicaEscolaBase.Enums;
 using ClinicaEscolaBase.Models;
 using ClinicaEscolaBase.Services;
+using ClinicaEscolaBase.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -70,24 +72,69 @@ public class PacienteController : Controller
     [Authorize(Roles = "Professor")]
     public IActionResult Create()
     {
-        return View();
+        return View(new PacienteFormViewModel());
     }
 
     // CREATE: Com tratamento de erro e feedback (Apenas Professores)
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = "Professor")]
-    public async Task<IActionResult> Create(Paciente paciente)
+    public async Task<IActionResult> Create(PacienteFormViewModel viewModel)
     {
         if (ModelState.IsValid)
         {
             try 
             {
-                paciente.Id = Guid.NewGuid();
+                var paciente = new Paciente
+                {
+                    Id = Guid.NewGuid(),
+                    DataCriacao = DateTime.UtcNow,
+                    Ativo = true,
+                    NomeCompleto = viewModel.NomeCompleto,
+                    DataNascimento = viewModel.DataNascimento,
+                    Idade = viewModel.Idade,
+                    Sexo = viewModel.Sexo,
+                    Naturalidade = viewModel.Naturalidade,
+                    EstadoNascimento = viewModel.EstadoNascimento,
+                    Escolaridade = viewModel.Escolaridade,
+                    Profissao = viewModel.Profissao,
+                    RG = viewModel.RG,
+                    CPF = viewModel.CPF,
+                    EstadoCivil = viewModel.EstadoCivil,
+                    Religiao = viewModel.Religiao,
+                    EnderecoLogradouro = viewModel.EnderecoLogradouro,
+                    EnderecoNumero = viewModel.EnderecoNumero,
+                    Bairro = viewModel.Bairro,
+                    Cidade = viewModel.Cidade,
+                    Estado = viewModel.Estado,
+                    CEP = viewModel.CEP,
+                    Telefone = viewModel.Telefone,
+                    TelefoneRecado = viewModel.TelefoneRecado,
+                    NomePai = viewModel.NomePai,
+                    NomeMae = viewModel.NomeMae,
+                    TratamentoPsicologico = viewModel.TratamentoPsicologico,
+                    TratamentoNeurologico = viewModel.TratamentoNeurologico,
+                    TratamentoPsiquiatrico = viewModel.TratamentoPsiquiatrico,
+                    TratamentoCardiologico = viewModel.TratamentoCardiologico,
+                    Internacao = viewModel.Internacao,
+                    MotivoInternacao = viewModel.MotivoInternacao,
+                    Observacoes = viewModel.Observacoes
+                };
+
+                var prontuario = new Prontuario
+                {
+                    PacienteId = paciente.Id,
+                    NumeroProntuario = await GenerateNumeroProntuarioAsync(),
+                    DataPrimeiraConsulta = DateTime.UtcNow,
+                    SituacaoProntuario = SituacaoProntuario.Ativo
+                };
+
+                paciente.Prontuario = prontuario;
+
                 _context.Add(paciente);
                 await _context.SaveChangesAsync();
                 
-                TempData["MensagemSucesso"] = "Paciente cadastrado com sucesso!";
+                TempData["MensagemSucesso"] = "Paciente cadastrado com sucesso e prontuário criado automaticamente!";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception)
@@ -96,7 +143,13 @@ public class PacienteController : Controller
                 ModelState.AddModelError("", "Não foi possível salvar o paciente.");
             }
         }
-        return View(paciente);
+        return View(viewModel);
+    }
+
+    private async Task<string> GenerateNumeroProntuarioAsync()
+    {
+        var count = await _context.Prontuarios.CountAsync();
+        return $"{DateTime.UtcNow:yyyy}-{count + 1:000}";
     }
 
     public async Task<IActionResult> Edit(Guid? id)
@@ -113,15 +166,41 @@ public class PacienteController : Controller
         var paciente = await _context.Pacientes.FindAsync(id.Value);
         if (paciente == null) return NotFound();
 
-        return View(paciente);
+        var viewModel = new PacienteFormViewModel
+        {
+            Id = paciente.Id,
+            NomeCompleto = paciente.NomeCompleto,
+            DataNascimento = paciente.DataNascimento,
+            Sexo = paciente.Sexo,
+            Naturalidade = paciente.Naturalidade,
+            EstadoNascimento = paciente.EstadoNascimento,
+            Escolaridade = paciente.Escolaridade,
+            Profissao = paciente.Profissao,
+            RG = paciente.RG,
+            CPF = paciente.CPF,
+            EstadoCivil = paciente.EstadoCivil,
+            Religiao = paciente.Religiao,
+            EnderecoLogradouro = paciente.EnderecoLogradouro,
+            EnderecoNumero = paciente.EnderecoNumero,
+            Bairro = paciente.Bairro,
+            Cidade = paciente.Cidade,
+            CEP = paciente.CEP,
+            Telefone = paciente.Telefone,
+            TelefoneRecado = paciente.TelefoneRecado,
+            NomePai = paciente.NomePai,
+            NomeMae = paciente.NomeMae,
+            Observacoes = paciente.Observacoes
+        };
+
+        return View(viewModel);
     }
 
     // EDIT: Proteção contra concorrência e erros de atualização
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(Guid id, Paciente paciente)
+    public async Task<IActionResult> Edit(Guid id, PacienteFormViewModel viewModel)
     {
-        if (id != paciente.Id) return BadRequest();
+        if (id != viewModel.Id) return BadRequest();
 
         var usuarioId = _userManager.GetUserId(User);
         if (usuarioId == null) return Unauthorized();
@@ -134,6 +213,40 @@ public class PacienteController : Controller
         {
             try
             {
+                var paciente = await _context.Pacientes.FindAsync(id);
+                if (paciente == null) return NotFound();
+
+                paciente.NomeCompleto = viewModel.NomeCompleto;
+                paciente.DataNascimento = viewModel.DataNascimento;
+                paciente.Idade = viewModel.Idade;
+                paciente.Sexo = viewModel.Sexo;
+                paciente.Naturalidade = viewModel.Naturalidade;
+                paciente.EstadoNascimento = viewModel.EstadoNascimento;
+                paciente.Escolaridade = viewModel.Escolaridade;
+                paciente.Profissao = viewModel.Profissao;
+                paciente.RG = viewModel.RG;
+                paciente.CPF = viewModel.CPF;
+                paciente.EstadoCivil = viewModel.EstadoCivil;
+                paciente.Religiao = viewModel.Religiao;
+                paciente.EnderecoLogradouro = viewModel.EnderecoLogradouro;
+                paciente.EnderecoNumero = viewModel.EnderecoNumero;
+                paciente.Bairro = viewModel.Bairro;
+                paciente.Cidade = viewModel.Cidade;
+                paciente.Estado = viewModel.Estado;
+                paciente.CEP = viewModel.CEP;
+                paciente.Telefone = viewModel.Telefone;
+                paciente.TelefoneRecado = viewModel.TelefoneRecado;
+                paciente.NomePai = viewModel.NomePai;
+                paciente.NomeMae = viewModel.NomeMae;
+                paciente.TratamentoPsicologico = viewModel.TratamentoPsicologico;
+                paciente.TratamentoNeurologico = viewModel.TratamentoNeurologico;
+                paciente.TratamentoPsiquiatrico = viewModel.TratamentoPsiquiatrico;
+                paciente.TratamentoCardiologico = viewModel.TratamentoCardiologico;
+                paciente.Internacao = viewModel.Internacao;
+                paciente.MotivoInternacao = viewModel.MotivoInternacao;
+                paciente.Observacoes = viewModel.Observacoes;
+                paciente.DataAtualizacao = DateTime.UtcNow;
+
                 _context.Update(paciente);
                 await _context.SaveChangesAsync();
                 
@@ -142,7 +255,7 @@ public class PacienteController : Controller
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PacienteExists(paciente.Id)) return NotFound();
+                if (!PacienteExists(id)) return NotFound();
                 throw;
             }
             catch (Exception)
@@ -150,7 +263,7 @@ public class PacienteController : Controller
                 TempData["MensagemErro"] = "Ocorreu um erro ao atualizar o paciente no banco de dados.";
             }
         }
-        return View(paciente);
+        return View(viewModel);
     }
 
     [Authorize(Roles = "Professor")]

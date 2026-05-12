@@ -14,6 +14,7 @@ public class Paciente
     public bool Ativo { get; set; } = true;
     public string NomeCompleto { get; set; } = string.Empty;
     public DateTime? DataNascimento { get; set; }
+    public int? Idade { get; set; }
     public string? Sexo { get; set; }
     public string? Naturalidade { get; set; }
     public string? EstadoNascimento { get; set; }
@@ -27,11 +28,18 @@ public class Paciente
     public string? EnderecoNumero { get; set; }
     public string? Bairro { get; set; }
     public string? Cidade { get; set; }
+    public string? Estado { get; set; }
     public string? CEP { get; set; }
     public string? Telefone { get; set; }
     public string? TelefoneRecado { get; set; }
     public string? NomePai { get; set; }
     public string? NomeMae { get; set; }
+    public bool TratamentoPsicologico { get; set; }
+    public bool TratamentoNeurologico { get; set; }
+    public bool TratamentoPsiquiatrico { get; set; }
+    public bool TratamentoCardiologico { get; set; }
+    public bool Internacao { get; set; }
+    public string? MotivoInternacao { get; set; }
     public string? Observacoes { get; set; }
 
     public Prontuario? Prontuario { get; set; }

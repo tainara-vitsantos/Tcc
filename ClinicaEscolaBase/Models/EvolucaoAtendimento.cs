@@ -10,6 +10,8 @@ public class EvolucaoAtendimento : EntityBase
     public string TextoEvolucao { get; set; } = string.Empty;
     public string CriadoPorUsuarioId { get; set; } = string.Empty;
     public string? SupervisorId { get; set; }
+    public string? AssinaturaAluno { get; set; }
+    public string? AssinaturaSupervisor { get; set; }
 
     public DocumentoClinico DocumentoClinico { get; set; } = null!;
     public Atendimento? Atendimento { get; set; }
