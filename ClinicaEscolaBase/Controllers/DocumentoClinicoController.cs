@@ -30,6 +30,47 @@ public class DocumentoClinicoController : Controller
         _userManager = userManager;
     }
 
+    public async Task<IActionResult> Index()
+    {
+        var usuarioId = _userManager.GetUserId(User) ?? "";
+        var acessibleIds = await _authorizationService.GetAcessiblePacienteIdsAsync(usuarioId);
+
+        var documentos = await _context.DocumentosClinicos
+            .Include(x => x.Paciente)
+            .Include(x => x.Prontuario)
+            .Include(x => x.CriadoPorUsuario)
+            .Where(x => acessibleIds.Contains(x.PacienteId))
+            .OrderByDescending(x => x.DataDocumento)
+            .AsNoTracking()
+            .ToListAsync();
+
+        return View(documentos);
+    }
+
+    public async Task<IActionResult> Details(int? id)
+    {
+        if (id == null) return NotFound();
+
+        var usuarioId = _userManager.GetUserId(User) ?? "";
+
+        var documento = await _context.DocumentosClinicos
+            .Include(x => x.Paciente)
+            .Include(x => x.Prontuario)
+            .Include(x => x.Atendimento)
+            .Include(x => x.CriadoPorUsuario)
+            .Include(x => x.Anexos)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == id.Value);
+
+        if (documento == null) return NotFound();
+
+        if (!await _authorizationService.CanReadPacienteAsync(usuarioId, documento.PacienteId))
+            return Forbid();
+
+        ViewBag.CanWrite = await _authorizationService.CanWritePacienteAsync(usuarioId, documento.PacienteId);
+        return View(documento);
+    }
+
     [HttpGet]
     public async Task<IActionResult> CreateAnamneseAdulto(Guid pacienteId)
     {
@@ -39,16 +80,26 @@ public class DocumentoClinicoController : Controller
             return Forbid();
         }
 
-        var paciente = await _context.Pacientes.FindAsync(pacienteId);
+        var paciente = await _context.Pacientes
+            .Include(p => p.Prontuario)
+            .FirstOrDefaultAsync(p => p.Id == pacienteId);
+
         if (paciente == null || !paciente.Ativo)
         {
             return NotFound();
         }
 
+        if (paciente.Prontuario == null)
+        {
+            TempData["MensagemErro"] = "O paciente ainda não possui prontuário. Abra o prontuário antes de criar uma anamnese.";
+            return RedirectToAction("Details", "Paciente", new { id = pacienteId });
+        }
+
         var viewModel = new AnamneseAdultoViewModel
         {
             PacienteId = pacienteId,
-            PacienteNome = paciente.NomeCompleto
+            PacienteNome = paciente.NomeCompleto,
+            ProntuarioId = paciente.Prontuario.Id
         };
 
         return View(viewModel);
@@ -69,9 +120,18 @@ public class DocumentoClinicoController : Controller
             return View(viewModel);
         }
 
+        var prontuario = await _context.Prontuarios.FirstOrDefaultAsync(p => p.PacienteId == viewModel.PacienteId);
+        if (prontuario == null)
+        {
+            ModelState.AddModelError(string.Empty, "O paciente não possui um prontuário cadastrado.");
+            return View(viewModel);
+        }
+
         var documento = new DocumentoClinico
         {
             PacienteId = viewModel.PacienteId,
+            ProntuarioId = prontuario.Id,
+            AtendimentoId = viewModel.AtendimentoId,
             TipoDocumento = TipoDocumentoClinico.AnamneseAdulto,
             StatusDocumento = StatusDocumentoClinico.Rascunho,
             DataDocumento = DateTime.UtcNow,
@@ -86,7 +146,7 @@ public class DocumentoClinicoController : Controller
             usuarioId,
             documento.Id,
             viewModel.PacienteId,
-            null, // ProntuarioId if applicable
+            documento.ProntuarioId,
             TipoDocumentoClinico.AnamneseAdulto);
 
         return RedirectToAction("Details", "Paciente", new { id = viewModel.PacienteId });
@@ -101,16 +161,26 @@ public class DocumentoClinicoController : Controller
             return Forbid();
         }
 
-        var paciente = await _context.Pacientes.FindAsync(pacienteId);
+        var paciente = await _context.Pacientes
+            .Include(p => p.Prontuario)
+            .FirstOrDefaultAsync(p => p.Id == pacienteId);
+
         if (paciente == null || !paciente.Ativo)
         {
             return NotFound();
         }
 
+        if (paciente.Prontuario == null)
+        {
+            TempData["MensagemErro"] = "O paciente ainda não possui prontuário. Abra o prontuário antes de criar uma anamnese.";
+            return RedirectToAction("Details", "Paciente", new { id = pacienteId });
+        }
+
         var viewModel = new AnamneseAdolescenteViewModel
         {
             PacienteId = pacienteId,
-            PacienteNome = paciente.NomeCompleto
+            PacienteNome = paciente.NomeCompleto,
+            ProntuarioId = paciente.Prontuario.Id
         };
 
         return View(viewModel);
@@ -131,9 +201,18 @@ public class DocumentoClinicoController : Controller
             return View(viewModel);
         }
 
+        var prontuario = await _context.Prontuarios.FirstOrDefaultAsync(p => p.PacienteId == viewModel.PacienteId);
+        if (prontuario == null)
+        {
+            ModelState.AddModelError(string.Empty, "O paciente não possui um prontuário cadastrado.");
+            return View(viewModel);
+        }
+
         var documento = new DocumentoClinico
         {
             PacienteId = viewModel.PacienteId,
+            ProntuarioId = prontuario.Id,
+            AtendimentoId = viewModel.AtendimentoId,
             TipoDocumento = TipoDocumentoClinico.AnamneseAdolescente,
             StatusDocumento = StatusDocumentoClinico.Rascunho,
             DataDocumento = DateTime.UtcNow,
@@ -148,7 +227,7 @@ public class DocumentoClinicoController : Controller
             usuarioId,
             documento.Id,
             viewModel.PacienteId,
-            null,
+            documento.ProntuarioId,
             TipoDocumentoClinico.AnamneseAdolescente);
 
         return RedirectToAction("Details", "Paciente", new { id = viewModel.PacienteId });

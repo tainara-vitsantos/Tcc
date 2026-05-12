@@ -17,6 +17,11 @@ git config --global user.email "tainaravit.santos28@gmail.com"
 5- dotnet run
 
 dotnet clean
+
+//Cria a migration específica para SQL Server
+dotnet ef migrations add InitialCreate_SQLServer
+
+//Cria o banco e as tabelas
 dotnet ef database update
 
 tentar fazer conectar com o banco

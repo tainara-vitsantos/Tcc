@@ -59,6 +59,7 @@ public class ProntuarioController : Controller
 
         var prontuario = await _context.Prontuarios
             .Include(x => x.Paciente)
+            .Include(x => x.DocumentosClinicos)
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == id.Value);
 

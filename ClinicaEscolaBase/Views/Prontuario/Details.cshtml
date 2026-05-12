@@ -92,6 +92,35 @@
                     }
                 </div>
             </div>
+
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-white fw-bold">
+                    <i class="bi bi-journal-text me-2"></i> Documentos Clínicos
+                </div>
+                <div class="card-body">
+                    @if (Model.DocumentosClinicos != null && Model.DocumentosClinicos.Any())
+                    {
+                        <ul class="list-group list-group-flush">
+                            @foreach (var documento in Model.DocumentosClinicos.OrderByDescending(d => d.DataDocumento))
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>@documento.TipoDocumento</strong><br />
+                                        <small class="text-muted">@documento.DataDocumento.ToString("dd/MM/yyyy")</small>
+                                    </div>
+                                    <a asp-controller="DocumentoClinico" asp-action="Details" asp-route-id="@documento.Id" class="btn btn-sm btn-outline-secondary">Ver</a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <div class="text-center text-muted small py-4">
+                            Nenhum documento vinculado a este prontuário.
+                        </div>
+                    }
+                </div>
+            </div>
             
             <!-- Auditorias (Opcional, baseado na sua Model) -->
             @if (Model.Auditorias != null && Model.Auditorias.Any())

@@ -58,6 +58,7 @@ public class PacienteController : Controller
         var paciente = await _context.Pacientes
             .Include(x => x.Prontuario)
             .Include(x => x.Atendimentos)
+            .Include(x => x.DocumentosClinicos)
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == id.Value);
 

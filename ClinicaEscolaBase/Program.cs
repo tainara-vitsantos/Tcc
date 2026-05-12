@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Banco de Dados
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
 // Identity (Login / Usuários)
@@ -32,8 +32,9 @@ builder.Services.AddScoped<AuditService>();
 builder.Services.AddScoped<SoftDeleteService>();
 builder.Services.AddHttpContextAccessor();
 
-// MVC
+// MVC + Razor Pages
 builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
@@ -63,6 +64,8 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
+
+app.MapRazorPages();
 
 using (var scope = app.Services.CreateScope())
 {
