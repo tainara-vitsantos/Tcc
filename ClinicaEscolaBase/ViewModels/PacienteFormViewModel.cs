@@ -72,6 +72,12 @@ public class PacienteFormViewModel
     [StringLength(200)]
     public string? NomeMae { get; set; }
 
+    [StringLength(200)]
+    public string? NomeResponsavel { get; set; }
+
+    [StringLength(100)]
+    public string? GrauParentescoResponsavel { get; set; }
+
     public bool TratamentoPsicologico { get; set; }
     public bool TratamentoNeurologico { get; set; }
     public bool TratamentoPsiquiatrico { get; set; }

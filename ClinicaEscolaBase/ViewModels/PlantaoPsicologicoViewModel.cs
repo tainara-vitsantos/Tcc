@@ -5,32 +5,39 @@ namespace ClinicaEscolaBase.ViewModels;
 
 public class PlantaoPsicologicoViewModel
 {
-    public int? DocumentoClinicoId { get; set; }
-    public int PacienteId { get; set; }
+    [Required]
+    public Guid PacienteId { get; set; }
+
+    public string? PacienteNome { get; set; }
+
+    [Required]
     public int ProntuarioId { get; set; }
 
-    [DataType(DataType.Date)]
+    [Display(Name = "Data do Atendimento")]
+    [DataType(DataType.DateTime)]
     public DateTime? DataAtendimento { get; set; }
 
-    [StringLength(200)]
-    public string? ResponsavelNome { get; set; }
+    [Display(Name = "Síntese da Queixa")]
+    [StringLength(2000)]
+    public string? SinteseQueixaInicial { get; set; }
 
+    [Display(Name = "Relato do Atendimento")]
+    [StringLength(4000)]
+    public string? RelatoAtendimento { get; set; }
+
+    [Display(Name = "Conduta e Encaminhamento")]
+    [StringLength(2000)]
+    public string? CondutaEncaminhamento { get; set; }
+
+    [Display(Name = "Nome do Aluno")]
     [StringLength(200)]
     public string? NomeEstagiario { get; set; }
 
+    [Display(Name = "Nome do Supervisor")]
     [StringLength(200)]
     public string? NomeSupervisor { get; set; }
 
-    [StringLength(200)]
-    public string? AssinaturaAluno { get; set; }
-
-    [StringLength(200)]
-    public string? AssinaturaSupervisor { get; set; }
-
-    public string? SinteseQueixaInicial { get; set; }
-    public string? RelatoAtendimento { get; set; }
-    public string? CondutaEncaminhamento { get; set; }
-
-    [StringLength(20)]
+    [Display(Name = "CRP do Supervisor")]
+    [StringLength(50)]
     public string? CRPSupervisor { get; set; }
 }

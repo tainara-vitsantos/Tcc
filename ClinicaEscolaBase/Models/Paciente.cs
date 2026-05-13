@@ -34,6 +34,8 @@ public class Paciente
     public string? TelefoneRecado { get; set; }
     public string? NomePai { get; set; }
     public string? NomeMae { get; set; }
+    public string? NomeResponsavel { get; set; }
+    public string? GrauParentescoResponsavel { get; set; }
     public bool TratamentoPsicologico { get; set; }
     public bool TratamentoNeurologico { get; set; }
     public bool TratamentoPsiquiatrico { get; set; }

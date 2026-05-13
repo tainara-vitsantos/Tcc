@@ -28,27 +28,26 @@ public class AuthorizationService
         var usuario = await _context.Users.FindAsync(usuarioId);
         if (usuario == null) return false;
 
-        // Buscar Role de Professor uma única vez
+        // Verificar se está na role Professor
         var professorRoleId = await _context.Roles
             .Where(r => r.Name == "Professor")
             .Select(r => r.Id)
             .FirstOrDefaultAsync();
 
-        var isProfessor = usuario.NomeCompleto.Contains("Professor") || 
-            (professorRoleId != null && 
-             await _context.UserRoles.AnyAsync(ur => 
-                ur.UserId == usuarioId && ur.RoleId == professorRoleId));
+        var isProfessor = professorRoleId != null &&
+            await _context.UserRoles.AnyAsync(ur =>
+                ur.UserId == usuarioId && ur.RoleId == professorRoleId);
 
         if (isProfessor)
             return true;
 
         // Para alunos, verificar vínculo ativo
         return await _context.VinculosAlunoPaciente
-            .AnyAsync(v => 
-                v.AlunoId == usuarioId && 
-                v.PacienteId == pacienteId && 
-                v.StatusVinculo == StatusVinculo.Ativo && 
-                v.PermiteLeitura && 
+            .AnyAsync(v =>
+                v.AlunoId == usuarioId &&
+                v.PacienteId == pacienteId &&
+                v.StatusVinculo == StatusVinculo.Ativo &&
+                v.PermiteLeitura &&
                 v.Ativo);
     }
 
@@ -62,27 +61,26 @@ public class AuthorizationService
         var usuario = await _context.Users.FindAsync(usuarioId);
         if (usuario == null) return false;
 
-        // Buscar Role de Professor uma única vez
+        // Verificar se está na role Professor
         var professorRoleId = await _context.Roles
             .Where(r => r.Name == "Professor")
             .Select(r => r.Id)
             .FirstOrDefaultAsync();
 
-        var isProfessor = usuario.NomeCompleto.Contains("Professor") || 
-            (professorRoleId != null && 
-             await _context.UserRoles.AnyAsync(ur => 
-                ur.UserId == usuarioId && ur.RoleId == professorRoleId));
+        var isProfessor = professorRoleId != null &&
+            await _context.UserRoles.AnyAsync(ur =>
+                ur.UserId == usuarioId && ur.RoleId == professorRoleId);
 
         if (isProfessor)
             return true;
 
         // Para alunos, verificar vínculo ativo
         return await _context.VinculosAlunoPaciente
-            .AnyAsync(v => 
-                v.AlunoId == usuarioId && 
-                v.PacienteId == pacienteId && 
-                v.StatusVinculo == StatusVinculo.Ativo && 
-                v.PermiteEscrita && 
+            .AnyAsync(v =>
+                v.AlunoId == usuarioId &&
+                v.PacienteId == pacienteId &&
+                v.StatusVinculo == StatusVinculo.Ativo &&
+                v.PermiteEscrita &&
                 v.Ativo);
     }
 
@@ -102,10 +100,9 @@ public class AuthorizationService
             .FirstOrDefaultAsync();
 
         // Verificar se é professor
-        var isProfessor = usuario.NomeCompleto.Contains("Professor") || 
-            (professorRoleId != null && 
-             await _context.UserRoles.AnyAsync(ur => 
-                ur.UserId == usuarioId && ur.RoleId == professorRoleId));
+        var isProfessor = professorRoleId != null &&
+            await _context.UserRoles.AnyAsync(ur =>
+                ur.UserId == usuarioId && ur.RoleId == professorRoleId);
 
         if (isProfessor)
         {
@@ -114,9 +111,9 @@ public class AuthorizationService
 
         // Alunos: retornar pacientes com vínculo ativo
         return await _context.VinculosAlunoPaciente
-            .Where(v => 
-                v.AlunoId == usuarioId && 
-                v.StatusVinculo == StatusVinculo.Ativo && 
+            .Where(v =>
+                v.AlunoId == usuarioId &&
+                v.StatusVinculo == StatusVinculo.Ativo &&
                 v.Ativo)
             .Select(v => v.PacienteId)
             .ToListAsync();

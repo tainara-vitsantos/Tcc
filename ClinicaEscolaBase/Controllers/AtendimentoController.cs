@@ -136,6 +136,8 @@ public class AtendimentoController : Controller
             _context.Add(atendimento);
             await _context.SaveChangesAsync();
 
+            await AvaliarFrequenciaAsync(atendimento);
+
             // Registrar auditoria
             await _auditService.LogAsync(
                 usuarioId,
@@ -268,6 +270,48 @@ public class AtendimentoController : Controller
         var paciente = await _context.Pacientes.Include(x => x.Prontuario).AsNoTracking().FirstOrDefaultAsync(x => x.Id == pacienteId);
         ViewBag.PacienteNome = paciente?.NomeCompleto ?? "Não encontrado";
         ViewBag.ProntuarioNumero = paciente?.Prontuario?.NumeroProntuario ?? "N/A";
+    }
+
+    private async Task AvaliarFrequenciaAsync(Atendimento atendimento)
+    {
+        if (atendimento.StatusAtendimento != StatusAtendimento.FaltaPaciente && atendimento.StatusAtendimento != StatusAtendimento.FaltaAluno)
+            return;
+
+        if (atendimento.FaltaJustificada)
+            return;
+
+        var faltasRecentes = await _context.Atendimentos
+            .Where(x => x.PacienteId == atendimento.PacienteId &&
+                        (x.StatusAtendimento == StatusAtendimento.FaltaPaciente || x.StatusAtendimento == StatusAtendimento.FaltaAluno))
+            .OrderByDescending(x => x.DataHoraInicio)
+            .Take(3)
+            .ToListAsync();
+
+        var faltasNaoJustificadas = faltasRecentes.Count(x => !x.FaltaJustificada);
+        var faltasConsecutivas = 0;
+
+        foreach (var falta in faltasRecentes.OrderByDescending(x => x.DataHoraInicio))
+        {
+            if (!falta.FaltaJustificada)
+                faltasConsecutivas++;
+            else
+                break;
+        }
+
+        if (faltasNaoJustificadas >= 3 || faltasConsecutivas >= 2)
+        {
+            var prontuario = await _context.Prontuarios.FirstOrDefaultAsync(p => p.Id == atendimento.ProntuarioId);
+            if (prontuario == null)
+                return;
+
+            if (prontuario.SituacaoProntuario != SituacaoProntuario.InativoDesligado)
+            {
+                prontuario.SituacaoProntuario = SituacaoProntuario.InativoDesligado;
+                _context.Update(prontuario);
+                await _context.SaveChangesAsync();
+                TempData["MensagemAlertaFaltas"] = "O prontuário foi marcado como Inativo/Desligado devido a faltas injustificadas acumuladas ou consecutivas.";
+            }
+        }
     }
 
     private void LimparValidacoesNavegacao()

@@ -4,45 +4,253 @@
     ViewData["Title"] = "Novo Paciente";
 }
 
-<h1>Novo Paciente</h1>
+<div class="container-fluid">
+    <h1 class="mb-4">@ViewData["Title"]</h1>
 
-<form asp-action="Create" method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+    <form asp-action="Create" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-    <div class="mb-3">
-        <label asp-for="NomeCompleto" class="form-label"></label>
-        <input asp-for="NomeCompleto" class="form-control" />
-        <span asp-validation-for="NomeCompleto" class="text-danger"></span>
-    </div>
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" id="pacienteTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="dados-pessoais-tab" data-bs-toggle="tab" data-bs-target="#dados-pessoais" type="button" role="tab" aria-controls="dados-pessoais" aria-selected="true">Dados Pessoais</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="familia-social-tab" data-bs-toggle="tab" data-bs-target="#familia-social" type="button" role="tab" aria-controls="familia-social" aria-selected="false">Família e Social</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="historico-saude-tab" data-bs-toggle="tab" data-bs-target="#historico-saude" type="button" role="tab" aria-controls="historico-saude" aria-selected="false">Histórico de Saúde</button>
+            </li>
+        </ul>
 
-    <div class="mb-3">
-        <label asp-for="DataNascimento" class="form-label"></label>
-        <input asp-for="DataNascimento" type="date" class="form-control" />
-        <span asp-validation-for="DataNascimento" class="text-danger"></span>
-    </div>
+        <!-- Tab panes -->
+        <div class="tab-content mt-4" id="pacienteTabContent">
+            <!-- Dados Pessoais Tab -->
+            <div class="tab-pane fade show active" id="dados-pessoais" role="tabpanel" aria-labelledby="dados-pessoais-tab">
+                <div class="card">
+                    <div class="card-header fw-bold">Informações Pessoais</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="NomeCompleto" class="form-label"></label>
+                                <input asp-for="NomeCompleto" class="form-control" />
+                                <span asp-validation-for="NomeCompleto" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label asp-for="DataNascimento" class="form-label"></label>
+                                <input asp-for="DataNascimento" type="date" class="form-control" />
+                                <span asp-validation-for="DataNascimento" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label asp-for="Idade" class="form-label"></label>
+                                <input asp-for="Idade" class="form-control" type="number" />
+                                <span asp-validation-for="Idade" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <label asp-for="Sexo" class="form-label"></label>
+                                <select asp-for="Sexo" class="form-select">
+                                    <option value="">Selecione</option>
+                                    <option>Masculino</option>
+                                    <option>Feminino</option>
+                                </select>
+                                <span asp-validation-for="Sexo" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label asp-for="EstadoCivil" class="form-label"></label>
+                                <input asp-for="EstadoCivil" class="form-control" />
+                                <span asp-validation-for="EstadoCivil" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label asp-for="Naturalidade" class="form-label"></label>
+                                <input asp-for="Naturalidade" class="form-control" />
+                                <span asp-validation-for="Naturalidade" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label asp-for="EstadoNascimento" class="form-label"></label>
+                                <input asp-for="EstadoNascimento" class="form-control" />
+                                <span asp-validation-for="EstadoNascimento" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="Escolaridade" class="form-label"></label>
+                                <input asp-for="Escolaridade" class="form-control" />
+                                <span asp-validation-for="Escolaridade" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="Profissao" class="form-label"></label>
+                                <input asp-for="Profissao" class="form-control" />
+                                <span asp-validation-for="Profissao" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="Religiao" class="form-label"></label>
+                                <input asp-for="Religiao" class="form-control" />
+                                <span asp-validation-for="Religiao" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-    <div class="mb-3">
-        <label asp-for="Sexo" class="form-label"></label>
-        <select asp-for="Sexo" class="form-select">
-            <option value="">Selecione</option>
-            <option>Masculino</option>
-            <option>Feminino</option>
-        </select>
-        <span asp-validation-for="Sexo" class="text-danger"></span>
-    </div>
+                <div class="card mt-3">
+                    <div class="card-header fw-bold">Documentos de Identificação</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="CPF" class="form-label"></label>
+                                <input asp-for="CPF" class="form-control" />
+                                <span asp-validation-for="CPF" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="RG" class="form-label"></label>
+                                <input asp-for="RG" class="form-control" />
+                                <span asp-validation-for="RG" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-    <div class="mb-3">
-        <label asp-for="CPF" class="form-label"></label>
-        <input asp-for="CPF" class="form-control" />
-        <span asp-validation-for="CPF" class="text-danger"></span>
-    </div>
+                <div class="card mt-3">
+                    <div class="card-header fw-bold">Endereço e Contato</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8 mb-3">
+                                <label asp-for="EnderecoLogradouro" class="form-label"></label>
+                                <input asp-for="EnderecoLogradouro" class="form-control" />
+                                <span asp-validation-for="EnderecoLogradouro" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="EnderecoNumero" class="form-label"></label>
+                                <input asp-for="EnderecoNumero" class="form-control" />
+                                <span asp-validation-for="EnderecoNumero" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="Bairro" class="form-label"></label>
+                                <input asp-for="Bairro" class="form-control" />
+                                <span asp-validation-for="Bairro" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="Cidade" class="form-label"></label>
+                                <input asp-for="Cidade" class="form-control" />
+                                <span asp-validation-for="Cidade" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="Estado" class="form-label"></label>
+                                <input asp-for="Estado" class="form-control" />
+                                <span asp-validation-for="Estado" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="CEP" class="form-label"></label>
+                                <input asp-for="CEP" class="form-control" />
+                                <span asp-validation-for="CEP" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="Telefone" class="form-label"></label>
+                                <input asp-for="Telefone" class="form-control" />
+                                <span asp-validation-for="Telefone" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="TelefoneRecado" class="form-label"></label>
+                                <input asp-for="TelefoneRecado" class="form-control" />
+                                <span asp-validation-for="TelefoneRecado" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <div class="mb-3">
-        <label asp-for="Telefone" class="form-label"></label>
-        <input asp-for="Telefone" class="form-control" />
-        <span asp-validation-for="Telefone" class="text-danger"></span>
-    </div>
+            <!-- Família e Social Tab -->
+            <div class="tab-pane fade" id="familia-social" role="tabpanel" aria-labelledby="familia-social-tab">
+                <div class="card">
+                    <div class="card-header fw-bold">Filiação</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="NomePai" class="form-label"></label>
+                                <input asp-for="NomePai" class="form-control" />
+                                <span asp-validation-for="NomePai" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="NomeMae" class="form-label"></label>
+                                <input asp-for="NomeMae" class="form-control" />
+                                <span asp-validation-for="NomeMae" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="NomeResponsavel" class="form-label"></label>
+                                <input asp-for="NomeResponsavel" class="form-control" />
+                                <span asp-validation-for="NomeResponsavel" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="GrauParentescoResponsavel" class="form-label"></label>
+                                <input asp-for="GrauParentescoResponsavel" class="form-control" />
+                                <span asp-validation-for="GrauParentescoResponsavel" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <button type="submit" class="btn btn-primary">Salvar</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
-</form>
+            <!-- Histórico de Saúde Tab -->
+            <div class="tab-pane fade" id="historico-saude" role="tabpanel" aria-labelledby="historico-saude-tab">
+                <div class="card">
+                    <div class="card-header fw-bold">Histórico de Tratamentos</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check">
+                                    <input asp-for="TratamentoPsicologico" class="form-check-input" />
+                                    <label asp-for="TratamentoPsicologico" class="form-check-label"></label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check">
+                                    <input asp-for="TratamentoNeurologico" class="form-check-input" />
+                                    <label asp-for="TratamentoNeurologico" class="form-check-label"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check">
+                                    <input asp-for="TratamentoPsiquiatrico" class="form-check-input" />
+                                    <label asp-for="TratamentoPsiquiatrico" class="form-check-label"></label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check">
+                                    <input asp-for="TratamentoCardiologico" class="form-check-input" />
+                                    <label asp-for="TratamentoCardiologico" class="form-check-label"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check">
+                                    <input asp-for="Internacao" class="form-check-input" />
+                                    <label asp-for="Internacao" class="form-check-label"></label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="MotivoInternacao" class="form-label"></label>
+                                <input asp-for="MotivoInternacao" class="form-control" />
+                                <span asp-validation-for="MotivoInternacao" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">Salvar Paciente</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>

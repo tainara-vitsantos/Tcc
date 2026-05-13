@@ -112,6 +112,8 @@ public class PacienteController : Controller
                     TelefoneRecado = viewModel.TelefoneRecado,
                     NomePai = viewModel.NomePai,
                     NomeMae = viewModel.NomeMae,
+                    NomeResponsavel = viewModel.NomeResponsavel,
+                    GrauParentescoResponsavel = viewModel.GrauParentescoResponsavel,
                     TratamentoPsicologico = viewModel.TratamentoPsicologico,
                     TratamentoNeurologico = viewModel.TratamentoNeurologico,
                     TratamentoPsiquiatrico = viewModel.TratamentoPsiquiatrico,
@@ -189,6 +191,8 @@ public class PacienteController : Controller
             TelefoneRecado = paciente.TelefoneRecado,
             NomePai = paciente.NomePai,
             NomeMae = paciente.NomeMae,
+            NomeResponsavel = paciente.NomeResponsavel,
+            GrauParentescoResponsavel = paciente.GrauParentescoResponsavel,
             Observacoes = paciente.Observacoes
         };
 
@@ -238,6 +242,8 @@ public class PacienteController : Controller
                 paciente.TelefoneRecado = viewModel.TelefoneRecado;
                 paciente.NomePai = viewModel.NomePai;
                 paciente.NomeMae = viewModel.NomeMae;
+                paciente.NomeResponsavel = viewModel.NomeResponsavel;
+                paciente.GrauParentescoResponsavel = viewModel.GrauParentescoResponsavel;
                 paciente.TratamentoPsicologico = viewModel.TratamentoPsicologico;
                 paciente.TratamentoNeurologico = viewModel.TratamentoNeurologico;
                 paciente.TratamentoPsiquiatrico = viewModel.TratamentoPsiquiatrico;
