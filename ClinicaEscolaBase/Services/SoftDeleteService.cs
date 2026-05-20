@@ -1,5 +1,6 @@
 using ClinicaEscolaBase.Data;
 using ClinicaEscolaBase.Models;
+using ClinicaEscolaBase.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClinicaEscolaBase.Services;
@@ -9,7 +10,7 @@ namespace ClinicaEscolaBase.Services;
 /// Marca registros sensíveis como inativos em vez de deletar do BD,
 /// preservando o histórico acadêmico e de auditoria.
 /// </summary>
-public class SoftDeleteService(ApplicationDbContext context)
+public class SoftDeleteService(ApplicationDbContext context) 
 {
 
     /// <summary>

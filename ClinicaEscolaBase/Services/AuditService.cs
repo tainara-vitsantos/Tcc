@@ -1,6 +1,7 @@
 using ClinicaEscolaBase.Data;
 using ClinicaEscolaBase.Enums;
 using ClinicaEscolaBase.Models;
+using ClinicaEscolaBase.Services.Interfaces;
 using System.Text.Json;
 
 namespace ClinicaEscolaBase.Services;
@@ -9,7 +10,7 @@ namespace ClinicaEscolaBase.Services;
 /// Serviço para implementar a trilha de auditoria automática.
 /// Registra: Quem fez, Quando fez e Qual registro foi afetado.
 /// </summary>
-public class AuditService(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
+public class AuditService(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor) : IAuditService
 {
 
     /// <summary>

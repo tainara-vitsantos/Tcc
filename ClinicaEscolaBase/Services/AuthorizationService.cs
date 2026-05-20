@@ -1,5 +1,6 @@
 using ClinicaEscolaBase.Data;
 using ClinicaEscolaBase.Enums;
+using ClinicaEscolaBase.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClinicaEscolaBase.Services;
@@ -9,7 +10,7 @@ namespace ClinicaEscolaBase.Services;
 /// Implementa a segurança acadêmica: Um Aluno só pode visualizar ou editar dados de um Paciente 
 /// se houver um vínculo ativo e liberado.
 /// </summary>
-public class AuthorizationService(ApplicationDbContext context)
+public class AuthorizationService(ApplicationDbContext context) : IAuthorizationService
 {
 
     /// <summary>

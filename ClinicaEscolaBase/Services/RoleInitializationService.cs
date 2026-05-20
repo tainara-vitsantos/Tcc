@@ -1,3 +1,4 @@
+using ClinicaEscolaBase.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
 namespace ClinicaEscolaBase.Services;
@@ -6,7 +7,7 @@ namespace ClinicaEscolaBase.Services;
 /// Serviço para inicializar os Roles (perfis) do sistema automaticamente.
 /// Define Professor (acesso total) e Aluno (acesso restrito).
 /// </summary>
-public class RoleInitializationService(RoleManager<IdentityRole> roleManager)
+public class RoleInitializationService(RoleManager<IdentityRole> roleManager):IRoleInitializationService
 {
 
     /// <summary>
