@@ -9,16 +9,8 @@ namespace ClinicaEscolaBase.Services;
 /// Serviço para implementar a trilha de auditoria automática.
 /// Registra: Quem fez, Quando fez e Qual registro foi afetado.
 /// </summary>
-public class AuditService
+public class AuditService(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
 {
-    private readonly ApplicationDbContext _context;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-
-    public AuditService(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
-    {
-        _context = context;
-        _httpContextAccessor = httpContextAccessor;
-    }
 
     /// <summary>
     /// Registra uma ação de auditoria.
@@ -34,7 +26,7 @@ public class AuditService
         object? valoresAntes = null,
         object? valoresDepois = null)
     {
-        var httpContext = _httpContextAccessor.HttpContext;
+        var httpContext = httpContextAccessor.HttpContext;
         var ip = httpContext?.Connection?.RemoteIpAddress?.ToString();
         var userAgent = httpContext?.Request?.Headers["User-Agent"].ToString();
 
@@ -54,7 +46,7 @@ public class AuditService
             Observacoes = observacoes
         };
 
-        _context.Auditorias.Add(auditoria);
+        context.Auditorias.Add(auditoria);
         return Task.CompletedTask;
     }
 
@@ -145,7 +137,7 @@ public class AuditService
     {
         try
         {
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
         catch (Exception ex)
         {

@@ -5,12 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ClinicaEscolaBase.Data;
 
-public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options)
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
-    {
-    }
-
     public DbSet<Paciente> Pacientes => Set<Paciente>();
     public DbSet<Prontuario> Prontuarios => Set<Prontuario>();
     public DbSet<TratamentoAnteriorPaciente> TratamentosAnterioresPaciente => Set<TratamentoAnteriorPaciente>();

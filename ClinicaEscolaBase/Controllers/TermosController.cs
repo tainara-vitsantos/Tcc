@@ -11,33 +11,20 @@ using Microsoft.EntityFrameworkCore;
 namespace ClinicaEscolaBase.Controllers;
 
 [Authorize]
-public class TermosController : Controller
+public class TermosController(
+    ApplicationDbContext context,
+    AuthorizationService authorizationService,
+    AuditService auditService,
+    UserManager<ApplicationUser> userManager) : Controller
 {
-    private readonly ApplicationDbContext _context;
-    private readonly AuthorizationService _authorizationService;
-    private readonly AuditService _auditService;
-    private readonly UserManager<ApplicationUser> _userManager;
-
-    public TermosController(
-        ApplicationDbContext context,
-        AuthorizationService authorizationService,
-        AuditService auditService,
-        UserManager<ApplicationUser> userManager)
-    {
-        _context = context;
-        _authorizationService = authorizationService;
-        _auditService = auditService;
-        _userManager = userManager;
-    }
-
     [HttpGet]
     public async Task<IActionResult> UploadContratoPsicoterapiaIndividual(Guid pacienteId)
     {
-        var usuarioId = _userManager.GetUserId(User) ?? string.Empty;
-        if (!await _authorizationService.CanWritePacienteAsync(usuarioId, pacienteId))
+        var usuarioId = userManager.GetUserId(User) ?? string.Empty;
+        if (!await authorizationService.CanWritePacienteAsync(usuarioId, pacienteId))
             return Forbid();
 
-        var paciente = await _context.Pacientes.Include(p => p.Prontuario).FirstOrDefaultAsync(p => p.Id == pacienteId);
+        var paciente = await context.Pacientes.Include(p => p.Prontuario).FirstOrDefaultAsync(p => p.Id == pacienteId);
         if (paciente == null || paciente.Prontuario == null)
             return NotFound();
 
@@ -55,8 +42,8 @@ public class TermosController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> UploadContratoPsicoterapiaIndividual(TermoUploadViewModel viewModel)
     {
-        var usuarioId = _userManager.GetUserId(User) ?? string.Empty;
-        if (!await _authorizationService.CanWritePacienteAsync(usuarioId, viewModel.PacienteId))
+        var usuarioId = userManager.GetUserId(User) ?? string.Empty;
+        if (!await authorizationService.CanWritePacienteAsync(usuarioId, viewModel.PacienteId))
             return Forbid();
 
         if (viewModel.Arquivo == null)
@@ -76,7 +63,7 @@ public class TermosController : Controller
         if (!ModelState.IsValid)
             return View(viewModel);
 
-        var paciente = await _context.Pacientes.Include(p => p.Prontuario).FirstOrDefaultAsync(p => p.Id == viewModel.PacienteId);
+        var paciente = await context.Pacientes.Include(p => p.Prontuario).FirstOrDefaultAsync(p => p.Id == viewModel.PacienteId);
         if (paciente == null || paciente.Prontuario == null)
             return NotFound();
 
@@ -91,8 +78,8 @@ public class TermosController : Controller
             Observacoes = "Contrato de Psicoterapia Individual enviado como anexo."
         };
 
-        _context.DocumentosClinicos.Add(documento);
-        await _context.SaveChangesAsync();
+        context.DocumentosClinicos.Add(documento);
+        await context.SaveChangesAsync();
 
         var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "termos");
         if (!Directory.Exists(uploadsFolder))
@@ -118,11 +105,11 @@ public class TermosController : Controller
             DataUpload = DateTime.UtcNow
         };
 
-        _context.Anexos.Add(anexo);
-        await _context.SaveChangesAsync();
+        context.Anexos.Add(anexo);
+        await context.SaveChangesAsync();
 
-        await _auditService.LogAsync(usuarioId, TipoAcaoAuditoria.Insercao, nameof(Anexo), anexo.Id.ToString(), viewModel.PacienteId, documento.ProntuarioId, "Contrato de Psicoterapia Individual enviado");
-        await _auditService.SaveAuditAsync();
+        await auditService.LogAsync(usuarioId, TipoAcaoAuditoria.Insercao, nameof(Anexo), anexo.Id.ToString(), viewModel.PacienteId, documento.ProntuarioId, "Contrato de Psicoterapia Individual enviado");
+        await auditService.SaveAuditAsync();
 
         TempData["MensagemSucesso"] = "Contrato de Psicoterapia Individual enviado com sucesso.";
         return RedirectToAction("Details", "Paciente", new { id = viewModel.PacienteId });
@@ -131,11 +118,11 @@ public class TermosController : Controller
     [HttpGet]
     public async Task<IActionResult> UploadAutorizacaoMenores(Guid pacienteId)
     {
-        var usuarioId = _userManager.GetUserId(User) ?? string.Empty;
-        if (!await _authorizationService.CanWritePacienteAsync(usuarioId, pacienteId))
+        var usuarioId = userManager.GetUserId(User) ?? string.Empty;
+        if (!await authorizationService.CanWritePacienteAsync(usuarioId, pacienteId))
             return Forbid();
 
-        var paciente = await _context.Pacientes.Include(p => p.Prontuario).FirstOrDefaultAsync(p => p.Id == pacienteId);
+        var paciente = await context.Pacientes.Include(p => p.Prontuario).FirstOrDefaultAsync(p => p.Id == pacienteId);
         if (paciente == null || paciente.Prontuario == null)
             return NotFound();
 
@@ -153,8 +140,8 @@ public class TermosController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> UploadAutorizacaoMenores(TermoUploadViewModel viewModel)
     {
-        var usuarioId = _userManager.GetUserId(User) ?? string.Empty;
-        if (!await _authorizationService.CanWritePacienteAsync(usuarioId, viewModel.PacienteId))
+        var usuarioId = userManager.GetUserId(User) ?? string.Empty;
+        if (!await authorizationService.CanWritePacienteAsync(usuarioId, viewModel.PacienteId))
             return Forbid();
 
         if (viewModel.Arquivo == null)
@@ -174,7 +161,7 @@ public class TermosController : Controller
         if (!ModelState.IsValid)
             return View(viewModel);
 
-        var paciente = await _context.Pacientes.Include(p => p.Prontuario).FirstOrDefaultAsync(p => p.Id == viewModel.PacienteId);
+        var paciente = await context.Pacientes.Include(p => p.Prontuario).FirstOrDefaultAsync(p => p.Id == viewModel.PacienteId);
         if (paciente == null || paciente.Prontuario == null)
             return NotFound();
 
@@ -189,8 +176,8 @@ public class TermosController : Controller
             Observacoes = "Autorização de Menores enviada como anexo."
         };
 
-        _context.DocumentosClinicos.Add(documento);
-        await _context.SaveChangesAsync();
+        context.DocumentosClinicos.Add(documento);
+        await context.SaveChangesAsync();
 
         var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "termos");
         if (!Directory.Exists(uploadsFolder))
@@ -216,11 +203,11 @@ public class TermosController : Controller
             DataUpload = DateTime.UtcNow
         };
 
-        _context.Anexos.Add(anexo);
-        await _context.SaveChangesAsync();
+        context.Anexos.Add(anexo);
+        await context.SaveChangesAsync();
 
-        await _auditService.LogAsync(usuarioId, TipoAcaoAuditoria.Insercao, nameof(Anexo), anexo.Id.ToString(), viewModel.PacienteId, documento.ProntuarioId, "Autorização de Menores enviada");
-        await _auditService.SaveAuditAsync();
+        await auditService.LogAsync(usuarioId, TipoAcaoAuditoria.Insercao, nameof(Anexo), anexo.Id.ToString(), viewModel.PacienteId, documento.ProntuarioId, "Autorização de Menores enviada");
+        await auditService.SaveAuditAsync();
 
         TempData["MensagemSucesso"] = "Autorização de Menores enviada com sucesso.";
         return RedirectToAction("Details", "Paciente", new { id = viewModel.PacienteId });

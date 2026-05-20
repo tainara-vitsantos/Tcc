@@ -8,19 +8,13 @@ using Microsoft.EntityFrameworkCore;
 namespace ClinicaEscolaBase.Controllers;
 
 [Authorize(Roles = "Professor")]
-public class AuditoriaController : Controller
+public class AuditoriaController(ApplicationDbContext context) : Controller
 {
-    private readonly ApplicationDbContext _context;
-
-    public AuditoriaController(ApplicationDbContext context)
-    {
-        _context = context;
-    }
 
     // GET: Auditoria
     public async Task<IActionResult> Index(int? pageNumber, string? usuario, string? entidade, TipoAcaoAuditoria? acao)
     {
-        var query = _context.Auditorias
+        var query = context.Auditorias
             .Include(a => a.Usuario)
             .AsQueryable();
 
@@ -62,7 +56,7 @@ public class AuditoriaController : Controller
             return NotFound();
         }
 
-        var auditoria = await _context.Auditorias
+        var auditoria = await context.Auditorias
             .Include(a => a.Usuario)
             .FirstOrDefaultAsync(m => m.Id == id);
 

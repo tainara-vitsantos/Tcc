@@ -9,29 +9,23 @@ namespace ClinicaEscolaBase.Services;
 /// Marca registros sensíveis como inativos em vez de deletar do BD,
 /// preservando o histórico acadêmico e de auditoria.
 /// </summary>
-public class SoftDeleteService
+public class SoftDeleteService(ApplicationDbContext context)
 {
-    private readonly ApplicationDbContext _context;
-
-    public SoftDeleteService(ApplicationDbContext context)
-    {
-        _context = context;
-    }
 
     /// <summary>
     /// Marca um DocumentoClinico como inativo (soft delete).
     /// </summary>
     public async Task SoftDeleteDocumentoAsync(int documentoId, string usuarioId, string motivo = "")
     {
-        var documento = await _context.DocumentosClinicos.FindAsync(documentoId);
+        var documento = await context.DocumentosClinicos.FindAsync(documentoId);
         if (documento != null)
         {
             documento.Ativo = false;
             documento.ExcluidoLogicamente = true;
             documento.DataAtualizacao = DateTime.UtcNow;
 
-            _context.DocumentosClinicos.Update(documento);
-            await _context.SaveChangesAsync();
+            context.DocumentosClinicos.Update(documento);
+            await context.SaveChangesAsync();
         }
     }
 
@@ -40,14 +34,14 @@ public class SoftDeleteService
     /// </summary>
     public async Task SoftDeleteAtendimentoAsync(int atendimentoId)
     {
-        var atendimento = await _context.Atendimentos.FindAsync(atendimentoId);
+        var atendimento = await context.Atendimentos.FindAsync(atendimentoId);
         if (atendimento != null)
         {
             atendimento.Ativo = false;
             atendimento.DataAtualizacao = DateTime.UtcNow;
 
-            _context.Atendimentos.Update(atendimento);
-            await _context.SaveChangesAsync();
+            context.Atendimentos.Update(atendimento);
+            await context.SaveChangesAsync();
         }
     }
 
@@ -56,14 +50,14 @@ public class SoftDeleteService
     /// </summary>
     public async Task SoftDeleteEvolucaoAsync(int evolucaoId)
     {
-        var evolucao = await _context.EvolucoesAtendimento.FindAsync(evolucaoId);
+        var evolucao = await context.EvolucoesAtendimento.FindAsync(evolucaoId);
         if (evolucao != null)
         {
             evolucao.Ativo = false;
             evolucao.DataAtualizacao = DateTime.UtcNow;
 
-            _context.EvolucoesAtendimento.Update(evolucao);
-            await _context.SaveChangesAsync();
+            context.EvolucoesAtendimento.Update(evolucao);
+            await context.SaveChangesAsync();
         }
     }
 
@@ -72,15 +66,15 @@ public class SoftDeleteService
     /// </summary>
     public async Task RestoreDocumentoAsync(int documentoId)
     {
-        var documento = await _context.DocumentosClinicos.FindAsync(documentoId);
+        var documento = await context.DocumentosClinicos.FindAsync(documentoId);
         if (documento != null)
         {
             documento.Ativo = true;
             documento.ExcluidoLogicamente = false;
             documento.DataAtualizacao = DateTime.UtcNow;
 
-            _context.DocumentosClinicos.Update(documento);
-            await _context.SaveChangesAsync();
+            context.DocumentosClinicos.Update(documento);
+            await context.SaveChangesAsync();
         }
     }
 

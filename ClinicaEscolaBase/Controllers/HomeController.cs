@@ -10,25 +10,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ClinicaEscolaBase.Controllers;
 
-public class HomeController : Controller
+public class HomeController(
+    ILogger<HomeController> logger,
+    ApplicationDbContext context,
+    UserManager<ApplicationUser> userManager,
+    AuthorizationService authorizationService) : Controller
 {
-    private readonly ILogger<HomeController> _logger;
-    private readonly ApplicationDbContext _context;
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly AuthorizationService _authorizationService;
-
-    public HomeController(
-        ILogger<HomeController> logger,
-        ApplicationDbContext context,
-        UserManager<ApplicationUser> userManager,
-        AuthorizationService authorizationService)
-    {
-        _logger = logger;
-        _context = context;
-        _userManager = userManager;
-        _authorizationService = authorizationService;
-    }
-
     public async Task<IActionResult> Index()
     {
         // Se não está autenticado, mostra página pública
@@ -57,12 +44,12 @@ public class HomeController : Controller
     private async Task<IActionResult> DashboardProfessor()
     {
         // Estatísticas Globais
-        var totalPacientes = await _context.Pacientes.CountAsync();
-        var totalProntuariosAtivos = await _context.Prontuarios
+        var totalPacientes = await context.Pacientes.CountAsync();
+        var totalProntuariosAtivos = await context.Prontuarios
             .CountAsync(p => p.SituacaoProntuario == SituacaoProntuario.Ativo);
-        var atendimentosHoje = await _context.Atendimentos
+        var atendimentosHoje = await context.Atendimentos
             .CountAsync(a => a.DataHoraInicio.Date == DateTime.Today);
-        var atendimentosRealizados = await _context.Atendimentos
+        var atendimentosRealizados = await context.Atendimentos
             .CountAsync(a => a.StatusAtendimento == StatusAtendimento.Realizado);
 
         ViewBag.TotalPacientes = totalPacientes;
@@ -71,7 +58,7 @@ public class HomeController : Controller
         ViewBag.AtendimentosRealizados = atendimentosRealizados;
 
         // Próximos atendimentos (global)
-        var proximosAtendimentos = await _context.Atendimentos
+        var proximosAtendimentos = await context.Atendimentos
             .Include(a => a.Paciente)
             .Include(a => a.Aluno)
             .Where(a => a.StatusAtendimento == StatusAtendimento.Agendado)
@@ -80,7 +67,7 @@ public class HomeController : Controller
             .ToListAsync();
 
         // Atividade recente de auditoria
-        var auditoriasRecentes = await _context.Auditorias
+        var auditoriasRecentes = await context.Auditorias
             .Include(a => a.Usuario)
             .Include(a => a.Paciente)
             .OrderByDescending(a => a.DataHora)
@@ -98,18 +85,18 @@ public class HomeController : Controller
     /// </summary>
     private async Task<IActionResult> DashboardAluno()
     {
-        var usuarioId = _userManager.GetUserId(User);
+        var usuarioId = userManager.GetUserId(User);
         if (usuarioId == null) return Unauthorized();
 
         // Estatísticas pessoais do aluno
-        var acessiblePacienteIds = await _authorizationService.GetAcessiblePacienteIdsAsync(usuarioId);
+        var acessiblePacienteIds = await authorizationService.GetAcessiblePacienteIdsAsync(usuarioId);
 
         var meusPacientes = acessiblePacienteIds.Count;
-        var meusAtendimentosAgendados = await _context.Atendimentos
+        var meusAtendimentosAgendados = await context.Atendimentos
             .CountAsync(a => a.AlunoId == usuarioId && a.StatusAtendimento == StatusAtendimento.Agendado);
-        var meusAtendimentosRealizados = await _context.Atendimentos
+        var meusAtendimentosRealizados = await context.Atendimentos
             .CountAsync(a => a.AlunoId == usuarioId && a.StatusAtendimento == StatusAtendimento.Realizado);
-        var meusAtendimentosHoje = await _context.Atendimentos
+        var meusAtendimentosHoje = await context.Atendimentos
             .CountAsync(a => a.AlunoId == usuarioId && a.DataHoraInicio.Date == DateTime.Today);
 
         ViewBag.MeusPacientes = meusPacientes;
@@ -118,7 +105,7 @@ public class HomeController : Controller
         ViewBag.MeusAtendimentosHoje = meusAtendimentosHoje;
 
         // Meus próximos atendimentos
-        var meusProximosAtendimentos = await _context.Atendimentos
+        var meusProximosAtendimentos = await context.Atendimentos
             .Include(a => a.Paciente)
             .Where(a => a.AlunoId == usuarioId && a.StatusAtendimento == StatusAtendimento.Agendado)
             .OrderBy(a => a.DataHoraInicio)
@@ -126,7 +113,7 @@ public class HomeController : Controller
             .ToListAsync();
 
         // Meus pacientes recentemente atendidos
-        var meusPacientesRecentes = await _context.Atendimentos
+        var meusPacientesRecentes = await context.Atendimentos
             .Include(a => a.Paciente)
             .Where(a => a.AlunoId == usuarioId)
             .OrderByDescending(a => a.DataHoraInicio)

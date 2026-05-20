@@ -6,14 +6,8 @@ namespace ClinicaEscolaBase.Services;
 /// Serviço para inicializar os Roles (perfis) do sistema automaticamente.
 /// Define Professor (acesso total) e Aluno (acesso restrito).
 /// </summary>
-public class RoleInitializationService
+public class RoleInitializationService(RoleManager<IdentityRole> roleManager)
 {
-    private readonly RoleManager<IdentityRole> _roleManager;
-
-    public RoleInitializationService(RoleManager<IdentityRole> roleManager)
-    {
-        _roleManager = roleManager;
-    }
 
     /// <summary>
     /// Inicializa os roles padrão do sistema se não existirem.
@@ -24,9 +18,9 @@ public class RoleInitializationService
 
         foreach (var roleName in roles)
         {
-            if (!await _roleManager.RoleExistsAsync(roleName))
+            if (!await roleManager.RoleExistsAsync(roleName))
             {
-                await _roleManager.CreateAsync(new IdentityRole(roleName));
+                await roleManager.CreateAsync(new IdentityRole(roleName));
             }
         }
     }

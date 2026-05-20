@@ -11,35 +11,23 @@ using Microsoft.EntityFrameworkCore;
 namespace ClinicaEscolaBase.Controllers;
 
 [Authorize]
-public class ProntuarioController : Controller
+public class ProntuarioController(
+    ApplicationDbContext context,
+    AuthorizationService authorizationService,
+    UserManager<ApplicationUser> userManager,
+    AuditService auditService) : Controller
 {
-    private readonly ApplicationDbContext _context;
-    private readonly AuthorizationService _authorizationService;
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly AuditService _auditService;
-
-    public ProntuarioController(
-        ApplicationDbContext context,
-        AuthorizationService authorizationService,
-        UserManager<ApplicationUser> userManager,
-        AuditService auditService)
-    {
-        _context = context;
-        _authorizationService = authorizationService;
-        _userManager = userManager;
-        _auditService = auditService;
-    }
 
     // LISTAGEM GERAL
     public async Task<IActionResult> Index()
     {
-        var usuarioId = _userManager.GetUserId(User);
+        var usuarioId = userManager.GetUserId(User);
         if (usuarioId == null) return Unauthorized();
 
         // Alunos veem apenas prontuários de pacientes vinculados
-        var acessibleIds = await _authorizationService.GetAcessiblePacienteIdsAsync(usuarioId);
+        var acessibleIds = await authorizationService.GetAcessiblePacienteIdsAsync(usuarioId);
 
-        var prontuarios = await _context.Prontuarios
+        var prontuarios = await context.Prontuarios
             .Include(x => x.Paciente)
             .Where(p => acessibleIds.Contains(p.PacienteId))
             .AsNoTracking()
@@ -54,10 +42,10 @@ public class ProntuarioController : Controller
     {
         if (id == null) return NotFound();
 
-        var usuarioId = _userManager.GetUserId(User);
+        var usuarioId = userManager.GetUserId(User);
         if (usuarioId == null) return Unauthorized();
 
-        var prontuario = await _context.Prontuarios
+        var prontuario = await context.Prontuarios
             .Include(x => x.Paciente)
             .Include(x => x.DocumentosClinicos)
             .AsNoTracking()
@@ -66,12 +54,12 @@ public class ProntuarioController : Controller
         if (prontuario == null) return NotFound();
 
         // Validar autorização
-        if (!await _authorizationService.CanReadPacienteAsync(usuarioId, prontuario.PacienteId))
+        if (!await authorizationService.CanReadPacienteAsync(usuarioId, prontuario.PacienteId))
             return Forbid();
 
         // Registrar auditoria
-        await _auditService.LogVisualizacaoProntuarioAsync(usuarioId, prontuario.Id, prontuario.PacienteId);
-        await _auditService.SaveAuditAsync();
+        await auditService.LogVisualizacaoProntuarioAsync(usuarioId, prontuario.Id, prontuario.PacienteId);
+        await auditService.SaveAuditAsync();
 
         return View(prontuario);
     }
@@ -82,7 +70,7 @@ public class ProntuarioController : Controller
     {
         if (pacienteId.HasValue)
         {
-            var paciente = await _context.Pacientes.FindAsync(pacienteId.Value);
+            var paciente = await context.Pacientes.FindAsync(pacienteId.Value);
             if (paciente != null)
             {
                 ViewBag.PacienteNome = paciente.NomeCompleto;
@@ -114,14 +102,14 @@ public class ProntuarioController : Controller
         {
             try 
             {
-                var usuarioId = _userManager.GetUserId(User);
+                var usuarioId = userManager.GetUserId(User);
                 if (usuarioId == null) return Unauthorized();
 
-                _context.Add(prontuario);
-                await _context.SaveChangesAsync();
+                context.Add(prontuario);
+                await context.SaveChangesAsync();
 
                 // Registrar auditoria
-                await _auditService.LogAsync(
+                await auditService.LogAsync(
                     usuarioId,
                     TipoAcaoAuditoria.Insercao,
                     nameof(Prontuario),
@@ -129,7 +117,7 @@ public class ProntuarioController : Controller
                     prontuario.PacienteId,
                     prontuario.Id,
                     $"Prontuário {prontuario.NumeroProntuario} criado");
-                await _auditService.SaveAuditAsync();
+                await auditService.SaveAuditAsync();
                 
                 TempData["MensagemSucesso"] = "Prontuário aberto com sucesso! Agora você já pode agendar atendimentos.";
                 
@@ -151,17 +139,17 @@ public class ProntuarioController : Controller
     {
         if (id == null) return NotFound();
 
-        var usuarioId = _userManager.GetUserId(User);
+        var usuarioId = userManager.GetUserId(User);
         if (usuarioId == null) return Unauthorized();
 
-        var prontuario = await _context.Prontuarios
+        var prontuario = await context.Prontuarios
             .Include(p => p.Paciente)
             .FirstOrDefaultAsync(p => p.Id == id.Value);
 
         if (prontuario == null) return NotFound();
 
         // Validar autorização
-        if (!await _authorizationService.CanWritePacienteAsync(usuarioId, prontuario.PacienteId))
+        if (!await authorizationService.CanWritePacienteAsync(usuarioId, prontuario.PacienteId))
             return Forbid();
 
         ViewBag.PacienteNome = prontuario.Paciente?.NomeCompleto;
@@ -175,11 +163,11 @@ public class ProntuarioController : Controller
     {
         if (id != prontuario.Id) return BadRequest();
 
-        var usuarioId = _userManager.GetUserId(User);
+        var usuarioId = userManager.GetUserId(User);
         if (usuarioId == null) return Unauthorized();
 
         // Validar autorização
-        if (!await _authorizationService.CanWritePacienteAsync(usuarioId, prontuario.PacienteId))
+        if (!await authorizationService.CanWritePacienteAsync(usuarioId, prontuario.PacienteId))
             return Forbid();
 
         ModelState.Remove("Paciente");
@@ -188,11 +176,11 @@ public class ProntuarioController : Controller
         {
             try
             {
-                _context.Update(prontuario);
-                await _context.SaveChangesAsync();
+                context.Update(prontuario);
+                await context.SaveChangesAsync();
 
                 // Registrar auditoria
-                await _auditService.LogAsync(
+                await auditService.LogAsync(
                     usuarioId,
                     TipoAcaoAuditoria.Atualizacao,
                     nameof(Prontuario),
@@ -200,7 +188,7 @@ public class ProntuarioController : Controller
                     prontuario.PacienteId,
                     prontuario.Id,
                     "Prontuário atualizado");
-                await _auditService.SaveAuditAsync();
+                await auditService.SaveAuditAsync();
 
                 TempData["MensagemSucesso"] = "Prontuário atualizado com sucesso.";
                 return RedirectToAction("Details", "Paciente", new { id = prontuario.PacienteId });
@@ -220,7 +208,7 @@ public class ProntuarioController : Controller
     {
         if (id == null) return NotFound();
 
-        var prontuario = await _context.Prontuarios
+        var prontuario = await context.Prontuarios
             .Include(x => x.Paciente)
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == id.Value);
@@ -236,18 +224,18 @@ public class ProntuarioController : Controller
     [Authorize(Roles = "Professor")]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var usuarioId = _userManager.GetUserId(User);
+        var usuarioId = userManager.GetUserId(User);
         if (usuarioId == null) return Unauthorized();
 
-        var prontuario = await _context.Prontuarios.FindAsync(id);
+        var prontuario = await context.Prontuarios.FindAsync(id);
         if (prontuario != null)
         {
             var pacienteId = prontuario.PacienteId;
-            _context.Prontuarios.Remove(prontuario);
-            await _context.SaveChangesAsync();
+            context.Prontuarios.Remove(prontuario);
+            await context.SaveChangesAsync();
 
             // Registrar auditoria
-            await _auditService.LogAsync(
+            await auditService.LogAsync(
                 usuarioId,
                 TipoAcaoAuditoria.ExclusaoLogica,
                 nameof(Prontuario),
@@ -255,7 +243,7 @@ public class ProntuarioController : Controller
                 prontuario.PacienteId,
                 prontuario.Id,
                 "Prontuário excluído");
-            await _auditService.SaveAuditAsync();
+            await auditService.SaveAuditAsync();
 
             TempData["MensagemSucesso"] = "Prontuário excluído com sucesso.";
             return RedirectToAction("Details", "Paciente", new { id = pacienteId });
@@ -268,9 +256,9 @@ public class ProntuarioController : Controller
     private async Task PopulatePacientesDropDownList(Guid? selectedPacienteId = null)
     {
         // Só mostra pacientes que AINDA NÃO possuem prontuário
-        var pacientesQuery = _context.Pacientes
+        var pacientesQuery = context.Pacientes
             .AsNoTracking()
-            .Where(p => !_context.Prontuarios.Any(pr => pr.PacienteId == p.Id))
+            .Where(p => !context.Prontuarios.Any(pr => pr.PacienteId == p.Id))
             .OrderBy(p => p.NomeCompleto);
 
         ViewData["PacienteId"] = new SelectList(await pacientesQuery.ToListAsync(), "Id", "NomeCompleto", selectedPacienteId);
@@ -278,6 +266,6 @@ public class ProntuarioController : Controller
 
     private bool ProntuarioExists(int id)
     {
-        return _context.Prontuarios.Any(x => x.Id == id);
+        return context.Prontuarios.Any(x => x.Id == id);
     }
 }

@@ -12,33 +12,21 @@ using System.Security.Claims;
 namespace ClinicaEscolaBase.Controllers;
 
 [Authorize]
-public class AtendimentoController : Controller
+public class AtendimentoController(
+    ApplicationDbContext context,
+    AuthorizationService authorizationService,
+    UserManager<ApplicationUser> userManager,
+    AuditService auditService) : Controller
 {
-    private readonly ApplicationDbContext _context;
-    private readonly AuthorizationService _authorizationService;
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly AuditService _auditService;
-
-    public AtendimentoController(
-        ApplicationDbContext context,
-        AuthorizationService authorizationService,
-        UserManager<ApplicationUser> userManager,
-        AuditService auditService)
-    {
-        _context = context;
-        _authorizationService = authorizationService;
-        _userManager = userManager;
-        _auditService = auditService;
-    }
 
     // 1. LISTAGEM GERAL
     public async Task<IActionResult> Index()
     {
-        var usuarioId = _userManager.GetUserId(User);
+        var usuarioId = userManager.GetUserId(User);
         if (usuarioId == null) return Unauthorized();
 
         // Alunos veem apenas seus atendimentos
-        var atendimentos = await _context.Atendimentos
+        var atendimentos = await context.Atendimentos
             .Include(x => x.Paciente)
             .Include(x => x.Prontuario)
             .Where(a => User.IsInRole("Professor") || a.AlunoId == usuarioId)
@@ -54,10 +42,10 @@ public class AtendimentoController : Controller
     {
         if (id == null) return NotFound();
 
-        var usuarioId = _userManager.GetUserId(User);
+        var usuarioId = userManager.GetUserId(User);
         if (usuarioId == null) return Unauthorized();
 
-        var atendimento = await _context.Atendimentos
+        var atendimento = await context.Atendimentos
             .Include(a => a.Paciente)
             .Include(a => a.Prontuario)
             .Include(a => a.Evolucoes)
@@ -67,7 +55,7 @@ public class AtendimentoController : Controller
         if (atendimento == null) return NotFound();
 
         // Validar autorização
-        if (!await _authorizationService.CanReadPacienteAsync(usuarioId, atendimento.PacienteId))
+        if (!await authorizationService.CanReadPacienteAsync(usuarioId, atendimento.PacienteId))
             return Forbid();
 
         return View(atendimento);
@@ -76,14 +64,14 @@ public class AtendimentoController : Controller
     // 3. GET: CREATE
     public async Task<IActionResult> Create(Guid pacienteId)
     {
-        var usuarioId = _userManager.GetUserId(User);
+        var usuarioId = userManager.GetUserId(User);
         if (usuarioId == null) return Unauthorized();
 
         // Validar autorização
-        if (!await _authorizationService.CanWritePacienteAsync(usuarioId, pacienteId))
+        if (!await authorizationService.CanWritePacienteAsync(usuarioId, pacienteId))
             return Forbid();
 
-        var paciente = await _context.Pacientes
+        var paciente = await context.Pacientes
             .Include(p => p.Prontuario)
             .FirstOrDefaultAsync(p => p.Id == pacienteId);
 
@@ -116,11 +104,11 @@ public class AtendimentoController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create([Bind("PacienteId,ProntuarioId,TipoAtendimento,DataHoraInicio,DataHoraFim,StatusAtendimento,Observacoes")] Atendimento atendimento)
     {
-        var usuarioId = _userManager.GetUserId(User);
+        var usuarioId = userManager.GetUserId(User);
         if (usuarioId == null) return Unauthorized();
 
         // Validar autorização
-        if (!await _authorizationService.CanWritePacienteAsync(usuarioId, atendimento.PacienteId))
+        if (!await authorizationService.CanWritePacienteAsync(usuarioId, atendimento.PacienteId))
             return Forbid();
 
         if (atendimento.DataHoraFim.HasValue && atendimento.DataHoraFim <= atendimento.DataHoraInicio)
@@ -133,13 +121,13 @@ public class AtendimentoController : Controller
         if (ModelState.IsValid)
         {
             atendimento.AlunoId = usuarioId; // Definir o usuário logado
-            _context.Add(atendimento);
-            await _context.SaveChangesAsync();
+            context.Add(atendimento);
+            await context.SaveChangesAsync();
 
             await AvaliarFrequenciaAsync(atendimento);
 
             // Registrar auditoria
-            await _auditService.LogAsync(
+            await auditService.LogAsync(
                 usuarioId,
                 TipoAcaoAuditoria.Insercao,
                 nameof(Atendimento),
@@ -147,7 +135,7 @@ public class AtendimentoController : Controller
                 atendimento.PacienteId,
                 atendimento.ProntuarioId,
                 $"Atendimento criado: {atendimento.TipoAtendimento}");
-            await _auditService.SaveAuditAsync();
+            await auditService.SaveAuditAsync();
 
             TempData["MensagemSucesso"] = "Atendimento agendado com sucesso!";
             return RedirectToAction("Details", "Paciente", new { id = atendimento.PacienteId });
@@ -163,15 +151,15 @@ public class AtendimentoController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> RegistrarEvolucao(int id, string relato)
     {
-        var usuarioId = _userManager.GetUserId(User);
+        var usuarioId = userManager.GetUserId(User);
         if (usuarioId == null) return Unauthorized();
 
-        var atendimento = await _context.Atendimentos.FindAsync(id);
+        var atendimento = await context.Atendimentos.FindAsync(id);
         
         if (atendimento == null) return NotFound();
 
         // Validar autorização
-        if (!await _authorizationService.CanWritePacienteAsync(usuarioId, atendimento.PacienteId))
+        if (!await authorizationService.CanWritePacienteAsync(usuarioId, atendimento.PacienteId))
             return Forbid();
 
         if (string.IsNullOrWhiteSpace(relato))
@@ -191,13 +179,13 @@ public class AtendimentoController : Controller
         atendimento.StatusAtendimento = StatusAtendimento.Realizado;
         atendimento.DataHoraFim = DateTime.Now;
         
-        _context.EvolucoesAtendimento.Add(novaEvolucao);
-        _context.Update(atendimento);
+        context.EvolucoesAtendimento.Add(novaEvolucao);
+        context.Update(atendimento);
         
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
 
         // Registrar auditoria
-        await _auditService.LogAsync(
+        await auditService.LogAsync(
             usuarioId,
             TipoAcaoAuditoria.Insercao,
             nameof(EvolucaoAtendimento),
@@ -205,7 +193,7 @@ public class AtendimentoController : Controller
             atendimento.PacienteId,
             atendimento.ProntuarioId,
             "Evolução de atendimento registrada");
-        await _auditService.SaveAuditAsync();
+        await auditService.SaveAuditAsync();
 
         TempData["MensagemSucesso"] = "Atendimento finalizado!";
         return RedirectToAction(nameof(Details), new { id = id });
@@ -216,14 +204,14 @@ public class AtendimentoController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddEvolucao(int atendimentoId, string textoEvolucao, DateTime dataEvolucao)
     {
-        var usuarioId = _userManager.GetUserId(User);
+        var usuarioId = userManager.GetUserId(User);
         if (usuarioId == null) return Unauthorized();
 
-        var atendimento = await _context.Atendimentos.FindAsync(atendimentoId);
+        var atendimento = await context.Atendimentos.FindAsync(atendimentoId);
         if (atendimento == null) return NotFound();
 
         // Validar autorização
-        if (!await _authorizationService.CanWritePacienteAsync(usuarioId, atendimento.PacienteId))
+        if (!await authorizationService.CanWritePacienteAsync(usuarioId, atendimento.PacienteId))
             return Forbid();
 
         if (string.IsNullOrWhiteSpace(textoEvolucao))
@@ -240,11 +228,11 @@ public class AtendimentoController : Controller
             CriadoPorUsuarioId = usuarioId // Registrar quem criou
         };
 
-        _context.EvolucoesAtendimento.Add(evolucao);
-        await _context.SaveChangesAsync();
+        context.EvolucoesAtendimento.Add(evolucao);
+        await context.SaveChangesAsync();
 
         // Registrar auditoria
-        await _auditService.LogAsync(
+        await auditService.LogAsync(
             usuarioId,
             TipoAcaoAuditoria.Insercao,
             nameof(EvolucaoAtendimento),
@@ -252,7 +240,7 @@ public class AtendimentoController : Controller
             atendimento.PacienteId,
             atendimento.ProntuarioId,
             "Evolução adicional registrada");
-        await _auditService.SaveAuditAsync();
+        await auditService.SaveAuditAsync();
 
         TempData["MensagemSucesso"] = "Evolução adicionada!";
         return RedirectToAction("Details", new { id = atendimentoId });
@@ -267,7 +255,7 @@ public class AtendimentoController : Controller
 
     private async Task LoadPatientInfoAsync(Guid pacienteId)
     {
-        var paciente = await _context.Pacientes.Include(x => x.Prontuario).AsNoTracking().FirstOrDefaultAsync(x => x.Id == pacienteId);
+        var paciente = await context.Pacientes.Include(x => x.Prontuario).AsNoTracking().FirstOrDefaultAsync(x => x.Id == pacienteId);
         ViewBag.PacienteNome = paciente?.NomeCompleto ?? "Não encontrado";
         ViewBag.ProntuarioNumero = paciente?.Prontuario?.NumeroProntuario ?? "N/A";
     }
@@ -280,7 +268,7 @@ public class AtendimentoController : Controller
         if (atendimento.FaltaJustificada)
             return;
 
-        var faltasRecentes = await _context.Atendimentos
+        var faltasRecentes = await context.Atendimentos
             .Where(x => x.PacienteId == atendimento.PacienteId &&
                         (x.StatusAtendimento == StatusAtendimento.FaltaPaciente || x.StatusAtendimento == StatusAtendimento.FaltaAluno))
             .OrderByDescending(x => x.DataHoraInicio)
@@ -300,15 +288,15 @@ public class AtendimentoController : Controller
 
         if (faltasNaoJustificadas >= 3 || faltasConsecutivas >= 2)
         {
-            var prontuario = await _context.Prontuarios.FirstOrDefaultAsync(p => p.Id == atendimento.ProntuarioId);
+            var prontuario = await context.Prontuarios.FirstOrDefaultAsync(p => p.Id == atendimento.ProntuarioId);
             if (prontuario == null)
                 return;
 
             if (prontuario.SituacaoProntuario != SituacaoProntuario.InativoDesligado)
             {
                 prontuario.SituacaoProntuario = SituacaoProntuario.InativoDesligado;
-                _context.Update(prontuario);
-                await _context.SaveChangesAsync();
+                context.Update(prontuario);
+                await context.SaveChangesAsync();
                 TempData["MensagemAlertaFaltas"] = "O prontuário foi marcado como Inativo/Desligado devido a faltas injustificadas acumuladas ou consecutivas.";
             }
         }

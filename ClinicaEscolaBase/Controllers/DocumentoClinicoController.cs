@@ -11,31 +11,18 @@ using Microsoft.EntityFrameworkCore;
 namespace ClinicaEscolaBase.Controllers;
 
 [Authorize]
-public class DocumentoClinicoController : Controller
+public class DocumentoClinicoController(
+    ApplicationDbContext context,
+    AuthorizationService authorizationService,
+    AuditService auditService,
+    UserManager<ApplicationUser> userManager) : Controller
 {
-    private readonly ApplicationDbContext _context;
-    private readonly AuthorizationService _authorizationService;
-    private readonly AuditService _auditService;
-    private readonly UserManager<ApplicationUser> _userManager;
-
-    public DocumentoClinicoController(
-        ApplicationDbContext context,
-        AuthorizationService authorizationService,
-        AuditService auditService,
-        UserManager<ApplicationUser> userManager)
-    {
-        _context = context;
-        _authorizationService = authorizationService;
-        _auditService = auditService;
-        _userManager = userManager;
-    }
-
     public async Task<IActionResult> Index()
     {
-        var usuarioId = _userManager.GetUserId(User) ?? "";
-        var acessibleIds = await _authorizationService.GetAcessiblePacienteIdsAsync(usuarioId);
+        var usuarioId = userManager.GetUserId(User) ?? "";
+        var acessibleIds = await authorizationService.GetAcessiblePacienteIdsAsync(usuarioId);
 
-        var documentos = await _context.DocumentosClinicos
+        var documentos = await context.DocumentosClinicos
             .Include(x => x.Paciente)
             .Include(x => x.Prontuario)
             .Include(x => x.CriadoPorUsuario)
@@ -51,9 +38,9 @@ public class DocumentoClinicoController : Controller
     {
         if (id == null) return NotFound();
 
-        var usuarioId = _userManager.GetUserId(User) ?? "";
+        var usuarioId = userManager.GetUserId(User) ?? "";
 
-        var documento = await _context.DocumentosClinicos
+        var documento = await context.DocumentosClinicos
             .Include(x => x.Paciente)
             .Include(x => x.Prontuario)
             .Include(x => x.Atendimento)
@@ -64,23 +51,23 @@ public class DocumentoClinicoController : Controller
 
         if (documento == null) return NotFound();
 
-        if (!await _authorizationService.CanReadPacienteAsync(usuarioId, documento.PacienteId))
+        if (!await authorizationService.CanReadPacienteAsync(usuarioId, documento.PacienteId))
             return Forbid();
 
-        ViewBag.CanWrite = await _authorizationService.CanWritePacienteAsync(usuarioId, documento.PacienteId);
+        ViewBag.CanWrite = await authorizationService.CanWritePacienteAsync(usuarioId, documento.PacienteId);
         return View(documento);
     }
 
     [HttpGet]
     public async Task<IActionResult> CreateAnamneseAdulto(Guid pacienteId)
     {
-        var usuarioId = _userManager.GetUserId(User) ?? "";
-        if (!await _authorizationService.CanWritePacienteAsync(usuarioId, pacienteId))
+        var usuarioId = userManager.GetUserId(User) ?? "";
+        if (!await authorizationService.CanWritePacienteAsync(usuarioId, pacienteId))
         {
             return Forbid();
         }
 
-        var paciente = await _context.Pacientes
+        var paciente = await context.Pacientes
             .Include(p => p.Prontuario)
             .FirstOrDefaultAsync(p => p.Id == pacienteId);
 
@@ -109,8 +96,8 @@ public class DocumentoClinicoController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CreateAnamneseAdulto(AnamneseAdultoViewModel viewModel)
     {
-        var usuarioId = _userManager.GetUserId(User) ?? "";
-        if (!await _authorizationService.CanWritePacienteAsync(usuarioId, viewModel.PacienteId))
+        var usuarioId = userManager.GetUserId(User) ?? "";
+        if (!await authorizationService.CanWritePacienteAsync(usuarioId, viewModel.PacienteId))
         {
             return Forbid();
         }
@@ -120,7 +107,7 @@ public class DocumentoClinicoController : Controller
             return View(viewModel);
         }
 
-        var prontuario = await _context.Prontuarios.FirstOrDefaultAsync(p => p.PacienteId == viewModel.PacienteId);
+        var prontuario = await context.Prontuarios.FirstOrDefaultAsync(p => p.PacienteId == viewModel.PacienteId);
         if (prontuario == null)
         {
             ModelState.AddModelError(string.Empty, "O paciente não possui um prontuário cadastrado.");
@@ -139,16 +126,16 @@ public class DocumentoClinicoController : Controller
             Observacoes = System.Text.Json.JsonSerializer.Serialize(viewModel)
         };
 
-        _context.DocumentosClinicos.Add(documento);
-        await _context.SaveChangesAsync();
+        context.DocumentosClinicos.Add(documento);
+        await context.SaveChangesAsync();
 
-        await _auditService.LogCriacaoDocumentoAsync(
+        await auditService.LogCriacaoDocumentoAsync(
             usuarioId,
             documento.Id,
             viewModel.PacienteId,
             documento.ProntuarioId,
             TipoDocumentoClinico.AnamneseAdulto);
-        await _auditService.SaveAuditAsync();
+        await auditService.SaveAuditAsync();
 
         return RedirectToAction("Details", "Paciente", new { id = viewModel.PacienteId });
     }
@@ -156,13 +143,13 @@ public class DocumentoClinicoController : Controller
     [HttpGet]
     public async Task<IActionResult> CreateAnamneseAdolescente(Guid pacienteId)
     {
-        var usuarioId = _userManager.GetUserId(User) ?? "";
-        if (!await _authorizationService.CanWritePacienteAsync(usuarioId, pacienteId))
+        var usuarioId = userManager.GetUserId(User) ?? "";
+        if (!await authorizationService.CanWritePacienteAsync(usuarioId, pacienteId))
         {
             return Forbid();
         }
 
-        var paciente = await _context.Pacientes
+        var paciente = await context.Pacientes
             .Include(p => p.Prontuario)
             .FirstOrDefaultAsync(p => p.Id == pacienteId);
 
@@ -191,8 +178,8 @@ public class DocumentoClinicoController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CreateAnamneseAdolescente(AnamneseAdolescenteViewModel viewModel)
     {
-        var usuarioId = _userManager.GetUserId(User) ?? "";
-        if (!await _authorizationService.CanWritePacienteAsync(usuarioId, viewModel.PacienteId))
+        var usuarioId = userManager.GetUserId(User) ?? "";
+        if (!await authorizationService.CanWritePacienteAsync(usuarioId, viewModel.PacienteId))
         {
             return Forbid();
         }
@@ -202,7 +189,7 @@ public class DocumentoClinicoController : Controller
             return View(viewModel);
         }
 
-        var prontuario = await _context.Prontuarios.FirstOrDefaultAsync(p => p.PacienteId == viewModel.PacienteId);
+        var prontuario = await context.Prontuarios.FirstOrDefaultAsync(p => p.PacienteId == viewModel.PacienteId);
         if (prontuario == null)
         {
             ModelState.AddModelError(string.Empty, "O paciente não possui um prontuário cadastrado.");
@@ -221,16 +208,16 @@ public class DocumentoClinicoController : Controller
             Observacoes = System.Text.Json.JsonSerializer.Serialize(viewModel)
         };
 
-        _context.DocumentosClinicos.Add(documento);
-        await _context.SaveChangesAsync();
+        context.DocumentosClinicos.Add(documento);
+        await context.SaveChangesAsync();
 
-        await _auditService.LogCriacaoDocumentoAsync(
+        await auditService.LogCriacaoDocumentoAsync(
             usuarioId,
             documento.Id,
             viewModel.PacienteId,
             documento.ProntuarioId,
             TipoDocumentoClinico.AnamneseAdolescente);
-        await _auditService.SaveAuditAsync();
+        await auditService.SaveAuditAsync();
 
         return RedirectToAction("Details", "Paciente", new { id = viewModel.PacienteId });
     }

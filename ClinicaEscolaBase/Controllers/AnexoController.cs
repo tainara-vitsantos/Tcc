@@ -10,30 +10,17 @@ using Microsoft.EntityFrameworkCore;
 namespace ClinicaEscolaBase.Controllers;
 
 [Authorize]
-public class AnexoController : Controller
+public class AnexoController(
+    ApplicationDbContext context,
+    AuthorizationService authorizationService,
+    AuditService auditService,
+    UserManager<ApplicationUser> userManager) : Controller
 {
-    private readonly ApplicationDbContext _context;
-    private readonly AuthorizationService _authorizationService;
-    private readonly AuditService _auditService;
-    private readonly UserManager<ApplicationUser> _userManager;
-
-    public AnexoController(
-        ApplicationDbContext context,
-        AuthorizationService authorizationService,
-        AuditService auditService,
-        UserManager<ApplicationUser> userManager)
-    {
-        _context = context;
-        _authorizationService = authorizationService;
-        _auditService = auditService;
-        _userManager = userManager;
-    }
-
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Upload(int documentoId, IFormFile arquivo)
     {
-        var usuarioId = _userManager.GetUserId(User);
+        var usuarioId = userManager.GetUserId(User);
         if (usuarioId == null) return Unauthorized();
 
         if (arquivo == null || arquivo.Length == 0)
@@ -56,7 +43,7 @@ public class AnexoController : Controller
         }
 
         // Check if documento exists and user has access
-        var documento = await _context.DocumentosClinicos
+        var documento = await context.DocumentosClinicos
             .Include(d => d.Paciente)
             .FirstOrDefaultAsync(d => d.Id == documentoId && d.Ativo);
 
@@ -65,7 +52,7 @@ public class AnexoController : Controller
             return NotFound("Documento não encontrado.");
         }
 
-        if (!await _authorizationService.CanWritePacienteAsync(usuarioId, documento.PacienteId))
+        if (!await authorizationService.CanWritePacienteAsync(usuarioId, documento.PacienteId))
         {
             return Forbid();
         }
@@ -100,11 +87,11 @@ public class AnexoController : Controller
             DataUpload = DateTime.UtcNow
         };
 
-        _context.Anexos.Add(anexo);
-        await _context.SaveChangesAsync();
+        context.Anexos.Add(anexo);
+        await context.SaveChangesAsync();
 
         // Audit
-        await _auditService.LogAsync(
+        await auditService.LogAsync(
             usuarioId,
             TipoAcaoAuditoria.Insercao,
             "Anexo",
@@ -112,7 +99,7 @@ public class AnexoController : Controller
             documento.PacienteId,
             documento.ProntuarioId,
             $"Anexo '{arquivo.FileName}' enviado para documento {documentoId}");
-        await _auditService.SaveAuditAsync();
+        await auditService.SaveAuditAsync();
 
         return Json(new
         {
@@ -126,10 +113,10 @@ public class AnexoController : Controller
     [HttpGet]
     public async Task<IActionResult> Download(int id)
     {
-        var usuarioId = _userManager.GetUserId(User);
+        var usuarioId = userManager.GetUserId(User);
         if (usuarioId == null) return Unauthorized();
 
-        var anexo = await _context.Anexos
+        var anexo = await context.Anexos
             .Include(a => a.DocumentoClinico)
             .FirstOrDefaultAsync(a => a.Id == id && a.Ativo);
 
@@ -138,7 +125,7 @@ public class AnexoController : Controller
             return NotFound();
         }
 
-        if (!await _authorizationService.CanReadPacienteAsync(usuarioId, anexo.DocumentoClinico.PacienteId))
+        if (!await authorizationService.CanReadPacienteAsync(usuarioId, anexo.DocumentoClinico.PacienteId))
         {
             return Forbid();
         }
@@ -150,7 +137,7 @@ public class AnexoController : Controller
         }
 
         // Audit download
-        await _auditService.LogAsync(
+        await auditService.LogAsync(
             usuarioId,
             TipoAcaoAuditoria.Visualizacao,
             "Anexo",
@@ -158,7 +145,7 @@ public class AnexoController : Controller
             anexo.DocumentoClinico.PacienteId,
             anexo.DocumentoClinico.ProntuarioId,
             $"Download do anexo '{anexo.NomeOriginal}'" );
-        await _auditService.SaveAuditAsync();
+        await auditService.SaveAuditAsync();
 
         var memory = new MemoryStream();
         using (var stream = new FileStream(filePath, FileMode.Open))
@@ -174,10 +161,10 @@ public class AnexoController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
     {
-        var usuarioId = _userManager.GetUserId(User);
+        var usuarioId = userManager.GetUserId(User);
         if (usuarioId == null) return Unauthorized();
 
-        var anexo = await _context.Anexos
+        var anexo = await context.Anexos
             .Include(a => a.DocumentoClinico)
             .FirstOrDefaultAsync(a => a.Id == id && a.Ativo);
 
@@ -186,7 +173,7 @@ public class AnexoController : Controller
             return NotFound();
         }
 
-        if (!await _authorizationService.CanWritePacienteAsync(usuarioId, anexo.DocumentoClinico.PacienteId))
+        if (!await authorizationService.CanWritePacienteAsync(usuarioId, anexo.DocumentoClinico.PacienteId))
         {
             return Forbid();
         }
@@ -195,7 +182,7 @@ public class AnexoController : Controller
         anexo.Ativo = false;
         anexo.DataAtualizacao = DateTime.UtcNow;
 
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
 
         // Delete physical file
         var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", anexo.CaminhoArquivo.TrimStart('/'));
@@ -205,7 +192,7 @@ public class AnexoController : Controller
         }
 
         // Audit
-        await _auditService.LogAsync(
+        await auditService.LogAsync(
             usuarioId,
             TipoAcaoAuditoria.ExclusaoLogica,
             "Anexo",
@@ -213,7 +200,7 @@ public class AnexoController : Controller
             anexo.DocumentoClinico.PacienteId,
             anexo.DocumentoClinico.ProntuarioId,
             $"Anexo '{anexo.NomeOriginal}' removido");
-        await _auditService.SaveAuditAsync();
+        await auditService.SaveAuditAsync();
 
         return Json(new { success = true, message = "Anexo removido com sucesso." });
     }

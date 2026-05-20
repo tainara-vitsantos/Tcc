@@ -11,32 +11,22 @@ using Microsoft.EntityFrameworkCore;
 namespace ClinicaEscolaBase.Controllers;
 
 [Authorize]
-public class PacienteController : Controller
+public class PacienteController(
+    ApplicationDbContext context,
+    AuthorizationService authorizationService,
+    UserManager<ApplicationUser> userManager) : Controller
 {
-    private readonly ApplicationDbContext _context;
-    private readonly AuthorizationService _authorizationService;
-    private readonly UserManager<ApplicationUser> _userManager;
-
-    public PacienteController(
-        ApplicationDbContext context,
-        AuthorizationService authorizationService,
-        UserManager<ApplicationUser> userManager)
-    {
-        _context = context;
-        _authorizationService = authorizationService;
-        _userManager = userManager;
-    }
 
     // LISTAGEM: Ordenada por nome para melhor UX
     public async Task<IActionResult> Index()
     {
-        var usuarioId = _userManager.GetUserId(User);
+        var usuarioId = userManager.GetUserId(User);
         if (usuarioId == null) return Unauthorized();
 
         // Alunos veem apenas seus pacientes vinculados; Professores veem todos
-        var acessibleIds = await _authorizationService.GetAcessiblePacienteIdsAsync(usuarioId);
+        var acessibleIds = await authorizationService.GetAcessiblePacienteIdsAsync(usuarioId);
 
-        var pacientes = await _context.Pacientes
+        var pacientes = await context.Pacientes
             .Where(p => acessibleIds.Contains(p.Id))
             .AsNoTracking()
             .OrderBy(x => x.NomeCompleto)
@@ -50,14 +40,14 @@ public class PacienteController : Controller
     {
         if (id == null) return NotFound();
 
-        var usuarioId = _userManager.GetUserId(User);
+        var usuarioId = userManager.GetUserId(User);
         if (usuarioId == null) return Unauthorized();
 
         // Validar autorização
-        if (!await _authorizationService.CanReadPacienteAsync(usuarioId, id.Value))
+        if (!await authorizationService.CanReadPacienteAsync(usuarioId, id.Value))
             return Forbid();
 
-        var paciente = await _context.Pacientes
+        var paciente = await context.Pacientes
             .Include(x => x.Prontuario)
             .Include(x => x.Atendimentos)
             .Include(x => x.DocumentosClinicos)
@@ -133,8 +123,8 @@ public class PacienteController : Controller
 
                 paciente.Prontuario = prontuario;
 
-                _context.Add(paciente);
-                await _context.SaveChangesAsync();
+                context.Add(paciente);
+                await context.SaveChangesAsync();
                 
                 TempData["MensagemSucesso"] = "Paciente cadastrado com sucesso e prontuário criado automaticamente!";
                 return RedirectToAction(nameof(Index));
@@ -150,7 +140,7 @@ public class PacienteController : Controller
 
     private async Task<string> GenerateNumeroProntuarioAsync()
     {
-        var count = await _context.Prontuarios.CountAsync();
+        var count = await context.Prontuarios.CountAsync();
         return $"{DateTime.UtcNow:yyyy}-{count + 1:000}";
     }
 
@@ -158,14 +148,14 @@ public class PacienteController : Controller
     {
         if (id == null) return NotFound();
 
-        var usuarioId = _userManager.GetUserId(User);
+        var usuarioId = userManager.GetUserId(User);
         if (usuarioId == null) return Unauthorized();
 
         // Validar autorização de escrita
-        if (!await _authorizationService.CanWritePacienteAsync(usuarioId, id.Value))
+        if (!await authorizationService.CanWritePacienteAsync(usuarioId, id.Value))
             return Forbid();
 
-        var paciente = await _context.Pacientes.FindAsync(id.Value);
+        var paciente = await context.Pacientes.FindAsync(id.Value);
         if (paciente == null) return NotFound();
 
         var viewModel = new PacienteFormViewModel
@@ -206,18 +196,18 @@ public class PacienteController : Controller
     {
         if (id != viewModel.Id) return BadRequest();
 
-        var usuarioId = _userManager.GetUserId(User);
+        var usuarioId = userManager.GetUserId(User);
         if (usuarioId == null) return Unauthorized();
 
         // Validar autorização de escrita
-        if (!await _authorizationService.CanWritePacienteAsync(usuarioId, id))
+        if (!await authorizationService.CanWritePacienteAsync(usuarioId, id))
             return Forbid();
 
         if (ModelState.IsValid)
         {
             try
             {
-                var paciente = await _context.Pacientes.FindAsync(id);
+                var paciente = await context.Pacientes.FindAsync(id);
                 if (paciente == null) return NotFound();
 
                 paciente.NomeCompleto = viewModel.NomeCompleto;
@@ -253,8 +243,8 @@ public class PacienteController : Controller
                 paciente.Observacoes = viewModel.Observacoes;
                 paciente.DataAtualizacao = DateTime.UtcNow;
 
-                _context.Update(paciente);
-                await _context.SaveChangesAsync();
+                context.Update(paciente);
+                await context.SaveChangesAsync();
                 
                 TempData["MensagemSucesso"] = "Dados do paciente atualizados com sucesso!";
                 return RedirectToAction(nameof(Index));
@@ -277,7 +267,7 @@ public class PacienteController : Controller
     {
         if (id == null) return NotFound();
 
-        var paciente = await _context.Pacientes
+        var paciente = await context.Pacientes
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == id.Value);
 
@@ -294,11 +284,11 @@ public class PacienteController : Controller
     {
         try 
         {
-            var paciente = await _context.Pacientes.FindAsync(id);
+            var paciente = await context.Pacientes.FindAsync(id);
             if (paciente != null)
             {
-                _context.Pacientes.Remove(paciente);
-                await _context.SaveChangesAsync();
+                context.Pacientes.Remove(paciente);
+                await context.SaveChangesAsync();
                 TempData["MensagemSucesso"] = "Paciente removido com sucesso.";
             }
         }
@@ -312,6 +302,6 @@ public class PacienteController : Controller
 
     private bool PacienteExists(Guid id)
     {
-        return _context.Pacientes.Any(x => x.Id == id);
+        return context.Pacientes.Any(x => x.Id == id);
     }
 }
