@@ -1,3 +1,4 @@
+using ClinicaEscolaBase;
 using ClinicaEscolaBase.Data;
 using ClinicaEscolaBase.Models;
 using ClinicaEscolaBase.Services;
@@ -25,17 +26,12 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 .AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-// Serviços de Negócio
-builder.Services.AddScoped<RoleInitializationService>();
-builder.Services.AddScoped<AuthorizationService>();
-builder.Services.AddScoped<AuditService>();
-builder.Services.AddScoped<SoftDeleteService>();
 builder.Services.AddHttpContextAccessor();
 
 // MVC + Razor Pages
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-
+builder.Services.AddSmartServices(); // isso aqui serve pra nao precisar registrar os servicos um por um manualmente
 var app = builder.Build();
 
 // Inicializar Roles na aplicação
