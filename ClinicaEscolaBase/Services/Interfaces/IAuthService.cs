@@ -30,4 +30,5 @@ public interface IAuthService
     Task Logout(CancellationToken cancellationToken = default);
 
     public Task<DashboardAlunoDto> GetDashboardAlunoAsync(string usuarioId);
+public Task<DashboardProfessorDto> GetDashboardProfessorAsync();
 }

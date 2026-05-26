@@ -133,7 +133,51 @@ public async Task<DashboardAlunoDto> GetDashboardAlunoAsync(string usuarioId)
 
         return dto;
 }
+public async Task<DashboardProfessorDto> GetDashboardProfessorAsync()
+{
+var inicioHoje = DateTime.Today;
+    var fimHoje = inicioHoje.AddDays(1);
 
+    // 1. Contadores Globais Lineares Otimizados
+    var totalPacientes = await context.Pacientes.CountAsync();
+
+    var totalProntuariosAtivos = await context.Prontuarios
+        .CountAsync(p => p.SituacaoProntuario == SituacaoProntuario.Ativo);
+
+    var atendimentosHoje = await context.Atendimentos
+        .CountAsync(a => a.DataHoraInicio >= inicioHoje && a.DataHoraInicio < fimHoje);
+
+    var atendimentosRealizados = await context.Atendimentos
+        .CountAsync(a => a.StatusAtendimento == StatusAtendimento.Realizado);
+
+    // 2. Criação do DTO preenchendo as propriedades e listagens com AsNoTracking
+    var dto = new DashboardProfessorDto
+    {
+        TotalPacientes = totalPacientes,
+        TotalProntuariosAtivos = totalProntuariosAtivos,
+        AtendimentosHoje = atendimentosHoje,
+        AtendimentosRealizados = atendimentosRealizados,
+
+        ProximosAtendimentos = await context.Atendimentos
+            .Include(a => a.Paciente)
+            .Include(a => a.Aluno)
+            .Where(a => a.StatusAtendimento == StatusAtendimento.Agendado)
+            .OrderBy(a => a.DataHoraInicio)
+            .Take(10)
+            .AsNoTracking()
+            .ToListAsync(),
+
+        AuditoriasRecentes = await context.Auditorias
+            .Include(a => a.Usuario)
+            .Include(a => a.Paciente)
+            .OrderByDescending(a => a.DataHora)
+            .Take(20)
+            .AsNoTracking()
+            .ToListAsync()
+    };
+
+    return dto;
+}
 #region Metodos Privados
 /// <summary>
     /// Verifica se o usuário é professor, utilizando cache local por requisição (Scoped)
