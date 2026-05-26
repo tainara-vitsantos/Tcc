@@ -1,22 +1,20 @@
 using ClinicaEscolaBase.Data;
 using ClinicaEscolaBase.Enums;
 using ClinicaEscolaBase.Models;
-using ClinicaEscolaBase.Services;
-using Microsoft.AspNetCore.Authorization;
+using ClinicaEscolaBase.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 
 namespace ClinicaEscolaBase.Controllers;
 
-[Authorize]
+[Microsoft.AspNetCore.Authorization.Authorize]
 public class AtendimentoController(
     ApplicationDbContext context,
-    AuthorizationService authorizationService,
+    IAuthService authorizationService,
     UserManager<ApplicationUser> userManager,
-    AuditService auditService) : Controller
+    IAuditService auditService) : Controller
 {
 
     // 1. LISTAGEM GERAL

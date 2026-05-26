@@ -1,7 +1,7 @@
 using ClinicaEscolaBase.Data;
 using ClinicaEscolaBase.Enums;
 using ClinicaEscolaBase.Models;
-using ClinicaEscolaBase.Services;
+using ClinicaEscolaBase.Services.Interfaces;
 using ClinicaEscolaBase.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -13,8 +13,8 @@ namespace ClinicaEscolaBase.Controllers;
 [Authorize]
 public class TermosController(
     ApplicationDbContext context,
-    AuthorizationService authorizationService,
-    AuditService auditService,
+    IAuthService authorizationService,
+    IAuditService auditService,
     UserManager<ApplicationUser> userManager) : Controller
 {
     [HttpGet]

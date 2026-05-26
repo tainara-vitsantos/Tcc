@@ -1,19 +1,19 @@
 using ClinicaEscolaBase.Data;
 using ClinicaEscolaBase.Models;
-using ClinicaEscolaBase.Services;
 using ClinicaEscolaBase.Enums;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ClinicaEscolaBase.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ClinicaEscolaBase.Controllers;
 
 [Authorize]
 public class AnexoController(
     ApplicationDbContext context,
-    AuthorizationService authorizationService,
-    AuditService auditService,
+    IAuthService authorizationService,
+    IAuditService auditService,
     UserManager<ApplicationUser> userManager) : Controller
 {
     [HttpPost]

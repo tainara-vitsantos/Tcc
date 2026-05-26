@@ -7,13 +7,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using ClinicaEscolaBase.Services.Interfaces;
 
 namespace ClinicaEscolaBase.Controllers;
 
 [Authorize]
 public class ProntuarioController(
     ApplicationDbContext context,
-    AuthorizationService authorizationService,
+    IAuthService authorizationService,
     UserManager<ApplicationUser> userManager,
     AuditService auditService) : Controller
 {

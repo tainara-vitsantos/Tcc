@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using ClinicaEscolaBase.Models;
 using ClinicaEscolaBase.Data;
 using ClinicaEscolaBase.Enums;
-using ClinicaEscolaBase.Services;
-using Microsoft.AspNetCore.Authorization;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using ClinicaEscolaBase.Services.Interfaces;
 
 namespace ClinicaEscolaBase.Controllers;
 
@@ -14,7 +14,7 @@ public class HomeController(
     ILogger<HomeController> logger,
     ApplicationDbContext context,
     UserManager<ApplicationUser> userManager,
-    AuthorizationService authorizationService) : Controller
+    IAuthService authorizationService) : Controller
 {
     public async Task<IActionResult> Index()
     {

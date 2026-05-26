@@ -4,7 +4,7 @@ namespace ClinicaEscolaBase.Services.Interfaces;
 /// Contrato para o serviço de validação de autorização de acesso aos pacientes.
 /// Garante a segurança acadêmica do sistema.
 /// </summary>
-public interface IAuthorizationService
+public interface IAuthService
 {
     /// <summary>
     /// Verifica se um usuário (Aluno) tem permissão de leitura para um paciente.

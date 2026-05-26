@@ -1,7 +1,7 @@
 using ClinicaEscolaBase;
 using ClinicaEscolaBase.Data;
 using ClinicaEscolaBase.Models;
-using ClinicaEscolaBase.Services;
+using ClinicaEscolaBase.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,7 +37,7 @@ var app = builder.Build();
 // Inicializar Roles na aplicação
 using (var scope = app.Services.CreateScope())
 {
-    var roleService = scope.ServiceProvider.GetRequiredService<RoleInitializationService>();
+    var roleService = scope.ServiceProvider.GetRequiredService<IRoleInitializationService>();
     await roleService.InitializeAsync();
 }
 
@@ -48,7 +48,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthentication();

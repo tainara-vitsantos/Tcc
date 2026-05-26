@@ -193,12 +193,28 @@ public static class DbSeeder
             context.Atendimentos.AddRange(atendimentos);
             await context.SaveChangesAsync();
 
+            // 8. Criar Documento Clínico vinculado ao primeiro atendimento (necessário para evoluções)
+            var documento = new DocumentoClinico
+            {
+                ProntuarioId = prontuarios[0].Id,
+                PacienteId = pacientes[0].Id,
+                AtendimentoId = atendimentos[0].Id,
+                TipoDocumento = TipoDocumentoClinico.EvolucaoAtendimento,
+                CriadoPorUsuarioId = aluno.Id,
+                DataCriacao = DateTime.UtcNow,
+                Ativo = true
+            };
+
+            context.DocumentosClinicos.Add(documento);
+            await context.SaveChangesAsync();
+
             // 8. Criar Evoluções de Teste
             var evolucoes = new[]
             {
                 new EvolucaoAtendimento
                 {
                     AtendimentoId = atendimentos[0].Id,
+                    DocumentoClinicoId = documento.Id,
                     TextoEvolucao = "Paciente relatou dificuldades em interações sociais. Trabalhou-se técnicas de respiração para controle da ansiedade.",
                     DataEvolucao = DateTime.UtcNow.AddDays(-5),
                     CriadoPorUsuarioId = aluno.Id,
