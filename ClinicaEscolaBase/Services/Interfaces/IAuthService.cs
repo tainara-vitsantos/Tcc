@@ -1,3 +1,5 @@
+using ClinicaEscolaBase.Dtos;
+
 namespace ClinicaEscolaBase.Services.Interfaces;
 
 /// <summary>
@@ -20,4 +22,12 @@ public interface IAuthService
     /// Retorna todos os IDs dos pacientes aos quais o usuário possui acesso.
     /// </summary>
     Task<List<Guid>> GetAcessiblePacienteIdsAsync(string usuarioId);
+
+    /// <summary>
+    /// Encerra a sessão do usuário atual limpando os cookies de autenticação.
+    /// </summary>
+    /// <param name="cancellationToken">Token de cancelamento para interromper a operação assíncrona se a requisição for cancelada.</param>
+    Task Logout(CancellationToken cancellationToken = default);
+
+    public Task<DashboardAlunoDto> GetDashboardAlunoAsync(string usuarioId);
 }
