@@ -71,8 +71,8 @@ public class TermosController(
         {
             PacienteId = viewModel.PacienteId,
             ProntuarioId = paciente.Prontuario.Id,
-            TipoDocumento = TipoDocumentoClinico.TermoPsicoterapiaIndividual,
-            StatusDocumento = StatusDocumentoClinico.Rascunho,
+            TipoDocumento = TipoDocumentoClinicoEnum.TermoPsicoterapiaIndividual,
+            StatusDocumento = StatusDocumentoClinicoEnum.Rascunho,
             DataDocumento = DateTime.UtcNow,
             CriadoPorUsuarioId = usuarioId,
             Observacoes = "Contrato de Psicoterapia Individual enviado como anexo."
@@ -108,7 +108,7 @@ public class TermosController(
         context.Anexos.Add(anexo);
         await context.SaveChangesAsync();
 
-        await auditService.LogAsync(usuarioId, TipoAcaoAuditoria.Insercao, nameof(Anexo), anexo.Id.ToString(), viewModel.PacienteId, documento.ProntuarioId, "Contrato de Psicoterapia Individual enviado");
+        await auditService.LogAsync(usuarioId, TipoAcaoAuditoriaEnum.Insercao, nameof(Anexo), anexo.Id.ToString(), viewModel.PacienteId, documento.ProntuarioId, "Contrato de Psicoterapia Individual enviado");
         await auditService.SaveAuditAsync();
 
         TempData["MensagemSucesso"] = "Contrato de Psicoterapia Individual enviado com sucesso.";
@@ -169,8 +169,8 @@ public class TermosController(
         {
             PacienteId = viewModel.PacienteId,
             ProntuarioId = paciente.Prontuario.Id,
-            TipoDocumento = TipoDocumentoClinico.TermoAutorizacaoMenor,
-            StatusDocumento = StatusDocumentoClinico.Rascunho,
+            TipoDocumento = TipoDocumentoClinicoEnum.TermoAutorizacaoMenor,
+            StatusDocumento = StatusDocumentoClinicoEnum.Rascunho,
             DataDocumento = DateTime.UtcNow,
             CriadoPorUsuarioId = usuarioId,
             Observacoes = "Autorização de Menores enviada como anexo."
@@ -206,7 +206,7 @@ public class TermosController(
         context.Anexos.Add(anexo);
         await context.SaveChangesAsync();
 
-        await auditService.LogAsync(usuarioId, TipoAcaoAuditoria.Insercao, nameof(Anexo), anexo.Id.ToString(), viewModel.PacienteId, documento.ProntuarioId, "Autorização de Menores enviada");
+        await auditService.LogAsync(usuarioId, TipoAcaoAuditoriaEnum.Insercao, nameof(Anexo), anexo.Id.ToString(), viewModel.PacienteId, documento.ProntuarioId, "Autorização de Menores enviada");
         await auditService.SaveAuditAsync();
 
         TempData["MensagemSucesso"] = "Autorização de Menores enviada com sucesso.";

@@ -10,7 +10,7 @@ public interface ITermoPsicoterapiaIndividualRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de termos de psicoterapia individual encontrados.
 	/// </returns>
-	Task<IEnumerable<TermoPsicoterapiaIndividual>> GetAllAsync();
+	Task<IEnumerable<TermoPsicoterapiaIndividualModel>> GetAllAsync();
 
 	/// <summary>
 	/// Busca um termo de psicoterapia individual pelo identificador do documento clínico.
@@ -19,7 +19,7 @@ public interface ITermoPsicoterapiaIndividualRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o termo encontrado ou <c>null</c> quando não existir.
 	/// </returns>
-	Task<TermoPsicoterapiaIndividual?> GetByIdAsync(int documentoClinicoId);
+	Task<TermoPsicoterapiaIndividualModel?> GetByIdAsync(int documentoClinicoId);
 
 	/// <summary>
 	/// Cria um novo termo de psicoterapia individual no banco de dados.
@@ -28,7 +28,7 @@ public interface ITermoPsicoterapiaIndividualRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o termo persistido com os valores gravados pelo banco de dados.
 	/// </returns>
-	Task<TermoPsicoterapiaIndividual> AddAsync(TermoPsicoterapiaIndividual termo);
+	Task<TermoPsicoterapiaIndividualModel> AddAsync(TermoPsicoterapiaIndividualModel termo);
 
 	/// <summary>
 	/// Atualiza um termo de psicoterapia individual existente no banco de dados.
@@ -37,7 +37,7 @@ public interface ITermoPsicoterapiaIndividualRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o termo atualizado ou <c>null</c> quando o registro não for encontrado.
 	/// </returns>
-	Task<TermoPsicoterapiaIndividual?> UpdateAsync(TermoPsicoterapiaIndividual termo);
+	Task<TermoPsicoterapiaIndividualModel?> UpdateAsync(TermoPsicoterapiaIndividualModel termo);
 
 	/// <summary>
 	/// Remove um termo de psicoterapia individual do banco de dados.

@@ -48,7 +48,7 @@ public class DocumentoClinicoRepository(ApplicationDbContext AppDbContext) : IDo
 			.ToListAsync();
 	}
 
-	public async Task<IEnumerable<DocumentoClinico>> GetByStatusAsync(StatusDocumentoClinico status)
+	public async Task<IEnumerable<DocumentoClinico>> GetByStatusAsync(StatusDocumentoClinicoEnum status)
 	{
 		return await AppDbContext.DocumentosClinicos
 			.AsNoTracking()

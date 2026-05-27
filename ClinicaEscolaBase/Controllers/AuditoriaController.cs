@@ -12,7 +12,7 @@ public class AuditoriaController(ApplicationDbContext context) : Controller
 {
 
     // GET: Auditoria
-    public async Task<IActionResult> Index(int? pageNumber, string? usuario, string? entidade, TipoAcaoAuditoria? acao)
+    public async Task<IActionResult> Index(int? pageNumber, string? usuario, string? entidade, TipoAcaoAuditoriaEnum? acao)
     {
         var query = context.Auditorias
             .Include(a => a.Usuario)

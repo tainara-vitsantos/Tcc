@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
 
-using System;
-using System.Collections.Generic;
 
 namespace ClinicaEscolaBase.Models;
 
-public class Paciente
+public class PacienteModel
 {
     public Guid Id { get; set; }
     public DateTime DataCriacao { get; set; } = DateTime.UtcNow;
@@ -44,11 +40,11 @@ public class Paciente
     public string? MotivoInternacao { get; set; }
     public string? Observacoes { get; set; }
 
-    public Prontuario? Prontuario { get; set; }
-    public ICollection<TratamentoAnteriorPaciente> TratamentosAnteriores { get; set; } = new List<TratamentoAnteriorPaciente>();
-    public ICollection<ResponsavelLegal> ResponsaveisLegais { get; set; } = new List<ResponsavelLegal>();
-    public ICollection<VinculoAlunoPaciente> VinculosAluno { get; set; } = new List<VinculoAlunoPaciente>();
-    public ICollection<Atendimento> Atendimentos { get; set; } = new List<Atendimento>();
-    public ICollection<DocumentoClinico> DocumentosClinicos { get; set; } = new List<DocumentoClinico>();
-    public ICollection<Auditoria> Auditorias { get; set; } = new List<Auditoria>();
+    public ProntuarioModel? Prontuario { get; set; }
+    public ICollection<TratamentoAnteriorPacienteModel> TratamentosAnteriores { get; set; } = new List<TratamentoAnteriorPacienteModel>();
+    public ICollection<ResponsavelLegalModel> ResponsaveisLegais { get; set; } = new List<ResponsavelLegalModel>();
+    public ICollection<VinculoAlunoPacienteModel> VinculosAluno { get; set; } = new List<VinculoAlunoPacienteModel>();
+    public ICollection<AtendimentoModel> Atendimentos { get; set; } = new List<AtendimentoModel>();
+    public ICollection<DocumentoClinicoModel> DocumentosClinicos { get; set; } = new List<DocumentoClinicoModel>();
+    public ICollection<AuditoriaModel> Auditorias { get; set; } = new List<AuditoriaModel>();
 }

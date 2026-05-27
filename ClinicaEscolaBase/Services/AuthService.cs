@@ -36,7 +36,7 @@ public class AuthService(ApplicationDbContext context,
             .AnyAsync(v =>
                 v.AlunoId == usuarioId &&
                 v.PacienteId == pacienteId &&
-                v.StatusVinculo == StatusVinculo.Ativo &&
+                v.StatusVinculo == StatusVinculoEnum.Ativo &&
                 v.PermiteLeitura &&
                 v.Ativo);
     }
@@ -56,7 +56,7 @@ public class AuthService(ApplicationDbContext context,
             .AnyAsync(v =>
                 v.AlunoId == usuarioId &&
                 v.PacienteId == pacienteId &&
-                v.StatusVinculo == StatusVinculo.Ativo &&
+                v.StatusVinculo == StatusVinculoEnum.Ativo &&
                 v.PermiteEscrita &&
                 v.Ativo);
     }
@@ -77,7 +77,7 @@ public class AuthService(ApplicationDbContext context,
        return await context.VinculosAlunoPaciente
             .Where(v =>
                 v.AlunoId == usuarioId &&
-                v.StatusVinculo == StatusVinculo.Ativo &&
+                v.StatusVinculo == StatusVinculoEnum.Ativo &&
                 v.Ativo)
             .Select(v => v.PacienteId)
             .ToListAsync();
@@ -105,10 +105,10 @@ public async Task<DashboardAlunoDto> GetDashboardAlunoAsync(string usuarioId)
 
             // Executa os contadores no banco
             MeusAtendimentosAgendados = await context.Atendimentos
-                .CountAsync(a => a.AlunoId == usuarioId && a.StatusAtendimento == StatusAtendimento.Agendado),
+                .CountAsync(a => a.AlunoId == usuarioId && a.StatusAtendimento == StatusAtendimentoEnum.Agendado),
 
             MeusAtendimentosRealizados = await context.Atendimentos
-                .CountAsync(a => a.AlunoId == usuarioId && a.StatusAtendimento == StatusAtendimento.Realizado),
+                .CountAsync(a => a.AlunoId == usuarioId && a.StatusAtendimento == StatusAtendimentoEnum.Realizado),
 
             MeusAtendimentosHoje = await context.Atendimentos
                 .CountAsync(a => a.AlunoId == usuarioId && a.DataHoraInicio >= inicioHoje && a.DataHoraInicio < fimHoje),
@@ -116,7 +116,7 @@ public async Task<DashboardAlunoDto> GetDashboardAlunoAsync(string usuarioId)
             // Busca as listagens usando AsNoTracking
             MeusProximosAtendimentos = await context.Atendimentos
                 .Include(a => a.Paciente)
-                .Where(a => a.AlunoId == usuarioId && a.StatusAtendimento == StatusAtendimento.Agendado)
+                .Where(a => a.AlunoId == usuarioId && a.StatusAtendimento == StatusAtendimentoEnum.Agendado)
                 .OrderBy(a => a.DataHoraInicio)
                 .Take(10)
                 .AsNoTracking()
@@ -142,13 +142,13 @@ var inicioHoje = DateTime.Today;
     var totalPacientes = await context.Pacientes.CountAsync();
 
     var totalProntuariosAtivos = await context.Prontuarios
-        .CountAsync(p => p.SituacaoProntuario == SituacaoProntuario.Ativo);
+        .CountAsync(p => p.SituacaoProntuario == SituacaoProntuarioEnum.Ativo);
 
     var atendimentosHoje = await context.Atendimentos
         .CountAsync(a => a.DataHoraInicio >= inicioHoje && a.DataHoraInicio < fimHoje);
 
     var atendimentosRealizados = await context.Atendimentos
-        .CountAsync(a => a.StatusAtendimento == StatusAtendimento.Realizado);
+        .CountAsync(a => a.StatusAtendimento == StatusAtendimentoEnum.Realizado);
 
     // 2. Criação do DTO preenchendo as propriedades e listagens com AsNoTracking
     var dto = new DashboardProfessorDto
@@ -161,7 +161,7 @@ var inicioHoje = DateTime.Today;
         ProximosAtendimentos = await context.Atendimentos
             .Include(a => a.Paciente)
             .Include(a => a.Aluno)
-            .Where(a => a.StatusAtendimento == StatusAtendimento.Agendado)
+            .Where(a => a.StatusAtendimento == StatusAtendimentoEnum.Agendado)
             .OrderBy(a => a.DataHoraInicio)
             .Take(10)
             .AsNoTracking()

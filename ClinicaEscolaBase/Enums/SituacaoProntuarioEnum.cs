@@ -1,6 +1,6 @@
 namespace ClinicaEscolaBase.Enums;
 
-public enum SituacaoProntuario
+public enum SituacaoProntuarioEnum
 {
     Ativo = 1,
     Encerrado = 2,

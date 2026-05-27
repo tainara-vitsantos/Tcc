@@ -38,7 +38,7 @@ public interface IDocumentoClinicoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de documentos clínicos ativos com o status informado.
 	/// </returns>
-	Task<IEnumerable<DocumentoClinico>> GetByStatusAsync(StatusDocumentoClinico status);
+	Task<IEnumerable<DocumentoClinico>> GetByStatusAsync(StatusDocumentoClinicoEnum status);
 
 	/// <summary>
 	/// Cria um novo documento clínico no banco de dados.

@@ -31,7 +31,7 @@ public class ApplicationUserRepository(ApplicationDbContext AppDbContext) : IApp
 			.FirstOrDefaultAsync(usuario => usuario.Cpf == cpf && usuario.Ativo);
 	}
 
-	public async Task<IEnumerable<ApplicationUser>> GetByTipoUsuarioAsync(TipoUsuario tipoUsuario)
+	public async Task<IEnumerable<ApplicationUser>> GetByTipoUsuarioAsync(TipoUsuarioEnum tipoUsuario)
 	{
 		return await AppDbContext.Users
 			.AsNoTracking()

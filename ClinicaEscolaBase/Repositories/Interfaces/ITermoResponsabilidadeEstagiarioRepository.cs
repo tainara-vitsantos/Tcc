@@ -10,7 +10,7 @@ public interface ITermoResponsabilidadeEstagiarioRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de termos de responsabilidade de estagiário encontrados.
 	/// </returns>
-	Task<IEnumerable<TermoResponsabilidadeEstagiario>> GetAllAsync();
+	Task<IEnumerable<TermoResponsabilidadeEstagiarioModel>> GetAllAsync();
 
 	/// <summary>
 	/// Busca um termo de responsabilidade de estagiário pelo identificador herdado de <see cref="EntityBase"/>.
@@ -19,7 +19,7 @@ public interface ITermoResponsabilidadeEstagiarioRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o termo encontrado ou <c>null</c> quando não existir.
 	/// </returns>
-	Task<TermoResponsabilidadeEstagiario?> GetByIdAsync(int id);
+	Task<TermoResponsabilidadeEstagiarioModel?> GetByIdAsync(int id);
 
 	/// <summary>
 	/// Lista os termos de responsabilidade de um estagiário específico.
@@ -28,7 +28,7 @@ public interface ITermoResponsabilidadeEstagiarioRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de termos associados ao estagiário informado.
 	/// </returns>
-	Task<IEnumerable<TermoResponsabilidadeEstagiario>> GetByEstagiarioIdAsync(string estagiarioId);
+	Task<IEnumerable<TermoResponsabilidadeEstagiarioModel>> GetByEstagiarioIdAsync(string estagiarioId);
 
 	/// <summary>
 	/// Busca o termo mais recente ou ativo assinado por um estagiário específico.
@@ -37,7 +37,7 @@ public interface ITermoResponsabilidadeEstagiarioRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o termo ativo ou mais recente do estagiário informado, ou <c>null</c> quando não existir.
 	/// </returns>
-	Task<TermoResponsabilidadeEstagiario?> GetAtivoByEstagiarioIdAsync(string estagiarioId);
+	Task<TermoResponsabilidadeEstagiarioModel?> GetAtivoByEstagiarioIdAsync(string estagiarioId);
 
 	/// <summary>
 	/// Cria um novo termo de responsabilidade de estagiário no banco de dados.
@@ -46,7 +46,7 @@ public interface ITermoResponsabilidadeEstagiarioRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o termo persistido com os valores gravados pelo banco de dados.
 	/// </returns>
-	Task<TermoResponsabilidadeEstagiario> AddAsync(TermoResponsabilidadeEstagiario termo);
+	Task<TermoResponsabilidadeEstagiarioModel> AddAsync(TermoResponsabilidadeEstagiarioModel termo);
 
 	/// <summary>
 	/// Atualiza um termo de responsabilidade de estagiário existente no banco de dados.
@@ -55,7 +55,7 @@ public interface ITermoResponsabilidadeEstagiarioRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o termo atualizado ou <c>null</c> quando o registro não for encontrado.
 	/// </returns>
-	Task<TermoResponsabilidadeEstagiario?> UpdateAsync(TermoResponsabilidadeEstagiario termo);
+	Task<TermoResponsabilidadeEstagiarioModel?> UpdateAsync(TermoResponsabilidadeEstagiarioModel termo);
 
 	/// <summary>
 	/// Remove um termo de responsabilidade de estagiário do banco de dados.

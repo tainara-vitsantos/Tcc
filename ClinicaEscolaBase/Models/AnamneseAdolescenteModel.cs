@@ -1,6 +1,6 @@
 namespace ClinicaEscolaBase.Models;
 
-public class AnamneseAdolescente
+public class AnamneseAdolescenteModel
 {
     public int DocumentoClinicoId { get; set; }
     public string? Escolaridade { get; set; }
@@ -38,5 +38,5 @@ public class AnamneseAdolescente
     public string? QuemEscolheCompanheiros { get; set; }
     public string? Religiao { get; set; }
 
-    public DocumentoClinico DocumentoClinico { get; set; } = null!;
+    public DocumentoClinicoModel DocumentoClinico { get; set; } = null!;
 }

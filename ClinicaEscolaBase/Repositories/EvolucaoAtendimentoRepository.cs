@@ -7,7 +7,7 @@ namespace ClinicaEscolaBase.Repositories;
 
 public class EvolucaoAtendimentoRepository(ApplicationDbContext AppDbContext) : IEvolucaoAtendimentoRepository
 {
-	public async Task<IEnumerable<EvolucaoAtendimento>> GetAllAsync()
+	public async Task<IEnumerable<EvolucaoAtendimentoModel>> GetAllAsync()
 	{
 		return await AppDbContext.EvolucoesAtendimento
 			.AsNoTracking()
@@ -19,7 +19,7 @@ public class EvolucaoAtendimentoRepository(ApplicationDbContext AppDbContext) : 
 			.ToListAsync();
 	}
 
-	public async Task<EvolucaoAtendimento?> GetByIdAsync(int id)
+	public async Task<EvolucaoAtendimentoModel?> GetByIdAsync(int id)
 	{
 		return await AppDbContext.EvolucoesAtendimento
 			.AsNoTracking()
@@ -30,7 +30,7 @@ public class EvolucaoAtendimentoRepository(ApplicationDbContext AppDbContext) : 
 			.FirstOrDefaultAsync(evolucao => evolucao.Id == id);
 	}
 
-	public async Task<IEnumerable<EvolucaoAtendimento>> GetByDocumentoClinicoIdAsync(int documentoClinicoId)
+	public async Task<IEnumerable<EvolucaoAtendimentoModel>> GetByDocumentoClinicoIdAsync(int documentoClinicoId)
 	{
 		return await AppDbContext.EvolucoesAtendimento
 			.AsNoTracking()
@@ -43,7 +43,7 @@ public class EvolucaoAtendimentoRepository(ApplicationDbContext AppDbContext) : 
 			.ToListAsync();
 	}
 
-	public async Task<IEnumerable<EvolucaoAtendimento>> GetByAtendimentoIdAsync(int atendimentoId)
+	public async Task<IEnumerable<EvolucaoAtendimentoModel>> GetByAtendimentoIdAsync(int atendimentoId)
 	{
 		return await AppDbContext.EvolucoesAtendimento
 			.AsNoTracking()
@@ -56,7 +56,7 @@ public class EvolucaoAtendimentoRepository(ApplicationDbContext AppDbContext) : 
 			.ToListAsync();
 	}
 
-	public async Task<EvolucaoAtendimento> AddAsync(EvolucaoAtendimento evolucao)
+	public async Task<EvolucaoAtendimentoModel> AddAsync(EvolucaoAtendimentoModel evolucao)
 	{
 		evolucao.DataCriacao = DateTime.UtcNow;
 		evolucao.DataEvolucao = evolucao.DataEvolucao == default ? DateTime.UtcNow : evolucao.DataEvolucao;
@@ -68,7 +68,7 @@ public class EvolucaoAtendimentoRepository(ApplicationDbContext AppDbContext) : 
 		return evolucao;
 	}
 
-	public async Task<EvolucaoAtendimento?> UpdateAsync(EvolucaoAtendimento evolucao)
+	public async Task<EvolucaoAtendimentoModel?> UpdateAsync(EvolucaoAtendimentoModel evolucao)
 	{
 		var existente = await AppDbContext.EvolucoesAtendimento
 			.FirstOrDefaultAsync(item => item.Id == evolucao.Id);

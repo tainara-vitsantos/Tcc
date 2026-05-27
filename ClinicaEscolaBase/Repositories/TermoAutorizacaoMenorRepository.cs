@@ -7,21 +7,21 @@ namespace ClinicaEscolaBase.Repositories;
 
 public class TermoAutorizacaoMenorRepository(ApplicationDbContext AppDbContext) : ITermoAutorizacaoMenorRepository
 {
-	public async Task<IEnumerable<TermoAutorizacaoMenor>> GetAllAsync()
+	public async Task<IEnumerable<TermoAutorizacaoMenorModel>> GetAllAsync()
 	{
 		return await AppDbContext.TermosAutorizacaoMenor
 			.AsNoTracking()
 			.ToListAsync();
 	}
 
-	public async Task<TermoAutorizacaoMenor?> GetByIdAsync(int documentoClinicoId)
+	public async Task<TermoAutorizacaoMenorModel?> GetByIdAsync(int documentoClinicoId)
 	{
 		return await AppDbContext.TermosAutorizacaoMenor
 			.AsNoTracking()
 			.FirstOrDefaultAsync(item => item.DocumentoClinicoId == documentoClinicoId);
 	}
 
-	public async Task<IEnumerable<TermoAutorizacaoMenor>> GetByResponsavelLegalIdAsync(int responsavelLegalId)
+	public async Task<IEnumerable<TermoAutorizacaoMenorModel>> GetByResponsavelLegalIdAsync(int responsavelLegalId)
 	{
 		return await AppDbContext.TermosAutorizacaoMenor
 			.AsNoTracking()
@@ -29,7 +29,7 @@ public class TermoAutorizacaoMenorRepository(ApplicationDbContext AppDbContext) 
 			.ToListAsync();
 	}
 
-	public async Task<TermoAutorizacaoMenor> AddAsync(TermoAutorizacaoMenor termo)
+	public async Task<TermoAutorizacaoMenorModel> AddAsync(TermoAutorizacaoMenorModel termo)
 	{
 		await AppDbContext.TermosAutorizacaoMenor.AddAsync(termo);
 		await AppDbContext.SaveChangesAsync();
@@ -37,7 +37,7 @@ public class TermoAutorizacaoMenorRepository(ApplicationDbContext AppDbContext) 
 		return termo;
 	}
 
-	public async Task<TermoAutorizacaoMenor?> UpdateAsync(TermoAutorizacaoMenor termo)
+	public async Task<TermoAutorizacaoMenorModel?> UpdateAsync(TermoAutorizacaoMenorModel termo)
 	{
 		var existente = await AppDbContext.TermosAutorizacaoMenor
 			.FirstOrDefaultAsync(item => item.DocumentoClinicoId == termo.DocumentoClinicoId);

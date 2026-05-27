@@ -53,7 +53,7 @@ public static class DbSeeder
         {
             var pacientes = new[]
             {
-                new Paciente
+                new PacienteModel
                 {
                     Id = Guid.NewGuid(),
                     NomeCompleto = "João Silva Santos",
@@ -66,7 +66,7 @@ public static class DbSeeder
                     Ativo = true,
                     DataCriacao = DateTime.UtcNow
                 },
-                new Paciente
+                new PacienteModel
                 {
                     Id = Guid.NewGuid(),
                     NomeCompleto = "Maria Oliveira Costa",
@@ -79,7 +79,7 @@ public static class DbSeeder
                     Ativo = true,
                     DataCriacao = DateTime.UtcNow
                 },
-                new Paciente
+                new PacienteModel
                 {
                     Id = Guid.NewGuid(),
                     NomeCompleto = "Pedro Alves Junior",
@@ -100,30 +100,30 @@ public static class DbSeeder
             // 5. Criar Prontuários
             var prontuarios = new[]
             {
-                new Prontuario
+                new ProntuarioModel
                 {
                     PacienteId = pacientes[0].Id,
                     NumeroProntuario = "2024-001",
                     DataPrimeiraConsulta = DateTime.UtcNow.AddDays(-30),
-                    SituacaoProntuario = SituacaoProntuario.Ativo,
+                    SituacaoProntuario = SituacaoProntuarioEnum.Ativo,
                     Ativo = true,
                     DataCriacao = DateTime.UtcNow
                 },
-                new Prontuario
+                new ProntuarioModel
                 {
                     PacienteId = pacientes[1].Id,
                     NumeroProntuario = "2024-002",
                     DataPrimeiraConsulta = DateTime.UtcNow.AddDays(-15),
-                    SituacaoProntuario = SituacaoProntuario.Ativo,
+                    SituacaoProntuario = SituacaoProntuarioEnum.Ativo,
                     Ativo = true,
                     DataCriacao = DateTime.UtcNow
                 },
-                new Prontuario
+                new ProntuarioModel
                 {
                     PacienteId = pacientes[2].Id,
                     NumeroProntuario = "2024-003",
                     DataPrimeiraConsulta = DateTime.UtcNow.AddDays(-7),
-                    SituacaoProntuario = SituacaoProntuario.Ativo,
+                    SituacaoProntuario = SituacaoProntuarioEnum.Ativo,
                     Ativo = true,
                     DataCriacao = DateTime.UtcNow
                 }
@@ -135,21 +135,21 @@ public static class DbSeeder
             // 6. Criar Vínculos Aluno-Paciente
             var vinculos = new[]
             {
-                new VinculoAlunoPaciente
+                new VinculoAlunoPacienteModel
                 {
                     AlunoId = aluno!.Id,
                     PacienteId = pacientes[0].Id,
-                    StatusVinculo = StatusVinculo.Ativo,
+                    StatusVinculo = StatusVinculoEnum.Ativo,
                     PermiteLeitura = true,
                     PermiteEscrita = true,
                     LiberadoPorUsuarioId = prof!.Id,
                     DataLiberacao = DateTime.UtcNow
                 },
-                new VinculoAlunoPaciente
+                new VinculoAlunoPacienteModel
                 {
                     AlunoId = aluno!.Id,
                     PacienteId = pacientes[1].Id,
-                    StatusVinculo = StatusVinculo.Ativo,
+                    StatusVinculo = StatusVinculoEnum.Ativo,
                     PermiteLeitura = true,
                     PermiteEscrita = false,
                     LiberadoPorUsuarioId = prof!.Id,
@@ -167,10 +167,10 @@ public static class DbSeeder
                 {
                     PacienteId = pacientes[0].Id,
                     ProntuarioId = prontuarios[0].Id,
-                    TipoAtendimento = TipoAtendimento.SessaoIndividual,
+                    TipoAtendimento = TipoAtendimentoEnum.SessaoIndividual,
                     DataHoraInicio = DateTime.UtcNow.AddDays(-5),
                     DataHoraFim = DateTime.UtcNow.AddDays(-5).AddHours(1),
-                    StatusAtendimento = StatusAtendimento.Realizado,
+                    StatusAtendimento = StatusAtendimentoEnum.Realizado,
                     Observacoes = "Primeira sessão - paciente apresentou ansiedade social",
                     AlunoId = aluno.Id,
                     Ativo = true,
@@ -180,9 +180,9 @@ public static class DbSeeder
                 {
                     PacienteId = pacientes[1].Id,
                     ProntuarioId = prontuarios[1].Id,
-                    TipoAtendimento = TipoAtendimento.Triagem,
+                    TipoAtendimento = TipoAtendimentoEnum.Triagem,
                     DataHoraInicio = DateTime.UtcNow.AddDays(1),
-                    StatusAtendimento = StatusAtendimento.Agendado,
+                    StatusAtendimento = StatusAtendimentoEnum.Agendado,
                     Observacoes = "Avaliação inicial",
                     AlunoId = aluno.Id,
                     Ativo = true,
@@ -199,7 +199,7 @@ public static class DbSeeder
                 ProntuarioId = prontuarios[0].Id,
                 PacienteId = pacientes[0].Id,
                 AtendimentoId = atendimentos[0].Id,
-                TipoDocumento = TipoDocumentoClinico.EvolucaoAtendimento,
+                TipoDocumento = TipoDocumentoClinicoEnum.EvolucaoAtendimento,
                 CriadoPorUsuarioId = aluno.Id,
                 DataCriacao = DateTime.UtcNow,
                 Ativo = true
@@ -211,7 +211,7 @@ public static class DbSeeder
             // 8. Criar Evoluções de Teste
             var evolucoes = new[]
             {
-                new EvolucaoAtendimento
+                new EvolucaoAtendimentoModel
                 {
                     AtendimentoId = atendimentos[0].Id,
                     DocumentoClinicoId = documento.Id,

@@ -1,6 +1,6 @@
 namespace ClinicaEscolaBase.Enums;
 
-public enum TipoUsuario
+public enum TipoUsuarioEnum
 {
     ProfessoraAdministradora = 1,
     Aluno = 2

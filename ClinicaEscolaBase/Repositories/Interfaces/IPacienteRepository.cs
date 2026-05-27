@@ -10,7 +10,7 @@ public interface IPacienteRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de pacientes ativos.
 	/// </returns>
-	Task<IEnumerable<Paciente>> GetAllAsync();
+	Task<IEnumerable<PacienteModel>> GetAllAsync();
 
 	/// <summary>
 	/// Busca um paciente ativo pelo identificador em modo somente leitura.
@@ -19,7 +19,7 @@ public interface IPacienteRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o paciente encontrado ou <c>null</c> quando não existir.
 	/// </returns>
-	Task<Paciente?> GetByIdAsync(Guid id);
+	Task<PacienteModel?> GetByIdAsync(Guid id);
 
 	/// <summary>
 	/// Busca um paciente ativo pelo identificador carregando os detalhes relacionados.
@@ -28,7 +28,7 @@ public interface IPacienteRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o paciente com os relacionamentos carregados ou <c>null</c> quando não existir.
 	/// </returns>
-	Task<Paciente?> GetByIdWithDetailsAsync(Guid id);
+	Task<PacienteModel?> GetByIdWithDetailsAsync(Guid id);
 
 	/// <summary>
 	/// Cria um novo paciente garantindo a data de criação em UTC.
@@ -37,7 +37,7 @@ public interface IPacienteRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o paciente persistido com os valores atualizados pelo banco de dados.
 	/// </returns>
-	Task<Paciente> CreateAsync(Paciente paciente);
+	Task<PacienteModel> CreateAsync(PacienteModel paciente);
 
 	/// <summary>
 	/// Atualiza um paciente existente e registra a data da última alteração em UTC.
@@ -46,7 +46,7 @@ public interface IPacienteRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o paciente atualizado ou <c>null</c> quando o registro não for encontrado.
 	/// </returns>
-	Task<Paciente?> UpdateAsync(Paciente paciente);
+	Task<PacienteModel?> UpdateAsync(PacienteModel paciente);
 
 	/// <summary>
 	/// Remove logicamente um paciente, marcando-o como inativo.

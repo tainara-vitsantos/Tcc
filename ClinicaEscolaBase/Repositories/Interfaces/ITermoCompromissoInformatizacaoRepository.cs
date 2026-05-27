@@ -10,7 +10,7 @@ public interface ITermoCompromissoInformatizacaoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de termos de compromisso de informatização encontrados.
 	/// </returns>
-	Task<IEnumerable<TermoCompromissoInformatizacao>> GetAllAsync();
+	Task<IEnumerable<TermoCompromissoInformatizacaoModel>> GetAllAsync();
 
 	/// <summary>
 	/// Busca um termo de compromisso de informatização pelo identificador do documento clínico.
@@ -19,7 +19,7 @@ public interface ITermoCompromissoInformatizacaoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o termo encontrado ou <c>null</c> quando não existir.
 	/// </returns>
-	Task<TermoCompromissoInformatizacao?> GetByIdAsync(int documentoClinicoId);
+	Task<TermoCompromissoInformatizacaoModel?> GetByIdAsync(int documentoClinicoId);
 
 	/// <summary>
 	/// Lista os termos de compromisso de informatização assinados por um estagiário específico.
@@ -28,7 +28,7 @@ public interface ITermoCompromissoInformatizacaoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de termos assinados pelo estagiário informado.
 	/// </returns>
-	Task<IEnumerable<TermoCompromissoInformatizacao>> GetByEstagiarioIdAsync(string estagiarioId);
+	Task<IEnumerable<TermoCompromissoInformatizacaoModel>> GetByEstagiarioIdAsync(string estagiarioId);
 
 	/// <summary>
 	/// Lista os termos de compromisso de informatização vinculados a um paciente específico.
@@ -37,7 +37,7 @@ public interface ITermoCompromissoInformatizacaoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de termos associados ao paciente informado.
 	/// </returns>
-	Task<IEnumerable<TermoCompromissoInformatizacao>> GetByPacienteIdAsync(Guid pacienteId);
+	Task<IEnumerable<TermoCompromissoInformatizacaoModel>> GetByPacienteIdAsync(Guid pacienteId);
 
 	/// <summary>
 	/// Cria um novo termo de compromisso de informatização no banco de dados.
@@ -46,7 +46,7 @@ public interface ITermoCompromissoInformatizacaoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o termo persistido com os valores gravados pelo banco de dados.
 	/// </returns>
-	Task<TermoCompromissoInformatizacao> AddAsync(TermoCompromissoInformatizacao termo);
+	Task<TermoCompromissoInformatizacaoModel> AddAsync(TermoCompromissoInformatizacaoModel termo);
 
 	/// <summary>
 	/// Atualiza um termo de compromisso de informatização existente no banco de dados.
@@ -55,7 +55,7 @@ public interface ITermoCompromissoInformatizacaoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o termo atualizado ou <c>null</c> quando o registro não for encontrado.
 	/// </returns>
-	Task<TermoCompromissoInformatizacao?> UpdateAsync(TermoCompromissoInformatizacao termo);
+	Task<TermoCompromissoInformatizacaoModel?> UpdateAsync(TermoCompromissoInformatizacaoModel termo);
 
 	/// <summary>
 	/// Remove um termo de compromisso de informatização do banco de dados.

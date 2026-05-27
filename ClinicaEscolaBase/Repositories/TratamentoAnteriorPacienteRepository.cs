@@ -8,7 +8,7 @@ namespace ClinicaEscolaBase.Repositories;
 
 public class TratamentoAnteriorPacienteRepository(ApplicationDbContext AppDbContext) : ITratamentoAnteriorPacienteRepository
 {
-	public async Task<IEnumerable<TratamentoAnteriorPaciente>> GetAllAsync()
+	public async Task<IEnumerable<TratamentoAnteriorPacienteModel>> GetAllAsync()
 	{
 		return await AppDbContext.TratamentosAnterioresPaciente
 			.AsNoTracking()
@@ -17,7 +17,7 @@ public class TratamentoAnteriorPacienteRepository(ApplicationDbContext AppDbCont
 			.ToListAsync();
 	}
 
-	public async Task<TratamentoAnteriorPaciente?> GetByIdAsync(int id)
+	public async Task<TratamentoAnteriorPacienteModel?> GetByIdAsync(int id)
 	{
 		return await AppDbContext.TratamentosAnterioresPaciente
 			.AsNoTracking()
@@ -25,7 +25,7 @@ public class TratamentoAnteriorPacienteRepository(ApplicationDbContext AppDbCont
 			.FirstOrDefaultAsync(tratamentoAnterior => tratamentoAnterior.Id == id);
 	}
 
-	public async Task<IEnumerable<TratamentoAnteriorPaciente>> GetByPacienteIdAsync(Guid pacienteId)
+	public async Task<IEnumerable<TratamentoAnteriorPacienteModel>> GetByPacienteIdAsync(Guid pacienteId)
 	{
 		return await AppDbContext.TratamentosAnterioresPaciente
 			.AsNoTracking()
@@ -35,7 +35,7 @@ public class TratamentoAnteriorPacienteRepository(ApplicationDbContext AppDbCont
 			.ToListAsync();
 	}
 
-	public async Task<IEnumerable<TratamentoAnteriorPaciente>> GetInternacoesByPacienteIdAsync(Guid pacienteId)
+	public async Task<IEnumerable<TratamentoAnteriorPacienteModel>> GetInternacoesByPacienteIdAsync(Guid pacienteId)
 	{
 		return await AppDbContext.TratamentosAnterioresPaciente
 			.AsNoTracking()
@@ -48,7 +48,7 @@ public class TratamentoAnteriorPacienteRepository(ApplicationDbContext AppDbCont
 			.ToListAsync();
 	}
 
-	public async Task<TratamentoAnteriorPaciente> AddAsync(TratamentoAnteriorPaciente tratamentoAnterior)
+	public async Task<TratamentoAnteriorPacienteModel> AddAsync(TratamentoAnteriorPacienteModel tratamentoAnterior)
 	{
 		tratamentoAnterior.DataCriacao = DateTime.UtcNow;
 		tratamentoAnterior.Ativo = true;
@@ -59,7 +59,7 @@ public class TratamentoAnteriorPacienteRepository(ApplicationDbContext AppDbCont
 		return tratamentoAnterior;
 	}
 
-	public async Task<TratamentoAnteriorPaciente?> UpdateAsync(TratamentoAnteriorPaciente tratamentoAnterior)
+	public async Task<TratamentoAnteriorPacienteModel?> UpdateAsync(TratamentoAnteriorPacienteModel tratamentoAnterior)
 	{
 		var existente = await AppDbContext.TratamentosAnterioresPaciente
 			.FirstOrDefaultAsync(item => item.Id == tratamentoAnterior.Id && item.Ativo);

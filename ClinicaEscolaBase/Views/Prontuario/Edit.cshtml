@@ -1,4 +1,4 @@
-@model ClinicaEscolaBase.Models.Prontuario
+@model ClinicaEscolaBase.Models.ProntuarioModel
 @{
     ViewData["Title"] = "Editar Prontuário Clínico";
     Layout = "_LayoutAdmin";
@@ -18,7 +18,7 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <label asp-for="SituacaoProntuario" class="form-label fw-bold"></label>
-                        <select asp-for="SituacaoProntuario" class="form-select" asp-items="Html.GetEnumSelectList<ClinicaEscolaBase.Enums.SituacaoProntuario>()"></select>
+                        <select asp-for="SituacaoProntuario" class="form-select" asp-items="Html.GetEnumSelectList<ClinicaEscolaBase.Enums.SituacaoProntuarioEnum>()"></select>
                     </div>
                 </div>
 

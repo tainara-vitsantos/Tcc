@@ -10,7 +10,7 @@ public interface IVinculoAlunoPacienteRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de vínculos encontrados.
 	/// </returns>
-	Task<IEnumerable<VinculoAlunoPaciente>> GetAllAsync();
+	Task<IEnumerable<VinculoAlunoPacienteModel>> GetAllAsync();
 
 	/// <summary>
 	/// Busca um vínculo de aluno e paciente pelo identificador herdado de <see cref="EntityBase"/>.
@@ -19,7 +19,7 @@ public interface IVinculoAlunoPacienteRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o vínculo encontrado ou <c>null</c> quando não existir.
 	/// </returns>
-	Task<VinculoAlunoPaciente?> GetByIdAsync(int id);
+	Task<VinculoAlunoPacienteModel?> GetByIdAsync(int id);
 
 	/// <summary>
 	/// Lista todos os vínculos de um aluno específico.
@@ -28,7 +28,7 @@ public interface IVinculoAlunoPacienteRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de vínculos associados ao aluno informado.
 	/// </returns>
-	Task<IEnumerable<VinculoAlunoPaciente>> GetByAlunoIdAsync(string alunoId);
+	Task<IEnumerable<VinculoAlunoPacienteModel>> GetByAlunoIdAsync(string alunoId);
 
 	/// <summary>
 	/// Lista todos os vínculos de um paciente específico.
@@ -37,7 +37,7 @@ public interface IVinculoAlunoPacienteRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de vínculos associados ao paciente informado.
 	/// </returns>
-	Task<IEnumerable<VinculoAlunoPaciente>> GetByPacienteIdAsync(Guid pacienteId);
+	Task<IEnumerable<VinculoAlunoPacienteModel>> GetByPacienteIdAsync(Guid pacienteId);
 
 	/// <summary>
 	/// Busca um vínculo ativo entre aluno e paciente.
@@ -47,7 +47,7 @@ public interface IVinculoAlunoPacienteRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o vínculo ativo encontrado ou <c>null</c> quando não existir.
 	/// </returns>
-	Task<VinculoAlunoPaciente?> GetVinculoAtivoAsync(string alunoId, Guid pacienteId);
+	Task<VinculoAlunoPacienteModel?> GetVinculoAtivoAsync(string alunoId, Guid pacienteId);
 
 	/// <summary>
 	/// Cria um novo vínculo de aluno e paciente no banco de dados.
@@ -56,7 +56,7 @@ public interface IVinculoAlunoPacienteRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o vínculo persistido com os valores gravados pelo banco de dados.
 	/// </returns>
-	Task<VinculoAlunoPaciente> AddAsync(VinculoAlunoPaciente vinculo);
+	Task<VinculoAlunoPacienteModel> AddAsync(VinculoAlunoPacienteModel vinculo);
 
 	/// <summary>
 	/// Atualiza um vínculo de aluno e paciente existente no banco de dados.
@@ -65,7 +65,7 @@ public interface IVinculoAlunoPacienteRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o vínculo atualizado ou <c>null</c> quando o registro não for encontrado.
 	/// </returns>
-	Task<VinculoAlunoPaciente?> UpdateAsync(VinculoAlunoPaciente vinculo);
+	Task<VinculoAlunoPacienteModel?> UpdateAsync(VinculoAlunoPacienteModel vinculo);
 
 	/// <summary>
 	/// Remove um vínculo de aluno e paciente do banco de dados.

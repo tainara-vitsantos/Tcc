@@ -12,8 +12,8 @@
             <p class="text-muted">Gestão clínica e registro de evolução</p>
         </div>
         <div class="text-end">
-            <span class="badge @(Model.StatusAtendimento == ClinicaEscolaBase.Enums.StatusAtendimento.Realizado ? "bg-success" : "bg-warning") fs-5 px-3 py-2 shadow-sm">
-                <i class="bi @(Model.StatusAtendimento == ClinicaEscolaBase.Enums.StatusAtendimento.Realizado ? "bi-check-all" : "bi-clock") me-1"></i>
+            <span class="badge @(Model.StatusAtendimento == ClinicaEscolaBase.Enums.StatusAtendimentoEnum.Realizado ? "bg-success" : "bg-warning") fs-5 px-3 py-2 shadow-sm">
+                <i class="bi @(Model.StatusAtendimento == ClinicaEscolaBase.Enums.StatusAtendimentoEnum.Realizado ? "bi-check-all" : "bi-clock") me-1"></i>
                 @Model.StatusAtendimento
             </span>
         </div>
@@ -53,7 +53,7 @@
                 <div class="card-header bg-light d-flex justify-content-between align-items-center py-3">
                     <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-journal-text me-2"></i>Evoluções e Relatos</h5>
                     
-                    @if (Model.StatusAtendimento != ClinicaEscolaBase.Enums.StatusAtendimento.Realizado)
+                    @if (Model.StatusAtendimento != ClinicaEscolaBase.Enums.StatusAtendimentoEnum.Realizado)
                     {
                         <button type="button" class="btn btn-primary btn-sm rounded-pill px-3" data-bs-toggle="collapse" data-bs-target="#addEvolucaoForm">
                             <i class="bi bi-plus-lg me-1"></i> Adicionar Evolução
@@ -62,7 +62,7 @@
                 </div>
                 <div class="card-body">
                     
-                    @if (Model.StatusAtendimento != ClinicaEscolaBase.Enums.StatusAtendimento.Realizado)
+                    @if (Model.StatusAtendimento != ClinicaEscolaBase.Enums.StatusAtendimentoEnum.Realizado)
                     {
                         <div class="collapse mb-4" id="addEvolucaoForm">
                             <form asp-action="RegistrarEvolucao" method="post" class="bg-light p-3 rounded border shadow-sm">
@@ -113,7 +113,7 @@
                 <div class="card-header bg-white fw-bold py-3">Menu de Ações</div>
                 <div class="card-body">
                     <div class="d-grid gap-2">
-                        @if (Model.StatusAtendimento != ClinicaEscolaBase.Enums.StatusAtendimento.Realizado)
+                        @if (Model.StatusAtendimento != ClinicaEscolaBase.Enums.StatusAtendimentoEnum.Realizado)
                         {
                             <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning py-2">
                                 <i class="bi bi-pencil-square me-2"></i>Editar Agendamento

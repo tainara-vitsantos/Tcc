@@ -7,7 +7,7 @@ namespace ClinicaEscolaBase.Repositories;
 
 public class TermoResponsabilidadeEstagiarioRepository(ApplicationDbContext AppDbContext) : ITermoResponsabilidadeEstagiarioRepository
 {
-	public async Task<IEnumerable<TermoResponsabilidadeEstagiario>> GetAllAsync()
+	public async Task<IEnumerable<TermoResponsabilidadeEstagiarioModel>> GetAllAsync()
 	{
 		return await AppDbContext.TermosResponsabilidadeEstagiario
 			.AsNoTracking()
@@ -16,14 +16,14 @@ public class TermoResponsabilidadeEstagiarioRepository(ApplicationDbContext AppD
 			.ToListAsync();
 	}
 
-	public async Task<TermoResponsabilidadeEstagiario?> GetByIdAsync(int id)
+	public async Task<TermoResponsabilidadeEstagiarioModel?> GetByIdAsync(int id)
 	{
 		return await AppDbContext.TermosResponsabilidadeEstagiario
 			.AsNoTracking()
 			.FirstOrDefaultAsync(item => item.Id == id);
 	}
 
-	public async Task<IEnumerable<TermoResponsabilidadeEstagiario>> GetByEstagiarioIdAsync(string estagiarioId)
+	public async Task<IEnumerable<TermoResponsabilidadeEstagiarioModel>> GetByEstagiarioIdAsync(string estagiarioId)
 	{
 		return await AppDbContext.TermosResponsabilidadeEstagiario
 			.AsNoTracking()
@@ -33,7 +33,7 @@ public class TermoResponsabilidadeEstagiarioRepository(ApplicationDbContext AppD
 			.ToListAsync();
 	}
 
-	public async Task<TermoResponsabilidadeEstagiario?> GetAtivoByEstagiarioIdAsync(string estagiarioId)
+	public async Task<TermoResponsabilidadeEstagiarioModel?> GetAtivoByEstagiarioIdAsync(string estagiarioId)
 	{
 		return await AppDbContext.TermosResponsabilidadeEstagiario
 			.AsNoTracking()
@@ -43,7 +43,7 @@ public class TermoResponsabilidadeEstagiarioRepository(ApplicationDbContext AppD
 			.FirstOrDefaultAsync();
 	}
 
-	public async Task<TermoResponsabilidadeEstagiario> AddAsync(TermoResponsabilidadeEstagiario termo)
+	public async Task<TermoResponsabilidadeEstagiarioModel> AddAsync(TermoResponsabilidadeEstagiarioModel termo)
 	{
 		termo.DataCriacao = DateTime.UtcNow;
 		termo.Ativo = true;
@@ -54,7 +54,7 @@ public class TermoResponsabilidadeEstagiarioRepository(ApplicationDbContext AppD
 		return termo;
 	}
 
-	public async Task<TermoResponsabilidadeEstagiario?> UpdateAsync(TermoResponsabilidadeEstagiario termo)
+	public async Task<TermoResponsabilidadeEstagiarioModel?> UpdateAsync(TermoResponsabilidadeEstagiarioModel termo)
 	{
 		var existente = await AppDbContext.TermosResponsabilidadeEstagiario
 			.FirstOrDefaultAsync(item => item.Id == termo.Id && item.Ativo);

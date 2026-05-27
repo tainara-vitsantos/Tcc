@@ -28,7 +28,7 @@
                     <label for="acao" class="form-label">Ação</label>
                     <select class="form-control" id="acao" name="acao">
                         <option value="">Todas</option>
-                        @foreach (var acao in Enum.GetValues(typeof(TipoAcaoAuditoria)))
+                        @foreach (var acao in Enum.GetValues(typeof(TipoAcaoAuditoriaEnum)))
                         {
                             <option value="@acao" selected="@(ViewData["Acao"]?.ToString() == acao.ToString())">@acao</option>
                         }
@@ -117,14 +117,14 @@
 </div>
 
 @{
-    string GetBadgeClass(TipoAcaoAuditoria acao)
+    string GetBadgeClass(TipoAcaoAuditoriaEnum acao)
     {
         return acao switch
         {
-            TipoAcaoAuditoria.Insercao => "success",
-            TipoAcaoAuditoria.Atualizacao => "warning",
-            TipoAcaoAuditoria.ExclusaoLogica => "danger",
-            TipoAcaoAuditoria.Visualizacao => "info",
+            TipoAcaoAuditoriaEnum.Insercao => "success",
+            TipoAcaoAuditoriaEnum.Atualizacao => "warning",
+            TipoAcaoAuditoriaEnum.ExclusaoLogica => "danger",
+            TipoAcaoAuditoriaEnum.Visualizacao => "info",
             _ => "secondary"
         };
     }

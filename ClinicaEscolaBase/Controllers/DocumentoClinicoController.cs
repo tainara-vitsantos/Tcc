@@ -119,8 +119,8 @@ public class DocumentoClinicoController(
             PacienteId = viewModel.PacienteId,
             ProntuarioId = prontuario.Id,
             AtendimentoId = viewModel.AtendimentoId,
-            TipoDocumento = TipoDocumentoClinico.AnamneseAdulto,
-            StatusDocumento = StatusDocumentoClinico.Rascunho,
+            TipoDocumento = TipoDocumentoClinicoEnum.AnamneseAdulto,
+            StatusDocumento = StatusDocumentoClinicoEnum.Rascunho,
             DataDocumento = DateTime.UtcNow,
             CriadoPorUsuarioId = usuarioId,
             Observacoes = System.Text.Json.JsonSerializer.Serialize(viewModel)
@@ -134,7 +134,7 @@ public class DocumentoClinicoController(
             documento.Id,
             viewModel.PacienteId,
             documento.ProntuarioId,
-            TipoDocumentoClinico.AnamneseAdulto);
+            TipoDocumentoClinicoEnum.AnamneseAdulto);
         await auditService.SaveAuditAsync();
 
         return RedirectToAction("Details", "Paciente", new { id = viewModel.PacienteId });
@@ -201,8 +201,8 @@ public class DocumentoClinicoController(
             PacienteId = viewModel.PacienteId,
             ProntuarioId = prontuario.Id,
             AtendimentoId = viewModel.AtendimentoId,
-            TipoDocumento = TipoDocumentoClinico.AnamneseAdolescente,
-            StatusDocumento = StatusDocumentoClinico.Rascunho,
+            TipoDocumento = TipoDocumentoClinicoEnum.AnamneseAdolescente,
+            StatusDocumento = StatusDocumentoClinicoEnum.Rascunho,
             DataDocumento = DateTime.UtcNow,
             CriadoPorUsuarioId = usuarioId,
             Observacoes = System.Text.Json.JsonSerializer.Serialize(viewModel)
@@ -216,7 +216,7 @@ public class DocumentoClinicoController(
             documento.Id,
             viewModel.PacienteId,
             documento.ProntuarioId,
-            TipoDocumentoClinico.AnamneseAdolescente);
+            TipoDocumentoClinicoEnum.AnamneseAdolescente);
         await auditService.SaveAuditAsync();
 
         return RedirectToAction("Details", "Paciente", new { id = viewModel.PacienteId });

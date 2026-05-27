@@ -7,21 +7,21 @@ namespace ClinicaEscolaBase.Repositories;
 
 public class TermoPsicoterapiaIndividualRepository(ApplicationDbContext AppDbContext) : ITermoPsicoterapiaIndividualRepository
 {
-	public async Task<IEnumerable<TermoPsicoterapiaIndividual>> GetAllAsync()
+	public async Task<IEnumerable<TermoPsicoterapiaIndividualModel>> GetAllAsync()
 	{
 		return await AppDbContext.TermosPsicoterapiaIndividual
 			.AsNoTracking()
 			.ToListAsync();
 	}
 
-	public async Task<TermoPsicoterapiaIndividual?> GetByIdAsync(int documentoClinicoId)
+	public async Task<TermoPsicoterapiaIndividualModel?> GetByIdAsync(int documentoClinicoId)
 	{
 		return await AppDbContext.TermosPsicoterapiaIndividual
 			.AsNoTracking()
 			.FirstOrDefaultAsync(item => item.DocumentoClinicoId == documentoClinicoId);
 	}
 
-	public async Task<TermoPsicoterapiaIndividual> AddAsync(TermoPsicoterapiaIndividual termo)
+	public async Task<TermoPsicoterapiaIndividualModel> AddAsync(TermoPsicoterapiaIndividualModel termo)
 	{
 		await AppDbContext.TermosPsicoterapiaIndividual.AddAsync(termo);
 		await AppDbContext.SaveChangesAsync();
@@ -29,7 +29,7 @@ public class TermoPsicoterapiaIndividualRepository(ApplicationDbContext AppDbCon
 		return termo;
 	}
 
-	public async Task<TermoPsicoterapiaIndividual?> UpdateAsync(TermoPsicoterapiaIndividual termo)
+	public async Task<TermoPsicoterapiaIndividualModel?> UpdateAsync(TermoPsicoterapiaIndividualModel termo)
 	{
 		var existente = await AppDbContext.TermosPsicoterapiaIndividual
 			.FirstOrDefaultAsync(item => item.DocumentoClinicoId == termo.DocumentoClinicoId);

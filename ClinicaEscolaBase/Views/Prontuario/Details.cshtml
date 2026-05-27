@@ -1,4 +1,4 @@
-@model ClinicaEscolaBase.Models.Prontuario
+@model ClinicaEscolaBase.Models.ProntuarioModel
 
 @{
     ViewData["Title"] = "Prontuário Clínico";
@@ -15,7 +15,7 @@
             <p class="fs-5 text-muted">Paciente: <strong>@Model.Paciente?.NomeCompleto</strong></p>
         </div>
         <div>
-            <span class="badge @(Model.SituacaoProntuario == ClinicaEscolaBase.Enums.SituacaoProntuario.Ativo ? "bg-success" : "bg-danger") fs-6 px-3 py-2">
+            <span class="badge @(Model.SituacaoProntuario == ClinicaEscolaBase.Enums.SituacaoProntuarioEnum.Ativo ? "bg-success" : "bg-danger") fs-6 px-3 py-2">
                 Status: @Model.SituacaoProntuario
             </span>
         </div>
@@ -71,9 +71,9 @@
                                         @{
                                             var badgeClass = atend.StatusAtendimento switch
                                             {
-                                                ClinicaEscolaBase.Enums.StatusAtendimento.Realizado => "bg-success",
-                                                ClinicaEscolaBase.Enums.StatusAtendimento.Agendado => "bg-info text-dark",
-                                                ClinicaEscolaBase.Enums.StatusAtendimento.Cancelado => "bg-danger",
+                                                ClinicaEscolaBase.Enums.StatusAtendimentoEnum.Realizado => "bg-success",
+                                                ClinicaEscolaBase.Enums.StatusAtendimentoEnum.Agendado => "bg-info text-dark",
+                                                ClinicaEscolaBase.Enums.StatusAtendimentoEnum.Cancelado => "bg-danger",
                                                 _ => "bg-secondary"
                                             };
                                         }

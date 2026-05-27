@@ -2,7 +2,7 @@ using System;
 
 namespace ClinicaEscolaBase.Models;
 
-public class TermoAutorizacaoMenor
+public class TermoAutorizacaoMenorModel
 {
     public int DocumentoClinicoId { get; set; }
     public int ResponsavelLegalId { get; set; }

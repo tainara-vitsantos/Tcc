@@ -7,21 +7,21 @@ namespace ClinicaEscolaBase.Repositories;
 
 public class PlantaoPsicologicoRepository(ApplicationDbContext AppDbContext) : IPlantaoPsicologicoRepository
 {
-	public async Task<IEnumerable<PlantaoPsicologico>> GetAllAsync()
+	public async Task<IEnumerable<PlantaoPsicologicoModel>> GetAllAsync()
 	{
 		return await AppDbContext.PlantaoPsicologico
 			.AsNoTracking()
 			.ToListAsync();
 	}
 
-	public async Task<PlantaoPsicologico?> GetByIdAsync(int documentoClinicoId)
+	public async Task<PlantaoPsicologicoModel?> GetByIdAsync(int documentoClinicoId)
 	{
 		return await AppDbContext.PlantaoPsicologico
 			.AsNoTracking()
 			.FirstOrDefaultAsync(item => item.DocumentoClinicoId == documentoClinicoId);
 	}
 
-	public async Task<PlantaoPsicologico> AddAsync(PlantaoPsicologico plantaoPsicologico)
+	public async Task<PlantaoPsicologicoModel> AddAsync(PlantaoPsicologicoModel plantaoPsicologico)
 	{
 		await AppDbContext.PlantaoPsicologico.AddAsync(plantaoPsicologico);
 		await AppDbContext.SaveChangesAsync();
@@ -29,7 +29,7 @@ public class PlantaoPsicologicoRepository(ApplicationDbContext AppDbContext) : I
 		return plantaoPsicologico;
 	}
 
-	public async Task<PlantaoPsicologico?> UpdateAsync(PlantaoPsicologico plantaoPsicologico)
+	public async Task<PlantaoPsicologicoModel?> UpdateAsync(PlantaoPsicologicoModel plantaoPsicologico)
 	{
 		var existente = await AppDbContext.PlantaoPsicologico
 			.FirstOrDefaultAsync(item => item.DocumentoClinicoId == plantaoPsicologico.DocumentoClinicoId);

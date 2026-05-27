@@ -13,7 +13,7 @@ public interface IAuditService
     /// </summary>
     Task LogAsync(
         string usuarioId,
-        TipoAcaoAuditoria tipoAcao,
+        TipoAcaoAuditoriaEnum tipoAcao,
         string entidade,
         string registroId,
         Guid? pacienteId = null,
@@ -35,7 +35,7 @@ public interface IAuditService
         int documentoId,
         Guid pacienteId,
         int? prontuarioId,
-        TipoDocumentoClinico tipo);
+        TipoDocumentoClinicoEnum tipo);
 
     /// <summary>
     /// Registra edição de documento clínico.
@@ -45,7 +45,7 @@ public interface IAuditService
         int documentoId,
         Guid pacienteId,
         int? prontuarioId,
-        TipoDocumentoClinico tipo,
+        TipoDocumentoClinicoEnum tipo,
         object? valoresAntes = null,
         object? valoresDepois = null);
 

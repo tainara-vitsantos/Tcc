@@ -1,6 +1,6 @@
 namespace ClinicaEscolaBase.Enums;
 
-public enum TipoDocumentoClinico
+public enum TipoDocumentoClinicoEnum
 {
     IdentificacaoPaciente = 1,
     AnamneseAdulto = 2,

@@ -4,16 +4,16 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ClinicaEscolaBase.Configurations;
 
-public class TermoCompromissoInformatizacaoConfiguration : IEntityTypeConfiguration<TermoCompromissoInformatizacao>
+public class TermoCompromissoInformatizacaoConfiguration : IEntityTypeConfiguration<TermoCompromissoInformatizacaoModel>
 {
-    public void Configure(EntityTypeBuilder<TermoCompromissoInformatizacao> builder)
+    public void Configure(EntityTypeBuilder<TermoCompromissoInformatizacaoModel> builder)
     {
         builder.ToTable("TermosCompromissoInformatizacao");
         builder.HasKey(x => x.DocumentoClinicoId);
 
         builder.HasOne(x => x.DocumentoClinico)
             .WithOne(x => x.TermoCompromissoInformatizacao)
-            .HasForeignKey<TermoCompromissoInformatizacao>(x => x.DocumentoClinicoId)
+            .HasForeignKey<TermoCompromissoInformatizacaoModel>(x => x.DocumentoClinicoId)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(x => x.EstagiarioUsuario)

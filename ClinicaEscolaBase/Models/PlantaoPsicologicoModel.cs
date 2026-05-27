@@ -2,7 +2,7 @@ using System;
 
 namespace ClinicaEscolaBase.Models;
 
-public class PlantaoPsicologico
+public class PlantaoPsicologicoModel
 {
     public int DocumentoClinicoId { get; set; }
     public DateTime? DataAtendimento { get; set; }

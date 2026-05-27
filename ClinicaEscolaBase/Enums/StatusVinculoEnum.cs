@@ -1,6 +1,6 @@
 namespace ClinicaEscolaBase.Enums;
 
-public enum StatusVinculo
+public enum StatusVinculoEnum
 {
     Ativo = 1,
     Encerrado = 2,

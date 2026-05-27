@@ -1,4 +1,4 @@
-@model IEnumerable<ClinicaEscolaBase.Models.Prontuario>
+@model IEnumerable<ClinicaEscolaBase.Models.ProntuarioModel>
 @{
     ViewData["Title"] = "Prontuários Clínico";
     Layout = "_LayoutAdmin";
@@ -27,7 +27,7 @@
                     <td>@item.Paciente?.NomeCompleto</td>
                     <td>@item.DataPrimeiraConsulta?.ToString("dd/MM/yyyy")</td>
                     <td>
-                        <span class="badge @(item.SituacaoProntuario == ClinicaEscolaBase.Enums.SituacaoProntuario.Ativo ? "bg-success" : "bg-secondary")">
+                        <span class="badge @(item.SituacaoProntuario == ClinicaEscolaBase.Enums.SituacaoProntuarioEnum.Ativo ? "bg-success" : "bg-secondary")">
                             @item.SituacaoProntuario
                         </span>
                     </td>

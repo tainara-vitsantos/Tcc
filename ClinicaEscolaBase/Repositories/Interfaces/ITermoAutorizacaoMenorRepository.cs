@@ -10,7 +10,7 @@ public interface ITermoAutorizacaoMenorRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de termos de autorização de menor encontrados.
 	/// </returns>
-	Task<IEnumerable<TermoAutorizacaoMenor>> GetAllAsync();
+	Task<IEnumerable<TermoAutorizacaoMenorModel>> GetAllAsync();
 
 	/// <summary>
 	/// Busca um termo de autorização de menor pelo identificador do documento clínico.
@@ -19,7 +19,7 @@ public interface ITermoAutorizacaoMenorRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o termo encontrado ou <c>null</c> quando não existir.
 	/// </returns>
-	Task<TermoAutorizacaoMenor?> GetByIdAsync(int documentoClinicoId);
+	Task<TermoAutorizacaoMenorModel?> GetByIdAsync(int documentoClinicoId);
 
 	/// <summary>
 	/// Lista os termos de autorização de menor vinculados a um responsável legal específico.
@@ -28,7 +28,7 @@ public interface ITermoAutorizacaoMenorRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de termos associados ao responsável legal informado.
 	/// </returns>
-	Task<IEnumerable<TermoAutorizacaoMenor>> GetByResponsavelLegalIdAsync(int responsavelLegalId);
+	Task<IEnumerable<TermoAutorizacaoMenorModel>> GetByResponsavelLegalIdAsync(int responsavelLegalId);
 
 	/// <summary>
 	/// Cria um novo termo de autorização de menor no banco de dados.
@@ -37,7 +37,7 @@ public interface ITermoAutorizacaoMenorRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o termo persistido com os valores gravados pelo banco de dados.
 	/// </returns>
-	Task<TermoAutorizacaoMenor> AddAsync(TermoAutorizacaoMenor termo);
+	Task<TermoAutorizacaoMenorModel> AddAsync(TermoAutorizacaoMenorModel termo);
 
 	/// <summary>
 	/// Atualiza um termo de autorização de menor existente no banco de dados.
@@ -46,7 +46,7 @@ public interface ITermoAutorizacaoMenorRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o termo atualizado ou <c>null</c> quando o registro não for encontrado.
 	/// </returns>
-	Task<TermoAutorizacaoMenor?> UpdateAsync(TermoAutorizacaoMenor termo);
+	Task<TermoAutorizacaoMenorModel?> UpdateAsync(TermoAutorizacaoMenorModel termo);
 
 	/// <summary>
 	/// Remove um termo de autorização de menor do banco de dados.

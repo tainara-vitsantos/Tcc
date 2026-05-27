@@ -3,10 +3,10 @@ using System;
 
 namespace ClinicaEscolaBase.Models;
 
-public class Auditoria : EntityBase
+public class AuditoriaModel : EntityBase
 {
     public string UsuarioId { get; set; } = string.Empty;
-    public TipoAcaoAuditoria TipoAcao { get; set; }
+    public TipoAcaoAuditoriaEnum TipoAcao { get; set; }
     public string Entidade { get; set; } = string.Empty;
     public string RegistroId { get; set; } = string.Empty;
     public Guid? PacienteId { get; set; }
@@ -19,6 +19,6 @@ public class Auditoria : EntityBase
     public string? Observacoes { get; set; }
 
     public ApplicationUser Usuario { get; set; } = null!;
-    public Paciente? Paciente { get; set; }
-    public Prontuario? Prontuario { get; set; }
+    public PacienteModel? Paciente { get; set; }
+    public ProntuarioModel? Prontuario { get; set; }
 }

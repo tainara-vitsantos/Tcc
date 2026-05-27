@@ -8,7 +8,7 @@ namespace ClinicaEscolaBase.Repositories;
 
 public class VinculoAlunoPacienteRepository(ApplicationDbContext AppDbContext) : IVinculoAlunoPacienteRepository
 {
-	public async Task<IEnumerable<VinculoAlunoPaciente>> GetAllAsync()
+	public async Task<IEnumerable<VinculoAlunoPacienteModel>> GetAllAsync()
 	{
 		return await AppDbContext.VinculosAlunoPaciente
 			.AsNoTracking()
@@ -20,7 +20,7 @@ public class VinculoAlunoPacienteRepository(ApplicationDbContext AppDbContext) :
 			.ToListAsync();
 	}
 
-	public async Task<VinculoAlunoPaciente?> GetByIdAsync(int id)
+	public async Task<VinculoAlunoPacienteModel?> GetByIdAsync(int id)
 	{
 		return await AppDbContext.VinculosAlunoPaciente
 			.AsNoTracking()
@@ -31,7 +31,7 @@ public class VinculoAlunoPacienteRepository(ApplicationDbContext AppDbContext) :
 			.FirstOrDefaultAsync(vinculo => vinculo.Id == id);
 	}
 
-	public async Task<IEnumerable<VinculoAlunoPaciente>> GetByAlunoIdAsync(string alunoId)
+	public async Task<IEnumerable<VinculoAlunoPacienteModel>> GetByAlunoIdAsync(string alunoId)
 	{
 		return await AppDbContext.VinculosAlunoPaciente
 			.AsNoTracking()
@@ -44,7 +44,7 @@ public class VinculoAlunoPacienteRepository(ApplicationDbContext AppDbContext) :
 			.ToListAsync();
 	}
 
-	public async Task<IEnumerable<VinculoAlunoPaciente>> GetByPacienteIdAsync(Guid pacienteId)
+	public async Task<IEnumerable<VinculoAlunoPacienteModel>> GetByPacienteIdAsync(Guid pacienteId)
 	{
 		return await AppDbContext.VinculosAlunoPaciente
 			.AsNoTracking()
@@ -57,7 +57,7 @@ public class VinculoAlunoPacienteRepository(ApplicationDbContext AppDbContext) :
 			.ToListAsync();
 	}
 
-	public async Task<VinculoAlunoPaciente?> GetVinculoAtivoAsync(string alunoId, Guid pacienteId)
+	public async Task<VinculoAlunoPacienteModel?> GetVinculoAtivoAsync(string alunoId, Guid pacienteId)
 	{
 		return await AppDbContext.VinculosAlunoPaciente
 			.AsNoTracking()
@@ -68,13 +68,13 @@ public class VinculoAlunoPacienteRepository(ApplicationDbContext AppDbContext) :
 			.Where(vinculo =>
 				vinculo.AlunoId == alunoId &&
 				vinculo.PacienteId == pacienteId &&
-				vinculo.StatusVinculo == StatusVinculo.Ativo &&
+				vinculo.StatusVinculo == StatusVinculoEnum.Ativo &&
 				vinculo.DataRevogacao == null)
 			.OrderByDescending(vinculo => vinculo.DataLiberacao)
 			.FirstOrDefaultAsync();
 	}
 
-	public async Task<VinculoAlunoPaciente> AddAsync(VinculoAlunoPaciente vinculo)
+	public async Task<VinculoAlunoPacienteModel> AddAsync(VinculoAlunoPacienteModel vinculo)
 	{
 		vinculo.DataCriacao = DateTime.UtcNow;
 		vinculo.Ativo = true;
@@ -85,7 +85,7 @@ public class VinculoAlunoPacienteRepository(ApplicationDbContext AppDbContext) :
 		return vinculo;
 	}
 
-	public async Task<VinculoAlunoPaciente?> UpdateAsync(VinculoAlunoPaciente vinculo)
+	public async Task<VinculoAlunoPacienteModel?> UpdateAsync(VinculoAlunoPacienteModel vinculo)
 	{
 		var existente = await AppDbContext.VinculosAlunoPaciente
 			.FirstOrDefaultAsync(item => item.Id == vinculo.Id && item.Ativo);

@@ -1,8 +1,7 @@
-using System;
 
 namespace ClinicaEscolaBase.Models;
 
-public class EvolucaoAtendimento : EntityBase
+public class EvolucaoAtendimentoModel : EntityBase
 {
     public int DocumentoClinicoId { get; set; }
     public int? AtendimentoId { get; set; }
@@ -13,8 +12,8 @@ public class EvolucaoAtendimento : EntityBase
     public string? AssinaturaAluno { get; set; }
     public string? AssinaturaSupervisor { get; set; }
 
-    public DocumentoClinico DocumentoClinico { get; set; } = null!;
-    public Atendimento? Atendimento { get; set; }
-    public ApplicationUser CriadoPorUsuario { get; set; } = null!;
-    public ApplicationUser? Supervisor { get; set; }
+    public DocumentoClinicoModel DocumentoClinico { get; set; } = null!;
+    public AtendimentoModel? Atendimento { get; set; }
+    public ApplicationUserModel CriadoPorUsuario { get; set; } = null!;
+    public ApplicationUserModel? Supervisor { get; set; }
 }

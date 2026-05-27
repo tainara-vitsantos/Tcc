@@ -57,7 +57,7 @@ public class AtendimentoRepository(ApplicationDbContext AppDbContext) : IAtendim
 			.ToListAsync();
 	}
 
-	public async Task<IEnumerable<Atendimento>> GetByStatusAsync(StatusAtendimento status)
+	public async Task<IEnumerable<Atendimento>> GetByStatusAsync(StatusAtendimentoEnum status)
 	{
 		return await AppDbContext.Atendimentos
 			.AsNoTracking()

@@ -1,6 +1,6 @@
 namespace ClinicaEscolaBase.Enums;
 
-public enum TipoAtendimento
+public enum TipoAtendimentoEnum
 {
     PlantaoPsicologico = 1,
     SessaoIndividual = 2,

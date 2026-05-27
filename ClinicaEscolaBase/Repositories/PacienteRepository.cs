@@ -7,7 +7,7 @@ namespace ClinicaEscolaBase.Repositories;
 
 public class PacienteRepository(ApplicationDbContext context) : IPacienteRepository
 {
-	public async Task<IEnumerable<Paciente>> GetAllAsync()
+	public async Task<IEnumerable<PacienteModel>> GetAllAsync()
 	{
 		return await context.Pacientes
 			.AsNoTracking()
@@ -15,14 +15,14 @@ public class PacienteRepository(ApplicationDbContext context) : IPacienteReposit
 			.ToListAsync();
 	}
 
-	public async Task<Paciente?> GetByIdAsync(Guid id)
+	public async Task<PacienteModel?> GetByIdAsync(Guid id)
 	{
 		return await context.Pacientes
 			.AsNoTracking()
 			.FirstOrDefaultAsync(paciente => paciente.Id == id && paciente.Ativo);
 	}
 
-	public async Task<Paciente?> GetByIdWithDetailsAsync(Guid id)
+	public async Task<PacienteModel?> GetByIdWithDetailsAsync(Guid id)
 	{
 		return await context.Pacientes
 			.AsNoTracking()
@@ -31,7 +31,7 @@ public class PacienteRepository(ApplicationDbContext context) : IPacienteReposit
 			.FirstOrDefaultAsync(paciente => paciente.Id == id && paciente.Ativo);
 	}
 
-	public async Task<Paciente> CreateAsync(Paciente paciente)
+	public async Task<PacienteModel> CreateAsync(PacienteModel paciente)
 	{
 		paciente.DataCriacao = DateTime.UtcNow;
 		paciente.Ativo = true;
@@ -42,7 +42,7 @@ public class PacienteRepository(ApplicationDbContext context) : IPacienteReposit
 		return paciente;
 	}
 
-	public async Task<Paciente?> UpdateAsync(Paciente paciente)
+	public async Task<PacienteModel?> UpdateAsync(PacienteModel paciente)
 	{
 		var existente = await context.Pacientes
 			.FirstOrDefaultAsync(item => item.Id == paciente.Id && item.Ativo);

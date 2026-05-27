@@ -1,6 +1,6 @@
 namespace ClinicaEscolaBase.Enums;
 
-public enum TipoAcaoAuditoria
+public enum TipoAcaoAuditoriaEnum
 {
     Login = 1,
     Logout = 2,

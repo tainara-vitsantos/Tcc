@@ -1,8 +1,7 @@
-using System;
 
 namespace ClinicaEscolaBase.Models;
 
-public class AnamneseAdulto
+public class AnamneseAdultoModel
 {
     public int DocumentoClinicoId { get; set; }
     public string? FrequenciaAtendimento { get; set; }
@@ -64,5 +63,5 @@ public class AnamneseAdulto
     public string? ConscienciaDoencaAtual { get; set; }
     public string? HipoteseDiagnostica { get; set; }
 
-    public DocumentoClinico DocumentoClinico { get; set; } = null!;
+    public DocumentoClinicoModel DocumentoClinico { get; set; } = null!;
 }

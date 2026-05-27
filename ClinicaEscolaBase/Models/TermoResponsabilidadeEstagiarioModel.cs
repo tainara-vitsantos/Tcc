@@ -2,7 +2,7 @@ using System;
 
 namespace ClinicaEscolaBase.Models;
 
-public class TermoResponsabilidadeEstagiario : EntityBase
+public class TermoResponsabilidadeEstagiarioModel : EntityBase
 {
     public string EstagiarioUsuarioId { get; set; } = string.Empty;
     public string? MatriculaInformada { get; set; }

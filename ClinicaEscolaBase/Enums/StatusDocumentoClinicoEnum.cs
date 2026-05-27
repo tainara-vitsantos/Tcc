@@ -1,6 +1,6 @@
 namespace ClinicaEscolaBase.Enums;
 
-public enum StatusDocumentoClinico
+public enum StatusDocumentoClinicoEnum
 {
     Rascunho = 1,
     Finalizado = 2,

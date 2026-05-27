@@ -2,7 +2,7 @@ using System;
 
 namespace ClinicaEscolaBase.Models;
 
-public class TermoCompromissoInformatizacao
+public class TermoCompromissoInformatizacaoModel
 {
     public int DocumentoClinicoId { get; set; }
     public string EstagiarioUsuarioId { get; set; } = string.Empty;
@@ -17,5 +17,5 @@ public class TermoCompromissoInformatizacao
 
     public DocumentoClinico DocumentoClinico { get; set; } = null!;
     public ApplicationUser EstagiarioUsuario { get; set; } = null!;
-    public Paciente Paciente { get; set; } = null!;
+    public PacienteModel Paciente { get; set; } = null!;
 }

@@ -4,16 +4,16 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ClinicaEscolaBase.Configurations;
 
-public class TermoPsicoterapiaIndividualConfiguration : IEntityTypeConfiguration<TermoPsicoterapiaIndividual>
+public class TermoPsicoterapiaIndividualConfiguration : IEntityTypeConfiguration<TermoPsicoterapiaIndividualModel>
 {
-    public void Configure(EntityTypeBuilder<TermoPsicoterapiaIndividual> builder)
+    public void Configure(EntityTypeBuilder<TermoPsicoterapiaIndividualModel> builder)
     {
         builder.ToTable("TermosPsicoterapiaIndividual");
         builder.HasKey(x => x.DocumentoClinicoId);
 
         builder.HasOne(x => x.DocumentoClinico)
             .WithOne(x => x.TermoPsicoterapiaIndividual)
-            .HasForeignKey<TermoPsicoterapiaIndividual>(x => x.DocumentoClinicoId)
+            .HasForeignKey<TermoPsicoterapiaIndividualModel>(x => x.DocumentoClinicoId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

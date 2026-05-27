@@ -5,9 +5,9 @@ namespace ClinicaEscolaBase.ViewModels;
 
 public class ProntuarioDetalhesViewModel
 {
-    public Paciente Paciente { get; set; } = null!;
-    public Prontuario Prontuario { get; set; } = null!;
+    public PacienteModel Paciente { get; set; } = null!;
+    public ProntuarioModel Prontuario { get; set; } = null!;
     public IReadOnlyCollection<Atendimento> Atendimentos { get; set; } = new List<Atendimento>();
     public IReadOnlyCollection<DocumentoClinico> DocumentosClinicos { get; set; } = new List<DocumentoClinico>();
-    public IReadOnlyCollection<EvolucaoAtendimento> Evolucoes { get; set; } = new List<EvolucaoAtendimento>();
+    public IReadOnlyCollection<EvolucaoAtendimentoModel> Evolucoes { get; set; } = new List<EvolucaoAtendimentoModel>();
 }

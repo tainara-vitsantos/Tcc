@@ -18,7 +18,7 @@ public class AuditService(ApplicationDbContext context, IHttpContextAccessor htt
     /// </summary>
     public Task LogAsync(
         string usuarioId,
-        TipoAcaoAuditoria tipoAcao,
+        TipoAcaoAuditoriaEnum tipoAcao,
         string entidade,
         string registroId,
         Guid? pacienteId = null,
@@ -58,8 +58,8 @@ public class AuditService(ApplicationDbContext context, IHttpContextAccessor htt
     {
         await LogAsync(
             usuarioId,
-            TipoAcaoAuditoria.Visualizacao,
-            nameof(Prontuario),
+            TipoAcaoAuditoriaEnum.Visualizacao,
+            nameof(ProntuarioModel),
             prontuarioId.ToString(),
             pacienteId,
             prontuarioId,
@@ -74,11 +74,11 @@ public class AuditService(ApplicationDbContext context, IHttpContextAccessor htt
         int documentoId,
         Guid pacienteId,
         int? prontuarioId,
-        TipoDocumentoClinico tipo)
+        TipoDocumentoClinicoEnum tipo)
     {
         await LogAsync(
             usuarioId,
-            TipoAcaoAuditoria.Insercao,
+            TipoAcaoAuditoriaEnum.Insercao,
             nameof(DocumentoClinico),
             documentoId.ToString(),
             pacienteId,
@@ -94,13 +94,13 @@ public class AuditService(ApplicationDbContext context, IHttpContextAccessor htt
         int documentoId,
         Guid pacienteId,
         int? prontuarioId,
-        TipoDocumentoClinico tipo,
+        TipoDocumentoClinicoEnum tipo,
         object? valoresAntes = null,
         object? valoresDepois = null)
     {
         await LogAsync(
             usuarioId,
-            TipoAcaoAuditoria.Atualizacao,
+            TipoAcaoAuditoriaEnum.Atualizacao,
             nameof(DocumentoClinico),
             documentoId.ToString(),
             pacienteId,
@@ -122,7 +122,7 @@ public class AuditService(ApplicationDbContext context, IHttpContextAccessor htt
     {
         await LogAsync(
             usuarioId,
-            TipoAcaoAuditoria.ExclusaoLogica,
+            TipoAcaoAuditoriaEnum.ExclusaoLogica,
             nameof(DocumentoClinico),
             documentoId.ToString(),
             pacienteId,

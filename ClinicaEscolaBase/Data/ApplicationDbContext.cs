@@ -7,22 +7,22 @@ namespace ClinicaEscolaBase.Data;
 
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options)
 {
-    public DbSet<Paciente> Pacientes => Set<Paciente>();
-    public DbSet<Prontuario> Prontuarios => Set<Prontuario>();
-    public DbSet<TratamentoAnteriorPaciente> TratamentosAnterioresPaciente => Set<TratamentoAnteriorPaciente>();
+    public DbSet<PacienteModel> Pacientes => Set<PacienteModel>();
+    public DbSet<ProntuarioModel> Prontuarios => Set<ProntuarioModel>();
+    public DbSet<TratamentoAnteriorPacienteModel> TratamentosAnterioresPaciente => Set<TratamentoAnteriorPacienteModel>();
     public DbSet<ResponsavelLegal> ResponsaveisLegais => Set<ResponsavelLegal>();
-    public DbSet<VinculoAlunoPaciente> VinculosAlunoPaciente => Set<VinculoAlunoPaciente>();
+    public DbSet<VinculoAlunoPacienteModel> VinculosAlunoPaciente => Set<VinculoAlunoPacienteModel>();
     public DbSet<Atendimento> Atendimentos => Set<Atendimento>();
     public DbSet<DocumentoClinico> DocumentosClinicos => Set<DocumentoClinico>();
     public DbSet<DocumentoIdentificacaoPaciente> DocumentosIdentificacaoPaciente => Set<DocumentoIdentificacaoPaciente>();
     public DbSet<AnamneseAdulto> AnamnesesAdulto => Set<AnamneseAdulto>();
     public DbSet<AnamneseAdolescente> AnamnesesAdolescente => Set<AnamneseAdolescente>();
-    public DbSet<PlantaoPsicologico> PlantaoPsicologico => Set<PlantaoPsicologico>();
-    public DbSet<EvolucaoAtendimento> EvolucoesAtendimento => Set<EvolucaoAtendimento>();
-    public DbSet<TermoPsicoterapiaIndividual> TermosPsicoterapiaIndividual => Set<TermoPsicoterapiaIndividual>();
-    public DbSet<TermoAutorizacaoMenor> TermosAutorizacaoMenor => Set<TermoAutorizacaoMenor>();
-    public DbSet<TermoCompromissoInformatizacao> TermosCompromissoInformatizacao => Set<TermoCompromissoInformatizacao>();
-    public DbSet<TermoResponsabilidadeEstagiario> TermosResponsabilidadeEstagiario => Set<TermoResponsabilidadeEstagiario>();
+    public DbSet<PlantaoPsicologicoModel> PlantaoPsicologico => Set<PlantaoPsicologicoModel>();
+    public DbSet<EvolucaoAtendimentoModel> EvolucoesAtendimento => Set<EvolucaoAtendimentoModel>();
+    public DbSet<TermoPsicoterapiaIndividualModel> TermosPsicoterapiaIndividual => Set<TermoPsicoterapiaIndividualModel>();
+    public DbSet<TermoAutorizacaoMenorModel> TermosAutorizacaoMenor => Set<TermoAutorizacaoMenorModel>();
+    public DbSet<TermoCompromissoInformatizacaoModel> TermosCompromissoInformatizacao => Set<TermoCompromissoInformatizacaoModel>();
+    public DbSet<TermoResponsabilidadeEstagiarioModel> TermosResponsabilidadeEstagiario => Set<TermoResponsabilidadeEstagiarioModel>();
     public DbSet<Anexo> Anexos => Set<Anexo>();
     public DbSet<Auditoria> Auditorias => Set<Auditoria>();
 

@@ -1,8 +1,7 @@
-using System;
 
 namespace ClinicaEscolaBase.Models;
 
-public class Anexo : EntityBase
+public class AnexoModel : EntityBase
 {
     public int DocumentoClinicoId { get; set; }
     public string NomeOriginal { get; set; } = string.Empty;
@@ -15,6 +14,6 @@ public class Anexo : EntityBase
     public string EnviadoPorUsuarioId { get; set; } = string.Empty;
     public DateTime DataUpload { get; set; } = DateTime.UtcNow;
 
-    public DocumentoClinico DocumentoClinico { get; set; } = null!;
-    public ApplicationUser EnviadoPorUsuario { get; set; } = null!;
+    public DocumentoClinicoModel DocumentoClinico { get; set; } = null!;
+    public ApplicationUserModel EnviadoPorUsuario { get; set; } = null!;
 }

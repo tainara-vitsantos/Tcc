@@ -1,6 +1,6 @@
 namespace ClinicaEscolaBase.Enums;
 
-public enum StatusAtendimento
+public enum StatusAtendimentoEnum
 {
     Agendado = 1,
     Realizado = 2,

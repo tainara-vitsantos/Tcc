@@ -1,6 +1,6 @@
 namespace ClinicaEscolaBase.Models;
 
-public class ResponsavelLegal : EntityBase
+public class ResponsavelLegalModel : EntityBase
 {
     public Guid PacienteId { get; set; }
     public string NomeCompleto { get; set; } = string.Empty;
@@ -12,6 +12,6 @@ public class ResponsavelLegal : EntityBase
     public string? Endereco { get; set; }
     public bool ResponsavelPrincipal { get; set; }
 
-    public Paciente Paciente { get; set; } = null!;
-    public ICollection<TermoAutorizacaoMenor> TermosAutorizacaoMenor { get; set; } = new List<TermoAutorizacaoMenor>();
+    public PacienteModel Paciente { get; set; } = null!;
+    public ICollection<TermoAutorizacaoMenorModel> TermosAutorizacaoMenor { get; set; } = new List<TermoAutorizacaoMenorModel>();
 }

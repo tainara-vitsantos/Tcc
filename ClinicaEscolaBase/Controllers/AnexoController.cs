@@ -93,7 +93,7 @@ public class AnexoController(
         // Audit
         await auditService.LogAsync(
             usuarioId,
-            TipoAcaoAuditoria.Insercao,
+            TipoAcaoAuditoriaEnum.Insercao,
             "Anexo",
             anexo.Id.ToString(),
             documento.PacienteId,
@@ -139,7 +139,7 @@ public class AnexoController(
         // Audit download
         await auditService.LogAsync(
             usuarioId,
-            TipoAcaoAuditoria.Visualizacao,
+            TipoAcaoAuditoriaEnum.Visualizacao,
             "Anexo",
             anexo.Id.ToString(),
             anexo.DocumentoClinico.PacienteId,
@@ -194,7 +194,7 @@ public class AnexoController(
         // Audit
         await auditService.LogAsync(
             usuarioId,
-            TipoAcaoAuditoria.ExclusaoLogica,
+            TipoAcaoAuditoriaEnum.ExclusaoLogica,
             "Anexo",
             anexo.Id.ToString(),
             anexo.DocumentoClinico.PacienteId,

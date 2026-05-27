@@ -89,7 +89,7 @@ public class AtendimentoController(
             PacienteId = paciente.Id,
             ProntuarioId = paciente.Prontuario.Id,
             DataHoraInicio = DateTime.Now,
-            StatusAtendimento = StatusAtendimento.Agendado,
+            StatusAtendimento = StatusAtendimentoEnum.Agendado,
             AlunoId = usuarioId // Preenchendo automaticamente
         };
 
@@ -127,7 +127,7 @@ public class AtendimentoController(
             // Registrar auditoria
             await auditService.LogAsync(
                 usuarioId,
-                TipoAcaoAuditoria.Insercao,
+                TipoAcaoAuditoriaEnum.Insercao,
                 nameof(Atendimento),
                 atendimento.Id.ToString(),
                 atendimento.PacienteId,
@@ -166,7 +166,7 @@ public class AtendimentoController(
             return RedirectToAction(nameof(Details), new { id = id });
         }
 
-        var novaEvolucao = new EvolucaoAtendimento
+        var novaEvolucao = new EvolucaoAtendimentoModel
         {
             AtendimentoId = id,
             TextoEvolucao = relato,
@@ -174,7 +174,7 @@ public class AtendimentoController(
             CriadoPorUsuarioId = usuarioId // Registrar quem criou
         };
 
-        atendimento.StatusAtendimento = StatusAtendimento.Realizado;
+        atendimento.StatusAtendimento = StatusAtendimentoEnum.Realizado;
         atendimento.DataHoraFim = DateTime.Now;
         
         context.EvolucoesAtendimento.Add(novaEvolucao);
@@ -185,8 +185,8 @@ public class AtendimentoController(
         // Registrar auditoria
         await auditService.LogAsync(
             usuarioId,
-            TipoAcaoAuditoria.Insercao,
-            nameof(EvolucaoAtendimento),
+            TipoAcaoAuditoriaEnum.Insercao,
+            nameof(EvolucaoAtendimentoModel),
             novaEvolucao.Id.ToString(),
             atendimento.PacienteId,
             atendimento.ProntuarioId,
@@ -218,7 +218,7 @@ public class AtendimentoController(
             return RedirectToAction("Details", new { id = atendimentoId });
         }
 
-        var evolucao = new EvolucaoAtendimento
+        var evolucao = new EvolucaoAtendimentoModel
         {
             AtendimentoId = atendimentoId,
             TextoEvolucao = textoEvolucao,
@@ -232,8 +232,8 @@ public class AtendimentoController(
         // Registrar auditoria
         await auditService.LogAsync(
             usuarioId,
-            TipoAcaoAuditoria.Insercao,
-            nameof(EvolucaoAtendimento),
+            TipoAcaoAuditoriaEnum.Insercao,
+            nameof(EvolucaoAtendimentoModel),
             evolucao.Id.ToString(),
             atendimento.PacienteId,
             atendimento.ProntuarioId,
@@ -245,10 +245,10 @@ public class AtendimentoController(
     }
 
     // MÉTODOS AUXILIARES
-    private void PopulateEnums(TipoAtendimento? tipo = null, StatusAtendimento? status = null)
+    private void PopulateEnums(TipoAtendimentoEnum? tipo = null, StatusAtendimentoEnum? status = null)
     {
-        ViewData["TipoAtendimento"] = new SelectList(Enum.GetValues(typeof(TipoAtendimento)), tipo);
-        ViewData["StatusAtendimento"] = new SelectList(Enum.GetValues(typeof(StatusAtendimento)), status);
+        ViewData["TipoAtendimento"] = new SelectList(Enum.GetValues(typeof(TipoAtendimentoEnum)), tipo);
+        ViewData["StatusAtendimento"] = new SelectList(Enum.GetValues(typeof(StatusAtendimentoEnum)), status);
     }
 
     private async Task LoadPatientInfoAsync(Guid pacienteId)
@@ -260,7 +260,7 @@ public class AtendimentoController(
 
     private async Task AvaliarFrequenciaAsync(Atendimento atendimento)
     {
-        if (atendimento.StatusAtendimento != StatusAtendimento.FaltaPaciente && atendimento.StatusAtendimento != StatusAtendimento.FaltaAluno)
+        if (atendimento.StatusAtendimento != StatusAtendimentoEnum.FaltaPaciente && atendimento.StatusAtendimento != StatusAtendimentoEnum.FaltaAluno)
             return;
 
         if (atendimento.FaltaJustificada)
@@ -268,7 +268,7 @@ public class AtendimentoController(
 
         var faltasRecentes = await context.Atendimentos
             .Where(x => x.PacienteId == atendimento.PacienteId &&
-                        (x.StatusAtendimento == StatusAtendimento.FaltaPaciente || x.StatusAtendimento == StatusAtendimento.FaltaAluno))
+                        (x.StatusAtendimento == StatusAtendimentoEnum.FaltaPaciente || x.StatusAtendimento == StatusAtendimentoEnum.FaltaAluno))
             .OrderByDescending(x => x.DataHoraInicio)
             .Take(3)
             .ToListAsync();
@@ -290,9 +290,9 @@ public class AtendimentoController(
             if (prontuario == null)
                 return;
 
-            if (prontuario.SituacaoProntuario != SituacaoProntuario.InativoDesligado)
+            if (prontuario.SituacaoProntuario != SituacaoProntuarioEnum.InativoDesligado)
             {
-                prontuario.SituacaoProntuario = SituacaoProntuario.InativoDesligado;
+                prontuario.SituacaoProntuario = SituacaoProntuarioEnum.InativoDesligado;
                 context.Update(prontuario);
                 await context.SaveChangesAsync();
                 TempData["MensagemAlertaFaltas"] = "O prontuário foi marcado como Inativo/Desligado devido a faltas injustificadas acumuladas ou consecutivas.";

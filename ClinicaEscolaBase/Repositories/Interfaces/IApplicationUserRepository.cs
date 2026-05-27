@@ -38,7 +38,7 @@ public interface IApplicationUserRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de usuários do perfil informado.
 	/// </returns>
-	Task<IEnumerable<ApplicationUser>> GetByTipoUsuarioAsync(TipoUsuario tipoUsuario);
+	Task<IEnumerable<ApplicationUser>> GetByTipoUsuarioAsync(TipoUsuarioEnum tipoUsuario);
 
 	/// <summary>
 	/// Cria um novo usuário no banco de dados.

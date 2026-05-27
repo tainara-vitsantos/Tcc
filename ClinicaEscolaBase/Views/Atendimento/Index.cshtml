@@ -76,9 +76,9 @@
                             <td>
                                 @{
                                     var badgeClass = item.StatusAtendimento switch {
-                                        ClinicaEscolaBase.Enums.StatusAtendimento.Realizado => "bg-success",
-                                        ClinicaEscolaBase.Enums.StatusAtendimento.Agendado => "bg-info text-dark",
-                                        ClinicaEscolaBase.Enums.StatusAtendimento.Cancelado => "bg-danger",
+                                        ClinicaEscolaBase.Enums.StatusAtendimentoEnum.Realizado => "bg-success",
+                                        ClinicaEscolaBase.Enums.StatusAtendimentoEnum.Agendado => "bg-info text-dark",
+                                        ClinicaEscolaBase.Enums.StatusAtendimentoEnum.Cancelado => "bg-danger",
                                         _ => "bg-secondary"
                                     };
                                 }

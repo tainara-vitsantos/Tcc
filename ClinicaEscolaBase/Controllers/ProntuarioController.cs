@@ -75,11 +75,11 @@ public class ProntuarioController(
             if (paciente != null)
             {
                 ViewBag.PacienteNome = paciente.NomeCompleto;
-                var novoProntuario = new Prontuario 
+                var novoProntuario = new ProntuarioModel 
                 { 
                     PacienteId = pacienteId.Value,
                     DataPrimeiraConsulta = DateTime.Now,
-                    SituacaoProntuario = SituacaoProntuario.Ativo
+                    SituacaoProntuario = SituacaoProntuarioEnum.Ativo
                 };
                 return View(novoProntuario);
             }
@@ -93,7 +93,7 @@ public class ProntuarioController(
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = "Professor")]
-    public async Task<IActionResult> Create(Prontuario prontuario)
+    public async Task<IActionResult> Create(ProntuarioModel prontuario)
     {
         // Limpa validações de navegação para evitar erros no ModelState
         ModelState.Remove("Paciente");
@@ -112,8 +112,8 @@ public class ProntuarioController(
                 // Registrar auditoria
                 await auditService.LogAsync(
                     usuarioId,
-                    TipoAcaoAuditoria.Insercao,
-                    nameof(Prontuario),
+                    TipoAcaoAuditoriaEnum.Insercao,
+                    nameof(ProntuarioModel),
                     prontuario.Id.ToString(),
                     prontuario.PacienteId,
                     prontuario.Id,
@@ -160,7 +160,7 @@ public class ProntuarioController(
     // POST: EDIT
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, Prontuario prontuario)
+    public async Task<IActionResult> Edit(int id, ProntuarioModel prontuario)
     {
         if (id != prontuario.Id) return BadRequest();
 
@@ -183,8 +183,8 @@ public class ProntuarioController(
                 // Registrar auditoria
                 await auditService.LogAsync(
                     usuarioId,
-                    TipoAcaoAuditoria.Atualizacao,
-                    nameof(Prontuario),
+                    TipoAcaoAuditoriaEnum.Atualizacao,
+                    nameof(ProntuarioModel),
                     prontuario.Id.ToString(),
                     prontuario.PacienteId,
                     prontuario.Id,
@@ -238,8 +238,8 @@ public class ProntuarioController(
             // Registrar auditoria
             await auditService.LogAsync(
                 usuarioId,
-                TipoAcaoAuditoria.ExclusaoLogica,
-                nameof(Prontuario),
+                TipoAcaoAuditoriaEnum.ExclusaoLogica,
+                nameof(ProntuarioModel),
                 prontuario.Id.ToString(),
                 prontuario.PacienteId,
                 prontuario.Id,

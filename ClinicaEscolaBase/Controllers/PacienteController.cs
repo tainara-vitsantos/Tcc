@@ -75,7 +75,7 @@ public class PacienteController(
         {
             try 
             {
-                var paciente = new Paciente
+                var paciente = new PacienteModel
                 {
                     Id = Guid.NewGuid(),
                     DataCriacao = DateTime.UtcNow,
@@ -113,12 +113,12 @@ public class PacienteController(
                     Observacoes = viewModel.Observacoes
                 };
 
-                var prontuario = new Prontuario
+                var prontuario = new ProntuarioModel
                 {
                     PacienteId = paciente.Id,
                     NumeroProntuario = await GenerateNumeroProntuarioAsync(),
                     DataPrimeiraConsulta = DateTime.UtcNow,
-                    SituacaoProntuario = SituacaoProntuario.Ativo
+                    SituacaoProntuario = SituacaoProntuarioEnum.Ativo
                 };
 
                 paciente.Prontuario = prontuario;

@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ClinicaEscolaBase.Configurations;
 
-public class VinculoAlunoPacienteConfiguration : IEntityTypeConfiguration<VinculoAlunoPaciente>
+public class VinculoAlunoPacienteConfiguration : IEntityTypeConfiguration<VinculoAlunoPacienteModel>
 {
-    public void Configure(EntityTypeBuilder<VinculoAlunoPaciente> builder)
+    public void Configure(EntityTypeBuilder<VinculoAlunoPacienteModel> builder)
     {
         builder.ToTable("VinculosAlunoPaciente");
         builder.HasKey(x => x.Id);

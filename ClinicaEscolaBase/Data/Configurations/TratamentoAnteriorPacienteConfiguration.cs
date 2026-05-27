@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ClinicaEscolaBase.Configurations;
 
-public class TratamentoAnteriorPacienteConfiguration : IEntityTypeConfiguration<TratamentoAnteriorPaciente>
+public class TratamentoAnteriorPacienteConfiguration : IEntityTypeConfiguration<TratamentoAnteriorPacienteModel>
 {
-    public void Configure(EntityTypeBuilder<TratamentoAnteriorPaciente> builder)
+    public void Configure(EntityTypeBuilder<TratamentoAnteriorPacienteModel> builder)
     {
         builder.ToTable("TratamentosAnterioresPaciente");
         builder.HasKey(x => x.Id);

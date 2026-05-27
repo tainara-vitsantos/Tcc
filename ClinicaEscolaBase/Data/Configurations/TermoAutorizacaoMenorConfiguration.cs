@@ -4,16 +4,16 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ClinicaEscolaBase.Configurations;
 
-public class TermoAutorizacaoMenorConfiguration : IEntityTypeConfiguration<TermoAutorizacaoMenor>
+public class TermoAutorizacaoMenorConfiguration : IEntityTypeConfiguration<TermoAutorizacaoMenorModel>
 {
-    public void Configure(EntityTypeBuilder<TermoAutorizacaoMenor> builder)
+    public void Configure(EntityTypeBuilder<TermoAutorizacaoMenorModel> builder)
     {
         builder.ToTable("TermosAutorizacaoMenor");
         builder.HasKey(x => x.DocumentoClinicoId);
 
         builder.HasOne(x => x.DocumentoClinico)
             .WithOne(x => x.TermoAutorizacaoMenor)
-            .HasForeignKey<TermoAutorizacaoMenor>(x => x.DocumentoClinicoId)
+            .HasForeignKey<TermoAutorizacaoMenorModel>(x => x.DocumentoClinicoId)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(x => x.ResponsavelLegal)

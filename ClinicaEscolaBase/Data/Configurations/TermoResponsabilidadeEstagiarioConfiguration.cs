@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ClinicaEscolaBase.Configurations;
 
-public class TermoResponsabilidadeEstagiarioConfiguration : IEntityTypeConfiguration<TermoResponsabilidadeEstagiario>
+public class TermoResponsabilidadeEstagiarioConfiguration : IEntityTypeConfiguration<TermoResponsabilidadeEstagiarioModel>
 {
-    public void Configure(EntityTypeBuilder<TermoResponsabilidadeEstagiario> builder)
+    public void Configure(EntityTypeBuilder<TermoResponsabilidadeEstagiarioModel> builder)
     {
         builder.ToTable("TermosResponsabilidadeEstagiario");
         builder.HasKey(x => x.Id);

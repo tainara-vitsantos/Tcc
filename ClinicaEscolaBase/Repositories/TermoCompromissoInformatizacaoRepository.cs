@@ -7,21 +7,21 @@ namespace ClinicaEscolaBase.Repositories;
 
 public class TermoCompromissoInformatizacaoRepository(ApplicationDbContext AppDbContext) : ITermoCompromissoInformatizacaoRepository
 {
-	public async Task<IEnumerable<TermoCompromissoInformatizacao>> GetAllAsync()
+	public async Task<IEnumerable<TermoCompromissoInformatizacaoModel>> GetAllAsync()
 	{
 		return await AppDbContext.TermosCompromissoInformatizacao
 			.AsNoTracking()
 			.ToListAsync();
 	}
 
-	public async Task<TermoCompromissoInformatizacao?> GetByIdAsync(int documentoClinicoId)
+	public async Task<TermoCompromissoInformatizacaoModel?> GetByIdAsync(int documentoClinicoId)
 	{
 		return await AppDbContext.TermosCompromissoInformatizacao
 			.AsNoTracking()
 			.FirstOrDefaultAsync(item => item.DocumentoClinicoId == documentoClinicoId);
 	}
 
-	public async Task<IEnumerable<TermoCompromissoInformatizacao>> GetByEstagiarioIdAsync(string estagiarioId)
+	public async Task<IEnumerable<TermoCompromissoInformatizacaoModel>> GetByEstagiarioIdAsync(string estagiarioId)
 	{
 		return await AppDbContext.TermosCompromissoInformatizacao
 			.AsNoTracking()
@@ -29,7 +29,7 @@ public class TermoCompromissoInformatizacaoRepository(ApplicationDbContext AppDb
 			.ToListAsync();
 	}
 
-	public async Task<IEnumerable<TermoCompromissoInformatizacao>> GetByPacienteIdAsync(Guid pacienteId)
+	public async Task<IEnumerable<TermoCompromissoInformatizacaoModel>> GetByPacienteIdAsync(Guid pacienteId)
 	{
 		return await AppDbContext.TermosCompromissoInformatizacao
 			.AsNoTracking()
@@ -37,7 +37,7 @@ public class TermoCompromissoInformatizacaoRepository(ApplicationDbContext AppDb
 			.ToListAsync();
 	}
 
-	public async Task<TermoCompromissoInformatizacao> AddAsync(TermoCompromissoInformatizacao termo)
+	public async Task<TermoCompromissoInformatizacaoModel> AddAsync(TermoCompromissoInformatizacaoModel termo)
 	{
 		await AppDbContext.TermosCompromissoInformatizacao.AddAsync(termo);
 		await AppDbContext.SaveChangesAsync();
@@ -45,7 +45,7 @@ public class TermoCompromissoInformatizacaoRepository(ApplicationDbContext AppDb
 		return termo;
 	}
 
-	public async Task<TermoCompromissoInformatizacao?> UpdateAsync(TermoCompromissoInformatizacao termo)
+	public async Task<TermoCompromissoInformatizacaoModel?> UpdateAsync(TermoCompromissoInformatizacaoModel termo)
 	{
 		var existente = await AppDbContext.TermosCompromissoInformatizacao
 			.FirstOrDefaultAsync(item => item.DocumentoClinicoId == termo.DocumentoClinicoId);

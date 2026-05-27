@@ -9,39 +9,39 @@ namespace ClinicaEscolaBase.Repositories;
 
 public class ProntuarioRepository(ApplicationDbContext context) : IProntuarioRepository
 {
-	public async Task<IEnumerable<Prontuario>> GetAllAsync()
+	public async Task<IEnumerable<ProntuarioModel>> GetAllAsync()
 	{
 		return await context.Prontuarios
 			.AsNoTracking()
-			.Where(prontuario => prontuario.SituacaoProntuario != SituacaoProntuario.InativoDesligado)
+			.Where(prontuario => prontuario.SituacaoProntuario != SituacaoProntuarioEnum.InativoDesligado)
 			.OrderBy(prontuario => prontuario.NumeroProntuario)
 			.ToListAsync();
 	}
 
-	public async Task<Prontuario?> GetByIdAsync(int id)
+	public async Task<ProntuarioModel?> GetByIdAsync(int id)
 	{
 		return await context.Prontuarios
 			.AsNoTracking()
-			.FirstOrDefaultAsync(prontuario => prontuario.Id == id && prontuario.SituacaoProntuario != SituacaoProntuario.InativoDesligado);
+			.FirstOrDefaultAsync(prontuario => prontuario.Id == id && prontuario.SituacaoProntuario != SituacaoProntuarioEnum.InativoDesligado);
 	}
 
-	public async Task<Prontuario?> GetByPacienteIdAsync(Guid pacienteId)
+	public async Task<ProntuarioModel?> GetByPacienteIdAsync(Guid pacienteId)
 	{
 		return await context.Prontuarios
 			.AsNoTracking()
-			.FirstOrDefaultAsync(prontuario => prontuario.PacienteId == pacienteId && prontuario.SituacaoProntuario != SituacaoProntuario.InativoDesligado);
+			.FirstOrDefaultAsync(prontuario => prontuario.PacienteId == pacienteId && prontuario.SituacaoProntuario != SituacaoProntuarioEnum.InativoDesligado);
 	}
 
-	public async Task<Prontuario?> GetWithDetailsByIdAsync(int id)
+	public async Task<ProntuarioModel?> GetWithDetailsByIdAsync(int id)
 	{
 		return await context.Prontuarios
 			.AsNoTracking()
 			.Include(prontuario => prontuario.Paciente)
 			.Include(prontuario => prontuario.Atendimentos)
-			.FirstOrDefaultAsync(prontuario => prontuario.Id == id && prontuario.SituacaoProntuario != SituacaoProntuario.InativoDesligado);
+			.FirstOrDefaultAsync(prontuario => prontuario.Id == id && prontuario.SituacaoProntuario != SituacaoProntuarioEnum.InativoDesligado);
 	}
 
-	public async Task<Prontuario> CreateAsync(Prontuario prontuario)
+	public async Task<ProntuarioModel> CreateAsync(ProntuarioModel prontuario)
 	{
 		prontuario.DataCriacao = DateTime.UtcNow;
 
@@ -51,10 +51,10 @@ public class ProntuarioRepository(ApplicationDbContext context) : IProntuarioRep
 		return prontuario;
 	}
 
-	public async Task<Prontuario?> UpdateAsync(Prontuario prontuario)
+	public async Task<ProntuarioModel?> UpdateAsync(ProntuarioModel prontuario)
 	{
 		var existente = await context.Prontuarios
-			.FirstOrDefaultAsync(item => item.Id == prontuario.Id && item.SituacaoProntuario != SituacaoProntuario.InativoDesligado);
+			.FirstOrDefaultAsync(item => item.Id == prontuario.Id && item.SituacaoProntuario != SituacaoProntuarioEnum.InativoDesligado);
 
 		if (existente is null)
 		{
@@ -73,14 +73,14 @@ public class ProntuarioRepository(ApplicationDbContext context) : IProntuarioRep
 	public async Task<bool> DeleteAsync(int id)
 	{
 		var prontuario = await context.Prontuarios
-			.FirstOrDefaultAsync(item => item.Id == id && item.SituacaoProntuario != SituacaoProntuario.InativoDesligado);
+			.FirstOrDefaultAsync(item => item.Id == id && item.SituacaoProntuario != SituacaoProntuarioEnum.InativoDesligado);
 
 		if (prontuario is null)
 		{
 			return false;
 		}
 
-		prontuario.SituacaoProntuario = SituacaoProntuario.InativoDesligado;
+		prontuario.SituacaoProntuario = SituacaoProntuarioEnum.InativoDesligado;
 		prontuario.DataAtualizacao = DateTime.UtcNow;
 
 		await context.SaveChangesAsync();

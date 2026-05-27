@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ClinicaEscolaBase.Configurations;
 
-public class ProntuarioConfiguration : IEntityTypeConfiguration<Prontuario>
+public class ProntuarioConfiguration : IEntityTypeConfiguration<ProntuarioModel>
 {
-    public void Configure(EntityTypeBuilder<Prontuario> builder)
+    public void Configure(EntityTypeBuilder<ProntuarioModel> builder)
     {
         builder.ToTable("Prontuarios");
         builder.HasKey(x => x.Id);
@@ -18,7 +18,7 @@ public class ProntuarioConfiguration : IEntityTypeConfiguration<Prontuario>
 
         builder.HasOne(x => x.Paciente)
             .WithOne(x => x.Prontuario)
-            .HasForeignKey<Prontuario>(x => x.PacienteId)
+            .HasForeignKey<ProntuarioModel>(x => x.PacienteId)
             .OnDelete(DeleteBehavior.Restrict);
     }
 }

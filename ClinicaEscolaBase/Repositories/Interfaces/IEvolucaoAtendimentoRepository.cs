@@ -10,7 +10,7 @@ public interface IEvolucaoAtendimentoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de evoluções de atendimento encontradas.
 	/// </returns>
-	Task<IEnumerable<EvolucaoAtendimento>> GetAllAsync();
+	Task<IEnumerable<EvolucaoAtendimentoModel>> GetAllAsync();
 
 	/// <summary>
 	/// Busca uma evolução de atendimento pelo identificador herdado de <see cref="EntityBase"/>.
@@ -19,7 +19,7 @@ public interface IEvolucaoAtendimentoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a evolução encontrada ou <c>null</c> quando não existir.
 	/// </returns>
-	Task<EvolucaoAtendimento?> GetByIdAsync(int id);
+	Task<EvolucaoAtendimentoModel?> GetByIdAsync(int id);
 
 	/// <summary>
 	/// Lista o histórico de evoluções vinculadas a um documento clínico específico.
@@ -28,7 +28,7 @@ public interface IEvolucaoAtendimentoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de evoluções associadas ao documento clínico informado.
 	/// </returns>
-	Task<IEnumerable<EvolucaoAtendimento>> GetByDocumentoClinicoIdAsync(int documentoClinicoId);
+	Task<IEnumerable<EvolucaoAtendimentoModel>> GetByDocumentoClinicoIdAsync(int documentoClinicoId);
 
 	/// <summary>
 	/// Busca a evolução de atendimento vinculada a um atendimento específico.
@@ -37,7 +37,7 @@ public interface IEvolucaoAtendimentoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de evoluções associadas ao atendimento informado.
 	/// </returns>
-	Task<IEnumerable<EvolucaoAtendimento>> GetByAtendimentoIdAsync(int atendimentoId);
+	Task<IEnumerable<EvolucaoAtendimentoModel>> GetByAtendimentoIdAsync(int atendimentoId);
 
 	/// <summary>
 	/// Cria uma nova evolução de atendimento no banco de dados.
@@ -46,7 +46,7 @@ public interface IEvolucaoAtendimentoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a evolução persistida com os valores gravados pelo banco de dados.
 	/// </returns>
-	Task<EvolucaoAtendimento> AddAsync(EvolucaoAtendimento evolucao);
+	Task<EvolucaoAtendimentoModel> AddAsync(EvolucaoAtendimentoModel evolucao);
 
 	/// <summary>
 	/// Atualiza uma evolução de atendimento existente no banco de dados.
@@ -55,7 +55,7 @@ public interface IEvolucaoAtendimentoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a evolução atualizada ou <c>null</c> quando o registro não for encontrado.
 	/// </returns>
-	Task<EvolucaoAtendimento?> UpdateAsync(EvolucaoAtendimento evolucao);
+	Task<EvolucaoAtendimentoModel?> UpdateAsync(EvolucaoAtendimentoModel evolucao);
 
 	/// <summary>
 	/// Remove uma evolução de atendimento do banco de dados.

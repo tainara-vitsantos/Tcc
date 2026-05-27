@@ -47,7 +47,7 @@ public interface IAtendimentoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de atendimentos com o status informado.
 	/// </returns>
-	Task<IEnumerable<Atendimento>> GetByStatusAsync(StatusAtendimento status);
+	Task<IEnumerable<Atendimento>> GetByStatusAsync(StatusAtendimentoEnum status);
 
 	/// <summary>
 	/// Cria um novo atendimento no banco de dados.

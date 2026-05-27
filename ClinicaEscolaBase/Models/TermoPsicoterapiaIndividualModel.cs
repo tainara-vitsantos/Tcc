@@ -2,7 +2,7 @@ using System;
 
 namespace ClinicaEscolaBase.Models;
 
-public class TermoPsicoterapiaIndividual
+public class TermoPsicoterapiaIndividualModel
 {
     public int DocumentoClinicoId { get; set; }
     public string? NomeClienteNoTermo { get; set; }
