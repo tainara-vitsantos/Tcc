@@ -1,4 +1,3 @@
-using System;
 
 namespace ClinicaEscolaBase.Models;
 
@@ -16,5 +15,5 @@ public class PlantaoPsicologicoModel
     public string? CondutaEncaminhamento { get; set; }
     public string? CRPSupervisor { get; set; }
 
-    public DocumentoClinico DocumentoClinico { get; set; } = null!;
+    public DocumentoClinicoModel DocumentoClinico { get; set; } = null!;
 }

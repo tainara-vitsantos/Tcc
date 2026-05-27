@@ -1,6 +1,4 @@
 using ClinicaEscolaBase.Enums;
-using System;
-using System.Collections.Generic;
 
 namespace ClinicaEscolaBase.Models;
 
@@ -21,16 +19,16 @@ public class DocumentoClinicoModel : EntityBase
 
     public ProntuarioModel Prontuario { get; set; } = null!;
     public PacienteModel Paciente { get; set; } = null!;
-    public Atendimento? Atendimento { get; set; }
-    public ApplicationUser CriadoPorUsuario { get; set; } = null!;
-    public ApplicationUser? Supervisor { get; set; }
+    public AtendimentoModel? Atendimento { get; set; }
+    public ApplicationUserModel CriadoPorUsuario { get; set; } = null!;
+    public ApplicationUserModel? Supervisor { get; set; }
     public DocumentoIdentificacaoPaciente? DocumentoIdentificacaoPaciente { get; set; }
-    public AnamneseAdulto? AnamneseAdulto { get; set; }
-    public AnamneseAdolescente? AnamneseAdolescente { get; set; }
+    public AnamneseAdultoModel? AnamneseAdulto { get; set; }
+    public AnamneseAdolescenteModel? AnamneseAdolescente { get; set; }
     public PlantaoPsicologicoModel? PlantaoPsicologico { get; set; }
     public TermoPsicoterapiaIndividualModel? TermoPsicoterapiaIndividual { get; set; }
     public TermoAutorizacaoMenorModel? TermoAutorizacaoMenor { get; set; }
     public TermoCompromissoInformatizacaoModel? TermoCompromissoInformatizacao { get; set; }
     public ICollection<EvolucaoAtendimentoModel> Evolucoes { get; set; } = new List<EvolucaoAtendimentoModel>();
-    public ICollection<Anexo> Anexos { get; set; } = new List<Anexo>();
+    public ICollection<AnexoModel> Anexos { get; set; } = new List<AnexoModel>();
 }

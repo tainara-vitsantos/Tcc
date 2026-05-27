@@ -8,6 +8,6 @@ public interface IAtendimentoService
 	Task<IEnumerable<AtendimentoListaDto>> BuscarAtendimentosPorPsicologo(string idPsicologo);
 	Task<AtendimentoDto> BuscarAtendimentoPorPaciente(string idPaciente);
    	Task<AtendimentoDto> BuscarAtendimentoPorPsicologo(string idPsicologo);
-	Task<AtendimentoDto> EvoluirAtendimento(EvolucaoAtendimentoDto evolucaoAtendimento)
+	Task<AtendimentoDto> EvoluirAtendimento(EvolucaoAtendimentoDto evolucaoAtendimento);
 
 }
