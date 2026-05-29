@@ -1,29 +1,202 @@
+
 @{
     ViewData["Title"] = "Bem-vindo - ConnectaMente";
     Layout = "_Layout";
 }
 
-<div class="container mt-5">
-    <div class="row justify-content-center align-items-center" style="min-height: 65vh;">
-        <div class="col-md-7 text-center">
-            <div class="mb-4">
-                <i class="bi bi-shield-lock-fill text-primary" style="font-size: 4.5rem;"></i>
+@section Styles {
+    <link rel="stylesheet" href="~/css/home.css" />
+}
+
+<div class="split-container">
+
+    <!-- HERO / BRAND -->
+    <div class="brand-side">
+
+        <div class="brand-glow"></div>
+
+        <div class="hero-top">
+
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <i class="bi bi-intersect"></i>
+                </div>
+
+                <span class="logo-text">ConnectaMente</span>
             </div>
-            <h1 class="fw-bold display-4">ConnectaMente</h1>
-            <p class="lead text-muted mb-5">
-                Plataforma de gestão para Clínica-Escola de Psicologia.<br>
-                Segurança, sigilo e organização para o seu atendimento acadêmico.
-            </p>
-            
-            <div class="card border-0 shadow p-4 bg-light">
-                <h5 class="fw-bold mb-3">Acesso Restrito</h5>
-                <p class="text-muted mb-4">É necessário estar autenticado para visualizar o dashboard e os prontuários.</p>
-                <div class="d-grid gap-2">
-                    <a href="/Identity/Account/Login" class="btn btn-primary btn-lg shadow-sm">
-                        <i class="bi bi-box-arrow-in-right me-2"></i>Entrar no Sistema
-                    </a>
+
+            <div class="hero-content">
+
+                <span class="feature-tag">
+                    <i class="bi bi-shield-check"></i>
+                    Conformidade LGPD & Sigilo Clínico
+                </span>
+
+                <h1 class="hero-title">
+                    Gestão inteligente para clínicas-escola de psicologia.
+                </h1>
+
+                <p class="hero-description">
+                    Plataforma premium desenvolvida para coordenadores,
+                    supervisores e alunos, unificando atendimento clínico,
+                    supervisão acadêmica e gestão institucional.
+                </p>
+
+            </div>
+
+            <!-- DASHBOARD FLOAT -->
+            <div class="dashboard-preview">
+
+                <div class="dashboard-card large-card">
+                    <div class="dashboard-card-header">
+                        <span>Pacientes Ativos</span>
+                        <i class="bi bi-heart-pulse"></i>
+                    </div>
+
+                    <h2>128</h2>
+
+                    <small>
+                        +12% este mês
+                    </small>
+                </div>
+
+                <div class="dashboard-grid">
+
+                    <div class="dashboard-card">
+                        <div class="dashboard-card-header">
+                            <span>Supervisões</span>
+                            <i class="bi bi-clipboard-check"></i>
+                        </div>
+
+                        <h3>24</h3>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="dashboard-card-header">
+                            <span>Alunos</span>
+                            <i class="bi bi-mortarboard"></i>
+                        </div>
+
+                        <h3>36</h3>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- BOTTOM FEATURES -->
+        <div class="hero-bottom">
+
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="bi bi-person-workspace"></i>
+                </div>
+
+                <div>
+                    <h6>Supervisão Inteligente</h6>
+                    <p>
+                        Acompanhamento acadêmico e clínico em tempo real.
+                    </p>
                 </div>
             </div>
+
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="bi bi-folder2-open"></i>
+                </div>
+
+                <div>
+                    <h6>Prontuário Seguro</h6>
+                    <p>
+                        Centralização criptografada dos registros clínicos.
+                    </p>
+                </div>
+            </div>
+
         </div>
+
     </div>
+
+    <!-- LOGIN -->
+    <div class="form-side">
+
+        <div class="card-auth">
+
+            <div class="mobile-logo d-lg-none">
+                <div class="logo-icon">
+                    <i class="bi bi-intersect"></i>
+                </div>
+
+                <span class="logo-text dark">
+                    ConnectaMente
+                </span>
+            </div>
+
+            <div class="auth-header">
+
+                <span class="welcome-badge">
+                    Plataforma Institucional
+                </span>
+
+                <h2>
+                    Acessar plataforma
+                </h2>
+
+                <p>
+                    Entre com suas credenciais para acessar
+                    o painel clínico e acadêmico.
+                </p>
+
+            </div>
+
+            <div class="secure-box">
+
+                <div class="secure-icon">
+                    <i class="bi bi-lock-fill"></i>
+                </div>
+
+                <div>
+                    <h6>
+                        Ambiente protegido
+                    </h6>
+
+                    <p>
+                        Todos os dados seguem padrões avançados
+                        de segurança e privacidade clínica.
+                    </p>
+                </div>
+
+            </div>
+
+            <a href="/Identity/Account/Login"
+               class="btn-premium">
+                Entrar no Sistema
+                <i class="bi bi-arrow-right"></i>
+            </a>
+
+            <div class="footer-auth">
+
+                <span>
+                    © @DateTime.Now.Year ConnectaMente
+                </span>
+
+                <div class="footer-links">
+                    <a href="#">
+                        Termos
+                    </a>
+
+                    <a href="#">
+                        Privacidade
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
+

@@ -1,31 +1,157 @@
-html {
-  font-size: 14px;
-}
+/* ==========================================================================
+   CONNECTAMENTE - PALETA DE CORES & CONFIGURAÇÕES GLOBAIS (SaaS Premium)
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+:root {
+    --brand-primary: #0D9488;      /* Teal / Menta Premium */
+    --brand-primary-hover: #0F766E;
+    --brand-dark: #0F172A;         /* Slate 900 (Contraste alto) */
+    --brand-muted: #64748B;        /* Slate 500 */
+    --brand-bg: #F8FAFC;           /* Fundo Suave */
+    --white: #FFFFFF;
 }
 
 body {
-  margin-bottom: 60px;
+    font-family: 'Inter', sans-serif;
+    background-color: var(--brand-bg);
+    color: var(--brand-dark);
+    margin: 0;
+    padding: 0;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+.heading-premium {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: var(--brand-dark);
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+/* ==========================================================================
+   LAYOUT SPLIT SCREEN (TELA DIVIDIDA RESPONSIVA)
+   ========================================================================== */
+.split-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+/* Lado Esquerdo - Branding (Escondido em telas menores que 992px) */
+.brand-side {
+    flex: 1;
+    background: linear-gradient(135deg, #042F2E 0%, #0D9488 100%);
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 4rem;
+    position: relative;
+}
+
+/* Lado Direito - Formulário (Ocupa 100% no mobile e divide espaço no desktop) */
+.form-side {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem;
+    background-color: var(--white);
+}
+
+.card-auth {
+    width: 100%;
+    max-width: 440px;
+}
+
+/* ==========================================================================
+   COMPONENTES PREMIUM & ACESSIBILIDADE
+   ========================================================================== */
+.btn-premium {
+    background-color: var(--brand-primary);
+    color: var(--white);
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    border: none;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 4px 12px rgba(13, 148, 136, 0.15);
+}
+
+.btn-premium:hover, 
+.btn-premium:focus {
+    background-color: var(--brand-primary-hover);
+    color: var(--white);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(13, 148, 136, 0.25);
+    outline: none;
+}
+
+.feature-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 99px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    backdrop-filter: blur(4px);
+}
+
+.bullet-point {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.bullet-icon {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 0.5rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+}
+
+/* ==========================================================================
+   MEDIA QUERIES (RESPONSIVIDADE TOTAL)
+   ========================================================================== */
+
+/* Telas Grandes (Monitores Ultrawide) - Aumenta o conforto visual */
+@media (min-width: 1400px) {
+    .brand-side, .form-side {
+        padding: 6rem;
+    }
+}
+
+/* Telas Médias (Notebooks e Tablets em modo paisagem) */
+@media (max-width: 1199.98px) {
+    .brand-side, .form-side {
+        padding: 3rem;
+    }
+}
+
+/* Tablets em modo Retrato e Celulares (Onde a mágica da responsividade acontece) */
+@media (max-width: 991.98px) {
+    .split-container {
+        flex-direction: column; /* Transforma as colunas em blocos verticais */
+    }
+
+    .brand-side {
+        display: none !important; /* Esconde o painel institucional pesado no mobile */
+    }
+
+    .form-side {
+        padding: 2.5rem 1.5rem; /* Ajusta o espaçamento interno para telas de celular */
+        background-color: var(--brand-bg); /* Adota o fundo suave para parecer um app mobile */
+        min-height: 100vh;
+    }
+
+    .card-auth {
+        max-width: 100%; /* Permite que o card se adapte a largura do celular */
+    }
 }
