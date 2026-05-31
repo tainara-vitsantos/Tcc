@@ -11,7 +11,7 @@ public interface IDocumentoClinicoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de documentos clínicos ativos.
 	/// </returns>
-	Task<IEnumerable<DocumentoClinico>> GetAllAtivosAsync();
+	Task<IEnumerable<DocumentoClinicoModel>> GetAllAtivosAsync();
 
 	/// <summary>
 	/// Busca um documento clínico ativo pelo identificador herdado de <see cref="EntityBase"/>.
@@ -20,7 +20,7 @@ public interface IDocumentoClinicoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o documento encontrado ou <c>null</c> quando não existir ou estiver excluído logicamente.
 	/// </returns>
-	Task<DocumentoClinico?> GetByIdAsync(int id);
+	Task<DocumentoClinicoModel?> GetByIdAsync(int id);
 
 	/// <summary>
 	/// Lista os documentos clínicos ativos de um prontuário específico.
@@ -29,7 +29,7 @@ public interface IDocumentoClinicoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de documentos clínicos ativos do prontuário informado.
 	/// </returns>
-	Task<IEnumerable<DocumentoClinico>> GetByProntuarioIdAsync(int prontuarioId);
+	Task<IEnumerable<DocumentoClinicoModel>> GetByProntuarioIdAsync(int prontuarioId);
 
 	/// <summary>
 	/// Lista os documentos clínicos ativos de acordo com o status informado.
@@ -38,7 +38,7 @@ public interface IDocumentoClinicoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de documentos clínicos ativos com o status informado.
 	/// </returns>
-	Task<IEnumerable<DocumentoClinico>> GetByStatusAsync(StatusDocumentoClinicoEnum status);
+	Task<IEnumerable<DocumentoClinicoModel>> GetByStatusAsync(StatusDocumentoClinicoEnum status);
 
 	/// <summary>
 	/// Cria um novo documento clínico no banco de dados.
@@ -47,7 +47,7 @@ public interface IDocumentoClinicoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o documento clínico persistido com os valores gravados pelo banco de dados.
 	/// </returns>
-	Task<DocumentoClinico> AddAsync(DocumentoClinico documento);
+	Task<DocumentoClinicoModel> AddAsync(DocumentoClinicoModel documento);
 
 	/// <summary>
 	/// Atualiza um documento clínico existente no banco de dados.
@@ -56,7 +56,7 @@ public interface IDocumentoClinicoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o documento clínico atualizado ou <c>null</c> quando o registro não for encontrado.
 	/// </returns>
-	Task<DocumentoClinico?> UpdateAsync(DocumentoClinico documento);
+	Task<DocumentoClinicoModel?> UpdateAsync(DocumentoClinicoModel documento);
 
 	/// <summary>
 	/// Executa a exclusão lógica de um documento clínico.

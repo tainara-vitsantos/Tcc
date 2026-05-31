@@ -25,7 +25,7 @@ public class ProntuarioRepository(ApplicationDbContext context) : IProntuarioRep
 			.FirstOrDefaultAsync(prontuario => prontuario.Id == id && prontuario.SituacaoProntuario != SituacaoProntuarioEnum.InativoDesligado);
 	}
 
-	public async Task<ProntuarioModel?> GetByPacienteIdAsync(Guid pacienteId)
+	public async Task<ProntuarioModel?> GetByPacienteIdAsync(int pacienteId)
 	{
 		return await context.Prontuarios
 			.AsNoTracking()

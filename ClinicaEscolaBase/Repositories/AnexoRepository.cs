@@ -7,30 +7,30 @@ namespace ClinicaEscolaBase.Repositories;
 
 public class AnexoRepository(ApplicationDbContext AppDbContext) : IAnexoRepository
 {
-	public async Task<IEnumerable<Anexo>> GetAllAsync()
+	public async Task<IEnumerable<AnexoModel>> GetAllAsync()
 	{
 		return await AppDbContext.Anexos
 			.AsNoTracking()
 			.ToListAsync();
 	}
 
-	public async Task<Anexo?> GetByIdAsync(int id)
+	public async Task<AnexoModel?> GetByIdAsync(int id)
 	{
 		return await AppDbContext.Anexos
 			.AsNoTracking()
 			.FirstOrDefaultAsync(anexo => anexo.Id == id);
 	}
 
-	public async Task<IEnumerable<Anexo>> GetByDocumentoClinicoIdAsync(int documentoClinicoId)
+	public async Task<IEnumerable<AnexoModel>> GetByDocumentoClinicoIdAsync(int documentoClinicoId)
 	{
 		return await AppDbContext.Anexos
 			.AsNoTracking()
-			.Where(anexo => anexo.DocumentoClinicoId == documentoClinicoId)
+			.Where(anexo => anexo.Id == documentoClinicoId)
 			.OrderBy(anexo => anexo.NomeOriginal)
 			.ToListAsync();
 	}
 
-	public async Task<Anexo> AddAsync(Anexo anexo)
+	public async Task<AnexoModel> AddAsync(AnexoModel anexo)
 	{
 		anexo.DataUpload = DateTime.UtcNow;
 
@@ -40,7 +40,7 @@ public class AnexoRepository(ApplicationDbContext AppDbContext) : IAnexoReposito
 		return anexo;
 	}
 
-	public async Task<Anexo?> UpdateAsync(Anexo anexo)
+	public async Task<AnexoModel?> UpdateAsync(AnexoModel anexo)
 	{
 		var existente = await AppDbContext.Anexos
 			.FirstOrDefaultAsync(item => item.Id == anexo.Id);

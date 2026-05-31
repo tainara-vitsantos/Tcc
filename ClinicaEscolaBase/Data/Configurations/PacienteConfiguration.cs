@@ -2,37 +2,47 @@ using ClinicaEscolaBase.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ClinicaEscolaBase.Configurations;
+namespace ClinicaEscolaBase.Data.Configurations;
 
 public class PacienteConfiguration : IEntityTypeConfiguration<PacienteModel>
 {
-    public void Configure(EntityTypeBuilder<PacienteModel> builder)
-    {
+   public void Configure(EntityTypeBuilder<PacienteModel> builder)
+    {        
         builder.ToTable("Pacientes");
-        builder.HasKey(x => x.Id);
-        builder.Property(x => x.Id).ValueGeneratedNever();
-        builder.Property(x => x.NomeCompleto).HasMaxLength(200).IsRequired();
-        builder.Property(x => x.Sexo).HasMaxLength(30);
-        builder.Property(x => x.Naturalidade).HasMaxLength(100);
-        builder.Property(x => x.EstadoNascimento).HasMaxLength(50);
-        builder.Property(x => x.Escolaridade).HasMaxLength(100);
-        builder.Property(x => x.Profissao).HasMaxLength(100);
-        builder.Property(x => x.RG).HasMaxLength(30);
-        builder.Property(x => x.CPF).HasMaxLength(14);
-        builder.Property(x => x.EstadoCivil).HasMaxLength(50);
-        builder.Property(x => x.Religiao).HasMaxLength(100);
-        builder.Property(x => x.EnderecoLogradouro).HasMaxLength(200);
-        builder.Property(x => x.EnderecoNumero).HasMaxLength(20);
-        builder.Property(x => x.Bairro).HasMaxLength(100);
-        builder.Property(x => x.Cidade).HasMaxLength(100);
-        builder.Property(x => x.CEP).HasMaxLength(20);
-        builder.Property(x => x.Telefone).HasMaxLength(30);
-        builder.Property(x => x.TelefoneRecado).HasMaxLength(30);
-        builder.Property(x => x.NomePai).HasMaxLength(200);
-        builder.Property(x => x.NomeMae).HasMaxLength(200);
-        builder.Property(x => x.Observacoes).HasColumnType("nvarchar(max)");
+        builder.HasKey(p => p.Id);
 
-        builder.HasIndex(x => x.NomeCompleto);
-        builder.HasIndex(x => x.CPF);
+        builder.Property(p => p.DataCriacao);
+        builder.Property(p => p.DataAtualizacao);
+        builder.Property(p => p.Ativo);
+        builder.Property(p => p.NomeCompleto);
+        builder.Property(p => p.Telefone);
+        builder.Property(p => p.TelefoneRecado);
+        builder.Property(p => p.Sexo);
+        builder.Property(p => p.Naturalidade);
+        builder.Property(p => p.EstadoNascimento);
+        builder.Property(p => p.Escolaridade);
+        builder.Property(p => p.Profissao);
+        builder.Property(p => p.RG);
+        builder.Property(p => p.CPF);
+        builder.Property(p => p.EstadoCivil);
+        builder.Property(p => p.Religiao);
+        builder.Property(p => p.DataNascimento);
+        builder.Property(p => p.FamiliarResponsavelId);
+        builder.Ignore(p => p.Idade);
+
+        builder.OwnsOne(p => p.Endereco, endereco =>
+        {
+            endereco.Property(e => e.Logradouro).HasColumnName("EnderecoLogradouro");
+            endereco.Property(e => e.Numero).HasColumnName("EnderecoNumero");
+            endereco.Property(e => e.Bairro).HasColumnName("EnderecoBairro");
+            endereco.Property(e => e.Cidade).HasColumnName("EnderecoCidade");
+            endereco.Property(e => e.Estado).HasColumnName("EnderecoEstado");
+            endereco.Property(e => e.CEP).HasColumnName("EnderecoCep");
+        });
+
+        builder.HasOne(p => p.FamiliarResponsavel)
+            .WithMany()
+            .HasForeignKey(p => p.FamiliarResponsavelId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

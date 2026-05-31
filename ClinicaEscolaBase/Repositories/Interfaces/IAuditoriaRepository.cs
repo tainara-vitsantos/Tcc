@@ -11,7 +11,7 @@ public interface IAuditoriaRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o log de auditoria persistido com os valores gravados pelo banco de dados.
 	/// </returns>
-	Task<Auditoria> AddAsync(Auditoria auditoria);
+	Task<AuditoriaModel> AddAsync(AuditoriaModel auditoria);
 
 	/// <summary>
 	/// Busca um log de auditoria pelo identificador herdado de <see cref="EntityBase"/>.
@@ -20,7 +20,7 @@ public interface IAuditoriaRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o log encontrado ou <c>null</c> quando não existir.
 	/// </returns>
-	Task<Auditoria?> GetByIdAsync(int id);
+	Task<AuditoriaModel?> GetByIdAsync(int id);
 
 	/// <summary>
 	/// Lista os logs de auditoria realizados por um usuário específico.
@@ -29,7 +29,7 @@ public interface IAuditoriaRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de logs vinculados ao usuário informado.
 	/// </returns>
-	Task<IEnumerable<Auditoria>> GetByUsuarioIdAsync(string usuarioId);
+	Task<IEnumerable<AuditoriaModel>> GetByUsuarioIdAsync(string usuarioId);
 
 	/// <summary>
 	/// Lista os logs de auditoria ocorridos em um intervalo de datas.
@@ -39,7 +39,7 @@ public interface IAuditoriaRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de logs registrados no período informado.
 	/// </returns>
-	Task<IEnumerable<Auditoria>> GetByPeriodoAsync(DateTime inicio, DateTime fim);
+	Task<IEnumerable<AuditoriaModel>> GetByPeriodoAsync(DateTime inicio, DateTime fim);
 
 	/// <summary>
 	/// Lista o histórico de auditoria de uma entidade e de um registro específico.
@@ -49,5 +49,5 @@ public interface IAuditoriaRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de logs relacionados à entidade e ao registro informados.
 	/// </returns>
-	Task<IEnumerable<Auditoria>> GetByEntidadeERegistroAsync(string entidade, string registroId);
+	Task<IEnumerable<AuditoriaModel>> GetByEntidadeERegistroAsync(string entidade, string registroId);
 }

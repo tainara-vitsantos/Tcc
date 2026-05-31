@@ -2,16 +2,25 @@ using ClinicaEscolaBase.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ClinicaEscolaBase.Configurations;
+namespace ClinicaEscolaBase.Data.Configurations;
 
-public class AtendimentoConfiguration : IEntityTypeConfiguration<Atendimento>
+public class AtendimentoConfiguration : IEntityTypeConfiguration<AtendimentoModel>
 {
-    public void Configure(EntityTypeBuilder<Atendimento> builder)
+    public void Configure(EntityTypeBuilder<AtendimentoModel> builder)
     {
         builder.ToTable("Atendimentos");
         builder.HasKey(x => x.Id);
-        builder.Property(x => x.Observacoes).HasColumnType("nvarchar(max)");
-        builder.HasIndex(x => new { x.PacienteId, x.DataHoraInicio });
+        builder.Property(x => x.DataCriacao);
+        builder.Property(x => x.DataAtualizacao);
+        builder.Property(x => x.Ativo);
+        builder.Property(x => x.ProntuarioId);
+        builder.Property(x => x.PacienteId);
+        builder.Property(x => x.TipoAtendimento).HasConversion<int>();
+        builder.Property(x => x.DataHoraInicio);
+        builder.Property(x => x.DataHoraFim);
+        builder.Property(x => x.StatusAtendimento).HasConversion<int>();
+        builder.Property(x => x.FaltaJustificada);
+        builder.Property(x => x.Observacoes);
 
         builder.HasOne(x => x.Prontuario)
             .WithMany(x => x.Atendimentos)
@@ -23,14 +32,5 @@ public class AtendimentoConfiguration : IEntityTypeConfiguration<Atendimento>
             .HasForeignKey(x => x.PacienteId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasOne(x => x.Aluno)
-            .WithMany(x => x.AtendimentosComoAluno)
-            .HasForeignKey(x => x.AlunoId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        builder.HasOne(x => x.Supervisor)
-            .WithMany(x => x.AtendimentosComoSupervisor)
-            .HasForeignKey(x => x.SupervisorId)
-            .OnDelete(DeleteBehavior.Restrict);
     }
 }

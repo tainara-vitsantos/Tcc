@@ -1,6 +1,5 @@
-using System;
 
-namespace ClinicaEscolaBase.Models;
+/*namespace ClinicaEscolaBase.Models;
 
 public class DocumentoIdentificacaoPaciente
 {
@@ -33,3 +32,4 @@ public class DocumentoIdentificacaoPaciente
 
     public DocumentoClinico DocumentoClinico { get; set; } = null!;
 }
+*/

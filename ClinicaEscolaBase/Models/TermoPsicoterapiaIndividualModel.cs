@@ -1,9 +1,10 @@
-using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace ClinicaEscolaBase.Models;
 
 public class TermoPsicoterapiaIndividualModel
 {
+    [Key]
     public int DocumentoClinicoId { get; set; }
     public string? NomeClienteNoTermo { get; set; }
     public string? RGCliente { get; set; }
@@ -24,5 +25,5 @@ public class TermoPsicoterapiaIndividualModel
     public string? RegraFaltas { get; set; }
     public string? Observacoes { get; set; }
 
-    public DocumentoClinico DocumentoClinico { get; set; } = null!;
+    public DocumentoClinicoModel DocumentoClinico { get; set; } = null!;
 }

@@ -10,7 +10,7 @@ public interface IAnexoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de anexos encontrados.
 	/// </returns>
-	Task<IEnumerable<Anexo>> GetAllAsync();
+	Task<IEnumerable<AnexoModel>> GetAllAsync();
 
 	/// <summary>
 	/// Busca um anexo pelo identificador primário herdado de <see cref="EntityBase"/>.
@@ -19,7 +19,7 @@ public interface IAnexoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o anexo encontrado ou <c>null</c> quando não existir.
 	/// </returns>
-	Task<Anexo?> GetByIdAsync(int id);
+	Task<AnexoModel?> GetByIdAsync(int id);
 
 	/// <summary>
 	/// Lista todos os anexos associados a um documento clínico específico.
@@ -28,7 +28,7 @@ public interface IAnexoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de anexos vinculados ao documento clínico informado.
 	/// </returns>
-	Task<IEnumerable<Anexo>> GetByDocumentoClinicoIdAsync(int documentoClinicoId);
+	Task<IEnumerable<AnexoModel>> GetByDocumentoClinicoIdAsync(int documentoClinicoId);
 
 	/// <summary>
 	/// Cria um novo anexo no banco de dados.
@@ -37,7 +37,7 @@ public interface IAnexoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o anexo persistido com os valores gravados pelo banco de dados.
 	/// </returns>
-	Task<Anexo> AddAsync(Anexo anexo);
+	Task<AnexoModel> AddAsync(AnexoModel anexo);
 
 	/// <summary>
 	/// Atualiza um anexo existente no banco de dados.
@@ -46,7 +46,7 @@ public interface IAnexoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o anexo atualizado ou <c>null</c> quando o registro não for encontrado.
 	/// </returns>
-	Task<Anexo?> UpdateAsync(Anexo anexo);
+	Task<AnexoModel?> UpdateAsync(AnexoModel anexo);
 
 	/// <summary>
 	/// Remove um anexo do banco de dados.

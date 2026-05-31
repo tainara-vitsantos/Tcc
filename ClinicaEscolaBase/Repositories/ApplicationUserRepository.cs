@@ -2,78 +2,43 @@ using ClinicaEscolaBase.Data;
 using ClinicaEscolaBase.Enums;
 using ClinicaEscolaBase.Models;
 using ClinicaEscolaBase.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace ClinicaEscolaBase.Repositories;
 
 public class ApplicationUserRepository(ApplicationDbContext AppDbContext) : IApplicationUserRepository
 {
-	public async Task<IEnumerable<ApplicationUser>> GetAllAsync()
-	{
-		return await AppDbContext.Users
-			.AsNoTracking()
-			.Where(usuario => usuario.Ativo)
-			.OrderBy(usuario => usuario.NomeCompleto)
-			.ToListAsync();
-	}
+    public Task<ApplicationUserModel> AddAsync(ApplicationUserModel usuario)
+    {
+        throw new NotImplementedException();
+    }
 
-	public async Task<ApplicationUser?> GetByIdAsync(string id)
-	{
-		return await AppDbContext.Users
-			.AsNoTracking()
-			.FirstOrDefaultAsync(usuario => usuario.Id == id && usuario.Ativo);
-	}
+    public Task<bool> DeleteAsync(string id)
+    {
+        throw new NotImplementedException();
+    }
 
-	public async Task<ApplicationUser?> GetByCpfAsync(string cpf)
-	{
-		return await AppDbContext.Users
-			.AsNoTracking()
-			.FirstOrDefaultAsync(usuario => usuario.Cpf == cpf && usuario.Ativo);
-	}
+    public Task<IEnumerable<ApplicationUserModel>> GetAllAsync()
+    {
+        throw new NotImplementedException();
+    }
 
-	public async Task<IEnumerable<ApplicationUser>> GetByTipoUsuarioAsync(TipoUsuarioEnum tipoUsuario)
-	{
-		return await AppDbContext.Users
-			.AsNoTracking()
-			.Where(usuario => usuario.TipoUsuario == tipoUsuario && usuario.Ativo)
-			.OrderBy(usuario => usuario.NomeCompleto)
-			.ToListAsync();
-	}
+    public Task<ApplicationUserModel> GetByCpfAsync(string cpf)
+    {
+        throw new NotImplementedException();
+    }
 
-	public async Task<ApplicationUser> AddAsync(ApplicationUser usuario)
-	{
-		usuario.Ativo = true;
+    public Task<ApplicationUserModel> GetByIdAsync(string id)
+    {
+        throw new NotImplementedException();
+    }
 
-		await AppDbContext.Users.AddAsync(usuario);
-		await AppDbContext.SaveChangesAsync();
+    public Task<IEnumerable<ApplicationUserModel>> GetByTipoUsuarioAsync(TipoUsuarioEnum tipoUsuario)
+    {
+        throw new NotImplementedException();
+    }
 
-		return usuario;
-	}
-
-	public async Task<ApplicationUser?> UpdateAsync(ApplicationUser usuario)
-	{
-		var existente = await AppDbContext.Users
-			.FirstOrDefaultAsync(item => item.Id == usuario.Id);
-
-		if (existente is null)
-		{
-			return null;
-		}
-
-		AppDbContext.Entry(existente).CurrentValues.SetValues(usuario);
-		existente.Id = usuario.Id;
-
-		await AppDbContext.SaveChangesAsync();
-
-		return existente;
-	}
-
-	public async Task<bool> DeleteAsync(string id)
-	{
-		var linhasAfetadas = await AppDbContext.Users
-			.Where(usuario => usuario.Id == id)
-			.ExecuteDeleteAsync();
-
-		return linhasAfetadas > 0;
-	}
+    public Task<ApplicationUserModel> UpdateAsync(ApplicationUserModel usuario)
+    {
+        throw new NotImplementedException();
+    }
 }

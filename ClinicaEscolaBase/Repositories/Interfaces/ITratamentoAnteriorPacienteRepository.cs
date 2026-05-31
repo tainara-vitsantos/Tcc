@@ -10,7 +10,7 @@ public interface ITratamentoAnteriorPacienteRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de tratamentos anteriores encontrados.
 	/// </returns>
-	Task<IEnumerable<TratamentoAnteriorPacienteModel>> GetAllAsync();
+	Task<IEnumerable<TratamentoAnteriorModel>> GetAllAsync();
 
 	/// <summary>
 	/// Busca um tratamento anterior pelo identificador herdado de <see cref="EntityBase"/>.
@@ -19,7 +19,7 @@ public interface ITratamentoAnteriorPacienteRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o tratamento encontrado ou <c>null</c> quando não existir.
 	/// </returns>
-	Task<TratamentoAnteriorPacienteModel?> GetByIdAsync(int id);
+	Task<TratamentoAnteriorModel?> GetByIdAsync(int id);
 
 	/// <summary>
 	/// Lista o histórico completo de tratamentos anteriores de um paciente específico.
@@ -28,7 +28,7 @@ public interface ITratamentoAnteriorPacienteRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de tratamentos anteriores associados ao paciente informado.
 	/// </returns>
-	Task<IEnumerable<TratamentoAnteriorPacienteModel>> GetByPacienteIdAsync(Guid pacienteId);
+	Task<IEnumerable<TratamentoAnteriorModel>> GetByPacienteIdAsync(int pacienteId);
 
 	/// <summary>
 	/// Lista apenas os registros de internação de um paciente específico.
@@ -37,7 +37,7 @@ public interface ITratamentoAnteriorPacienteRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de tratamentos anteriores com histórico de internação do paciente informado.
 	/// </returns>
-	Task<IEnumerable<TratamentoAnteriorPacienteModel>> GetInternacoesByPacienteIdAsync(Guid pacienteId);
+	Task<IEnumerable<TratamentoAnteriorModel>> GetInternacoesByPacienteIdAsync(int pacienteId);
 
 	/// <summary>
 	/// Cria um novo tratamento anterior de paciente no banco de dados.
@@ -46,7 +46,7 @@ public interface ITratamentoAnteriorPacienteRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o tratamento anterior persistido com os valores gravados pelo banco de dados.
 	/// </returns>
-	Task<TratamentoAnteriorPacienteModel> AddAsync(TratamentoAnteriorPacienteModel tratamentoAnterior);
+	Task<TratamentoAnteriorModel> AddAsync(TratamentoAnteriorModel tratamentoAnterior);
 
 	/// <summary>
 	/// Atualiza um tratamento anterior de paciente existente no banco de dados.
@@ -55,7 +55,7 @@ public interface ITratamentoAnteriorPacienteRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o tratamento atualizado ou <c>null</c> quando o registro não for encontrado.
 	/// </returns>
-	Task<TratamentoAnteriorPacienteModel?> UpdateAsync(TratamentoAnteriorPacienteModel tratamentoAnterior);
+	Task<TratamentoAnteriorModel?> UpdateAsync(TratamentoAnteriorModel tratamentoAnterior);
 
 	/// <summary>
 	/// Remove um tratamento anterior de paciente do banco de dados.

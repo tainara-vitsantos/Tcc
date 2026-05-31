@@ -2,7 +2,7 @@ using ClinicaEscolaBase.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ClinicaEscolaBase.Configurations;
+namespace ClinicaEscolaBase.Data.Configurations;
 
 public class ProntuarioConfiguration : IEntityTypeConfiguration<ProntuarioModel>
 {
@@ -10,15 +10,20 @@ public class ProntuarioConfiguration : IEntityTypeConfiguration<ProntuarioModel>
     {
         builder.ToTable("Prontuarios");
         builder.HasKey(x => x.Id);
-        builder.Property(x => x.NumeroProntuario).HasMaxLength(50).IsRequired();
-        builder.Property(x => x.ObservacoesGerais).HasColumnType("nvarchar(max)");
 
-        builder.HasIndex(x => x.NumeroProntuario).IsUnique();
-        builder.HasIndex(x => x.PacienteId).IsUnique();
+        builder.Property(x => x.DataCriacao);
+        builder.Property(x => x.DataAtualizacao);
+        builder.Property(x => x.Ativo);
+        builder.Property(x => x.PacienteId);
+        builder.Property(x => x.NumeroProntuario);
+        builder.Property(x => x.DataPrimeiraConsulta);
+        builder.Property(x => x.SituacaoProntuario).HasConversion<int>();
+        builder.Property(x => x.ObservacoesGerais);
 
         builder.HasOne(x => x.Paciente)
             .WithOne(x => x.Prontuario)
             .HasForeignKey<ProntuarioModel>(x => x.PacienteId)
             .OnDelete(DeleteBehavior.Restrict);
+
     }
 }

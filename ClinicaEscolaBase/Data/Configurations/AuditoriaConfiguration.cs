@@ -2,23 +2,30 @@ using ClinicaEscolaBase.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ClinicaEscolaBase.Configurations;
+namespace ClinicaEscolaBase.Data.Configurations;
 
-public class AuditoriaConfiguration : IEntityTypeConfiguration<Auditoria>
+public class AuditoriaConfiguration : IEntityTypeConfiguration<AuditoriaModel>
 {
-    public void Configure(EntityTypeBuilder<Auditoria> builder)
+    public void Configure(EntityTypeBuilder<AuditoriaModel> builder)
     {
-        builder.ToTable("Auditoria");
+        builder.ToTable("Auditorias");
         builder.HasKey(x => x.Id);
-        builder.Property(x => x.Entidade).HasMaxLength(150).IsRequired();
-        builder.Property(x => x.RegistroId).HasMaxLength(100).IsRequired();
-        builder.Property(x => x.IP).HasMaxLength(50);
-        builder.Property(x => x.UserAgent).HasMaxLength(500);
-        builder.Property(x => x.ValoresAntesJson).HasColumnType("nvarchar(max)");
-        builder.Property(x => x.ValoresDepoisJson).HasColumnType("nvarchar(max)");
-        builder.Property(x => x.Observacoes).HasColumnType("nvarchar(max)");
 
-        builder.HasIndex(x => new { x.Entidade, x.RegistroId, x.DataHora });
+        builder.Property(x => x.DataCriacao);
+        builder.Property(x => x.DataAtualizacao);
+        builder.Property(x => x.Ativo);
+        builder.Property(x => x.UsuarioId);
+        builder.Property(x => x.TipoAcao).HasConversion<int>();
+        builder.Property(x => x.Entidade);
+        builder.Property(x => x.RegistroId);
+        builder.Property(x => x.PacienteId);
+        builder.Property(x => x.ProntuarioId);
+        builder.Property(x => x.DataHora);
+        builder.Property(x => x.IP);
+        builder.Property(x => x.UserAgent);
+        builder.Property(x => x.ValoresAntesJson);
+        builder.Property(x => x.ValoresDepoisJson);
+        builder.Property(x => x.Observacoes);
 
         builder.HasOne(x => x.Usuario)
             .WithMany(x => x.Auditorias)

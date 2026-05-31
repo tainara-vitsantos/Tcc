@@ -1,5 +1,4 @@
 using ClinicaEscolaBase.Data;
-using ClinicaEscolaBase.Enums;
 using ClinicaEscolaBase.Models;
 using ClinicaEscolaBase.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +7,7 @@ namespace ClinicaEscolaBase.Repositories;
 
 public class TratamentoAnteriorPacienteRepository(ApplicationDbContext AppDbContext) : ITratamentoAnteriorPacienteRepository
 {
-	public async Task<IEnumerable<TratamentoAnteriorPacienteModel>> GetAllAsync()
+	public async Task<IEnumerable<TratamentoAnteriorModel>> GetAllAsync()
 	{
 		return await AppDbContext.TratamentosAnterioresPaciente
 			.AsNoTracking()
@@ -17,7 +16,7 @@ public class TratamentoAnteriorPacienteRepository(ApplicationDbContext AppDbCont
 			.ToListAsync();
 	}
 
-	public async Task<TratamentoAnteriorPacienteModel?> GetByIdAsync(int id)
+	public async Task<TratamentoAnteriorModel?> GetByIdAsync(int id)
 	{
 		return await AppDbContext.TratamentosAnterioresPaciente
 			.AsNoTracking()
@@ -25,7 +24,7 @@ public class TratamentoAnteriorPacienteRepository(ApplicationDbContext AppDbCont
 			.FirstOrDefaultAsync(tratamentoAnterior => tratamentoAnterior.Id == id);
 	}
 
-	public async Task<IEnumerable<TratamentoAnteriorPacienteModel>> GetByPacienteIdAsync(Guid pacienteId)
+	public async Task<IEnumerable<TratamentoAnteriorModel>> GetByPacienteIdAsync(int pacienteId)
 	{
 		return await AppDbContext.TratamentosAnterioresPaciente
 			.AsNoTracking()
@@ -35,20 +34,19 @@ public class TratamentoAnteriorPacienteRepository(ApplicationDbContext AppDbCont
 			.ToListAsync();
 	}
 
-	public async Task<IEnumerable<TratamentoAnteriorPacienteModel>> GetInternacoesByPacienteIdAsync(Guid pacienteId)
+	public async Task<IEnumerable<TratamentoAnteriorModel>> GetInternacoesByPacienteIdAsync(int pacienteId)
 	{
 		return await AppDbContext.TratamentosAnterioresPaciente
 			.AsNoTracking()
 			.Where(tratamentoAnterior =>
 				tratamentoAnterior.PacienteId == pacienteId &&
-				tratamentoAnterior.PossuiHistorico &&
 				!string.IsNullOrWhiteSpace(tratamentoAnterior.MotivoInternacao))
 			.Include(tratamentoAnterior => tratamentoAnterior.Paciente)
 			.OrderByDescending(tratamentoAnterior => tratamentoAnterior.Id)
 			.ToListAsync();
 	}
 
-	public async Task<TratamentoAnteriorPacienteModel> AddAsync(TratamentoAnteriorPacienteModel tratamentoAnterior)
+	public async Task<TratamentoAnteriorModel> AddAsync(TratamentoAnteriorModel tratamentoAnterior)
 	{
 		tratamentoAnterior.DataCriacao = DateTime.UtcNow;
 		tratamentoAnterior.Ativo = true;
@@ -59,7 +57,7 @@ public class TratamentoAnteriorPacienteRepository(ApplicationDbContext AppDbCont
 		return tratamentoAnterior;
 	}
 
-	public async Task<TratamentoAnteriorPacienteModel?> UpdateAsync(TratamentoAnteriorPacienteModel tratamentoAnterior)
+	public async Task<TratamentoAnteriorModel?> UpdateAsync(TratamentoAnteriorModel tratamentoAnterior)
 	{
 		var existente = await AppDbContext.TratamentosAnterioresPaciente
 			.FirstOrDefaultAsync(item => item.Id == tratamentoAnterior.Id && item.Ativo);

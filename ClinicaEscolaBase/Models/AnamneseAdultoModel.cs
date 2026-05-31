@@ -1,11 +1,13 @@
 
+using System.ComponentModel.DataAnnotations;
+
 namespace ClinicaEscolaBase.Models;
 
 public class AnamneseAdultoModel
 {
+    [Key]
     public int DocumentoClinicoId { get; set; }
-    public string? FrequenciaAtendimento { get; set; }
-    public DateTime? DataHoraAtendimento { get; set; }
+    public DocumentoClinicoModel DocumentoClinico { get; set; } = null!;
     public string? QueixaPrincipal { get; set; }
     public string? QueixaSecundaria { get; set; }
     public string? Sintomas { get; set; }
@@ -62,6 +64,4 @@ public class AnamneseAdultoModel
     public string? Humor { get; set; }
     public string? ConscienciaDoencaAtual { get; set; }
     public string? HipoteseDiagnostica { get; set; }
-
-    public DocumentoClinicoModel DocumentoClinico { get; set; } = null!;
 }

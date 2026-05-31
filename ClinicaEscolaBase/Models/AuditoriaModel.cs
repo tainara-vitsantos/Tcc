@@ -1,5 +1,4 @@
 using ClinicaEscolaBase.Enums;
-using System;
 
 namespace ClinicaEscolaBase.Models;
 
@@ -9,7 +8,7 @@ public class AuditoriaModel : EntityBase
     public TipoAcaoAuditoriaEnum TipoAcao { get; set; }
     public string Entidade { get; set; } = string.Empty;
     public string RegistroId { get; set; } = string.Empty;
-    public Guid? PacienteId { get; set; }
+    public int? PacienteId { get; set; }
     public int? ProntuarioId { get; set; }
     public DateTime DataHora { get; set; } = DateTime.UtcNow;
     public string? IP { get; set; }
@@ -18,7 +17,7 @@ public class AuditoriaModel : EntityBase
     public string? ValoresDepoisJson { get; set; }
     public string? Observacoes { get; set; }
 
-    public ApplicationUser Usuario { get; set; } = null!;
+    public ApplicationUserModel Usuario { get; set; } = null!;
     public PacienteModel? Paciente { get; set; }
     public ProntuarioModel? Prontuario { get; set; }
 }

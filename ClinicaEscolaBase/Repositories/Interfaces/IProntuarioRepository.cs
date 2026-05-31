@@ -29,7 +29,7 @@ public interface IProntuarioRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que representa a operação de busca e retorna o prontuário vinculado ao paciente ou <c>null</c> quando não existir.
 	/// </returns>
-	Task<ProntuarioModel?> GetByPacienteIdAsync(Guid pacienteId);
+	Task<ProntuarioModel?> GetByPacienteIdAsync(int pacienteId);
 
 	/// <summary>
 	/// Busca um prontuário pelo identificador carregando o paciente e os atendimentos relacionados.

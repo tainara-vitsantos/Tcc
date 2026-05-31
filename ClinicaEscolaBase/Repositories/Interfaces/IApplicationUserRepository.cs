@@ -11,7 +11,7 @@ public interface IApplicationUserRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de usuários encontrados.
 	/// </returns>
-	Task<IEnumerable<ApplicationUser>> GetAllAsync();
+	Task<IEnumerable<ApplicationUserModel>> GetAllAsync();
 
 	/// <summary>
 	/// Busca um usuário pelo identificador.
@@ -20,7 +20,7 @@ public interface IApplicationUserRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o usuário encontrado ou <c>null</c> quando não existir.
 	/// </returns>
-	Task<ApplicationUser?> GetByIdAsync(string id);
+	Task<ApplicationUserModel> GetByIdAsync(string id);
 
 	/// <summary>
 	/// Busca um usuário pelo CPF.
@@ -29,7 +29,7 @@ public interface IApplicationUserRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o usuário encontrado ou <c>null</c> quando não existir.
 	/// </returns>
-	Task<ApplicationUser?> GetByCpfAsync(string cpf);
+	Task<ApplicationUserModel> GetByCpfAsync(string cpf);
 
 	/// <summary>
 	/// Lista os usuários de um determinado tipo/perfil.
@@ -38,7 +38,7 @@ public interface IApplicationUserRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de usuários do perfil informado.
 	/// </returns>
-	Task<IEnumerable<ApplicationUser>> GetByTipoUsuarioAsync(TipoUsuarioEnum tipoUsuario);
+	Task<IEnumerable<ApplicationUserModel>> GetByTipoUsuarioAsync(TipoUsuarioEnum tipoUsuario);
 
 	/// <summary>
 	/// Cria um novo usuário no banco de dados.
@@ -47,7 +47,7 @@ public interface IApplicationUserRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o usuário persistido com os valores gravados pelo banco de dados.
 	/// </returns>
-	Task<ApplicationUser> AddAsync(ApplicationUser usuario);
+	Task<ApplicationUserModel> AddAsync(ApplicationUserModel usuario);
 
 	/// <summary>
 	/// Atualiza um usuário existente no banco de dados.
@@ -56,7 +56,7 @@ public interface IApplicationUserRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o usuário atualizado ou <c>null</c> quando o registro não for encontrado.
 	/// </returns>
-	Task<ApplicationUser?> UpdateAsync(ApplicationUser usuario);
+	Task<ApplicationUserModel> UpdateAsync(ApplicationUserModel usuario);
 
 	/// <summary>
 	/// Remove um usuário do banco de dados.

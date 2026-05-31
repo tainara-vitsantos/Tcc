@@ -1,7 +1,7 @@
 using ClinicaEscolaBase;
 using ClinicaEscolaBase.Data;
 using ClinicaEscolaBase.Models;
-using ClinicaEscolaBase.Services.Interfaces;
+using ClinicaEscolaBase.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,7 +14,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 
 // Identity (Login / Usuários)
-builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
+builder.Services.AddDefaultIdentity<ApplicationUserModel>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
 
@@ -35,12 +35,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddSmartServices(); // isso aqui serve pra nao precisar registrar os servicos um por um manualmente
 var app = builder.Build();
 
-// Inicializar Roles na aplicação
-using (var scope = app.Services.CreateScope())
-{
-    var roleService = scope.ServiceProvider.GetRequiredService<IRoleInitializationService>();
-    await roleService.InitializeAsync();
-}
+
 
 // Pipeline HTTP
 if (!app.Environment.IsDevelopment())

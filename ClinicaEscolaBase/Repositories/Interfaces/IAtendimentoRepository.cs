@@ -11,7 +11,7 @@ public interface IAtendimentoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de atendimentos encontrados.
 	/// </returns>
-	Task<IEnumerable<Atendimento>> GetAllAsync();
+	Task<IEnumerable<AtendimentoModel>> GetAllAsync();
 
 	/// <summary>
 	/// Busca um atendimento pelo identificador herdado de <see cref="EntityBase"/>.
@@ -20,7 +20,7 @@ public interface IAtendimentoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o atendimento encontrado ou <c>null</c> quando não existir.
 	/// </returns>
-	Task<Atendimento?> GetByIdAsync(int id);
+	Task<AtendimentoModel> GetByIdAsync(int id);
 
 	/// <summary>
 	/// Lista os atendimentos de um aluno específico.
@@ -29,7 +29,7 @@ public interface IAtendimentoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de atendimentos do aluno informado.
 	/// </returns>
-	Task<IEnumerable<Atendimento>> GetByAlunoIdAsync(string alunoId);
+	Task<IEnumerable<AtendimentoModel>> GetByAlunoIdAsync(string alunoId);
 
 	/// <summary>
 	/// Lista os atendimentos de um paciente específico.
@@ -38,7 +38,7 @@ public interface IAtendimentoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de atendimentos do paciente informado.
 	/// </returns>
-	Task<IEnumerable<Atendimento>> GetByPacienteIdAsync(Guid pacienteId);
+	Task<IEnumerable<AtendimentoModel>> GetByPacienteIdAsync(int pacienteId);
 
 	/// <summary>
 	/// Filtra os atendimentos por status.
@@ -47,7 +47,7 @@ public interface IAtendimentoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de atendimentos com o status informado.
 	/// </returns>
-	Task<IEnumerable<Atendimento>> GetByStatusAsync(StatusAtendimentoEnum status);
+	Task<IEnumerable<AtendimentoModel>> GetByStatusAsync(StatusAtendimentoEnum status);
 
 	/// <summary>
 	/// Cria um novo atendimento no banco de dados.
@@ -56,7 +56,7 @@ public interface IAtendimentoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o atendimento persistido com os valores gravados pelo banco de dados.
 	/// </returns>
-	Task<Atendimento> AddAsync(Atendimento atendimento);
+	Task<AtendimentoModel> AddAsync(AtendimentoModel atendimento);
 
 	/// <summary>
 	/// Atualiza um atendimento existente no banco de dados.
@@ -65,7 +65,7 @@ public interface IAtendimentoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna o atendimento atualizado ou <c>null</c> quando o registro não for encontrado.
 	/// </returns>
-	Task<Atendimento?> UpdateAsync(Atendimento atendimento);
+	Task<AtendimentoModel> UpdateAsync(AtendimentoModel atendimento);
 
 	/// <summary>
 	/// Remove um atendimento do banco de dados.

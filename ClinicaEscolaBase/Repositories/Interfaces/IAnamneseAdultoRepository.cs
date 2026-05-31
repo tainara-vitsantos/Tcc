@@ -10,7 +10,7 @@ public interface IAnamneseAdultoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a lista de anamneses de adultos encontradas.
 	/// </returns>
-	Task<IEnumerable<AnamneseAdulto>> GetAllAsync();
+	Task<IEnumerable<AnamneseAdultoModel>> GetAllAsync();
 
 	/// <summary>
 	/// Busca uma anamnese de adulto pelo identificador do documento clínico.
@@ -19,7 +19,7 @@ public interface IAnamneseAdultoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a anamnese encontrada ou <c>null</c> quando não existir.
 	/// </returns>
-	Task<AnamneseAdulto?> GetByIdAsync(int documentoClinicoId);
+	Task<AnamneseAdultoModel> GetByIdAsync(int documentoClinicoId);
 
 	/// <summary>
 	/// Cria uma nova anamnese de adulto no banco de dados.
@@ -28,7 +28,7 @@ public interface IAnamneseAdultoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a anamnese persistida com os dados gravados pelo banco.
 	/// </returns>
-	Task<AnamneseAdulto> AddAsync(AnamneseAdulto anamneseAdulto);
+	Task<AnamneseAdultoModel> AddAsync(AnamneseAdultoModel anamneseAdulto);
 
 	/// <summary>
 	/// Atualiza uma anamnese de adulto existente no banco de dados.
@@ -37,7 +37,7 @@ public interface IAnamneseAdultoRepository
 	/// <returns>
 	/// Uma tarefa assíncrona que retorna a anamnese atualizada ou <c>null</c> quando o registro não for encontrado.
 	/// </returns>
-	Task<AnamneseAdulto?> UpdateAsync(AnamneseAdulto anamneseAdulto);
+	Task<AnamneseAdultoModel> UpdateAsync(AnamneseAdultoModel anamneseAdulto);
 
 	/// <summary>
 	/// Remove uma anamnese de adulto do banco de dados.

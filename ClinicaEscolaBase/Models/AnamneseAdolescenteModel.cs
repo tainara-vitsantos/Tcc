@@ -1,19 +1,15 @@
+
+using System.ComponentModel.DataAnnotations;
+
 namespace ClinicaEscolaBase.Models;
 
 public class AnamneseAdolescenteModel
 {
+    [Key]
     public int DocumentoClinicoId { get; set; }
+    public DocumentoClinicoModel DocumentoClinico { get; set; } = null!;
     public string? Escolaridade { get; set; }
     public string? Escola { get; set; }
-    public string? PaiNome { get; set; }
-    public int? PaiIdade { get; set; }
-    public string? PaiInstrucao { get; set; }
-    public string? PaiProfissao { get; set; }
-    public string? MaeNome { get; set; }
-    public int? MaeIdade { get; set; }
-    public string? MaeInstrucao { get; set; }
-    public string? MaeProfissao { get; set; }
-    public string? CondicaoConjugalPais { get; set; }
     public string? QueixaPrincipal { get; set; }
     public string? DesdeQuando { get; set; }
     public string? AtitudeMaeFrenteQueixa { get; set; }
@@ -36,7 +32,7 @@ public class AnamneseAdolescenteModel
     public string? FamiliaRecebeVisitas { get; set; }
     public string? Companheiros { get; set; }
     public string? QuemEscolheCompanheiros { get; set; }
-    public string? Religiao { get; set; }
 
-    public DocumentoClinicoModel DocumentoClinico { get; set; } = null!;
+    public int ResponsavelPrincipalId { get; set; }
+    public InfoFamiliarModel? ResponsavelPrincipal { get; set; }
 }

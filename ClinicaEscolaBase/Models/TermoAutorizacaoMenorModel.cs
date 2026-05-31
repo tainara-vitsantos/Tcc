@@ -1,11 +1,13 @@
-using System;
+
+using System.ComponentModel.DataAnnotations;
 
 namespace ClinicaEscolaBase.Models;
 
 public class TermoAutorizacaoMenorModel
 {
+    [Key]
     public int DocumentoClinicoId { get; set; }
-    public int ResponsavelLegalId { get; set; }
+    public int InfoFamiliarId { get; set; }
     public string? RGResponsavel { get; set; }
     public string? CPFResponsavel { get; set; }
     public string? NomeMenorNoTermo { get; set; }
@@ -16,6 +18,6 @@ public class TermoAutorizacaoMenorModel
     public DateTime? DataAssinatura { get; set; }
     public string? Observacoes { get; set; }
 
-    public DocumentoClinico DocumentoClinico { get; set; } = null!;
-    public ResponsavelLegal ResponsavelLegal { get; set; } = null!;
+    public DocumentoClinicoModel DocumentoClinico { get; set; } = null!;
+    public InfoFamiliarModel InfoFamiliar { get; set; } = null!;
 }
