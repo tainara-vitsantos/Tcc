@@ -5,15 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ClinicaEscolaBase.Controllers;
 
-public class AuthController : Controller
+public class AuthController(SignInManager<ApplicationUser> signInManager) : Controller
 {
-    private readonly SignInManager<ApplicationUser> _signInManager;
-
-    public AuthController(SignInManager<ApplicationUser> signInManager)
-    {
-        _signInManager = signInManager;
-    }
-
     [HttpGet]
     public IActionResult Login()
     {
@@ -26,7 +19,7 @@ public class AuthController : Controller
         if (!ModelState.IsValid)
             return View(model);
 
-        var result = await _signInManager.PasswordSignInAsync(
+        var result = await signInManager.PasswordSignInAsync(
             model.Email,
             model.Password,
             false,
@@ -42,7 +35,7 @@ public class AuthController : Controller
 
     public async Task<IActionResult> Logout()
     {
-        await _signInManager.SignOutAsync();
+        await signInManager.SignOutAsync();
         return RedirectToAction("Login");
     }
 }
