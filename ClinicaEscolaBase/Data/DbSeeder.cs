@@ -21,12 +21,12 @@ public static class DbSeeder
         }
 
         // 2. Criar Professor
-        ApplicationUser? prof = await userManager.FindByEmailAsync("prof@fatec.com");
+        ApplicationUser? prof = await userManager.FindByEmailAsync("prof@etec.com");
         if (prof == null)
         {
             prof = new ApplicationUser {
-                UserName = "prof@fatec.com",
-                Email = "prof@fatec.com",
+                UserName = "prof@etec.com",
+                Email = "prof@etec.com",
                 NomeCompleto = "Tainara Vitória (Supervisor)",
                 EmailConfirmed = true
             };
@@ -35,12 +35,12 @@ public static class DbSeeder
         }
 
         // 3. Criar Aluno
-        ApplicationUser? aluno = await userManager.FindByEmailAsync("aluno@fatec.com");
+        ApplicationUser? aluno = await userManager.FindByEmailAsync("aluno@etec.com");
         if (aluno == null)
         {
             aluno = new ApplicationUser {
-                UserName = "aluno@fatec.com",
-                Email = "aluno@fatec.com",
+                UserName = "aluno@etec.com",
+                Email = "aluno@etec.com",
                 NomeCompleto = "Aluno Estagiário",
                 EmailConfirmed = true
             };

@@ -26,3 +26,9 @@ dotnet ef database update
 
 tentar fazer conectar com o banco
 Server=localhost;Database=ClinicaEscolaDB;Trusted_Connection=True;TrustServerCertificate=True
+
+prof@etec.com
+Senha@123
+
+aluno@etec.com
+Senha@123

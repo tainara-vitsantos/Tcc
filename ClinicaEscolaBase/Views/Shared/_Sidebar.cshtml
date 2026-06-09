@@ -1,0 +1,60 @@
+@using Microsoft.AspNetCore.Mvc.Rendering
+@{
+    string currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+    Func<string,string,string> active = (ctrl, act) => currentController.Equals(ctrl, StringComparison.OrdinalIgnoreCase) ? "active" : "";
+}
+
+<aside class="app-sidebar" aria-label="Sidebar">
+    <div class="sidebar-top d-flex flex-column align-items-start p-3">
+        <div class="d-flex align-items-center gap-2 mb-2">
+            <div class="sidebar-logo rounded-circle d-flex align-items-center justify-content-center">CE</div>
+            <div>
+                <div class="fw-bold">Clínica Escola</div>
+                <div class="small text-muted">Sistema Corporativo</div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="nav flex-column px-2 pb-3">
+        <a asp-controller="Home" asp-action="Index" class="nav-link d-flex align-items-center gap-2 px-3 py-2 @active("Home","Index")">
+            <i class="bi bi-speedometer2 fs-5"></i>
+            <span>Dashboard</span>
+        </a>
+        <a asp-controller="Paciente" asp-action="Index" class="nav-link d-flex align-items-center gap-2 px-3 py-2 @active("Paciente","Index")">
+            <i class="bi bi-person-lines-fill fs-5"></i>
+            <span>Pacientes</span>
+        </a>
+        <a asp-controller="Atendimento" asp-action="Index" class="nav-link d-flex align-items-center gap-2 px-3 py-2 @active("Atendimento","Index")">
+            <i class="bi bi-people-fill fs-5"></i>
+            <span>Atendimentos</span>
+        </a>
+        <a asp-controller="Prontuario" asp-action="Index" class="nav-link d-flex align-items-center gap-2 px-3 py-2 @active("Prontuario","Index")">
+            <i class="bi bi-file-earmark-medical-fill fs-5"></i>
+            <span>Prontuários</span>
+        </a>
+        <a asp-controller="Agenda" asp-action="Index" class="nav-link d-flex align-items-center gap-2 px-3 py-2 @active("Agenda","Index")">
+            <i class="bi bi-calendar3 fs-5"></i>
+            <span>Agenda</span>
+        </a>
+        <a asp-controller="Relatorio" asp-action="Index" class="nav-link d-flex align-items-center gap-2 px-3 py-2 @active("Relatorio","Index")">
+            <i class="bi bi-file-earmark-text fs-5"></i>
+            <span>Relatórios</span>
+        </a>
+        <a asp-controller="Auditoria" asp-action="Index" class="nav-link d-flex align-items-center gap-2 px-3 py-2 @active("Auditoria","Index")">
+            <i class="bi bi-shield-check fs-5"></i>
+            <span>Auditoria</span>
+        </a>
+        <a asp-controller="Usuario" asp-action="Index" class="nav-link d-flex align-items-center gap-2 px-3 py-2 @active("Usuario","Index")">
+            <i class="bi bi-people fs-5"></i>
+            <span>Usuários</span>
+        </a>
+        <a asp-controller="Configuracao" asp-action="Index" class="nav-link d-flex align-items-center gap-2 px-3 py-2 @active("Configuracao","Index")">
+            <i class="bi bi-gear-fill fs-5"></i>
+            <span>Configurações</span>
+        </a>
+    </nav>
+
+    <div class="sidebar-footer p-3 mt-auto small text-muted">
+        © 2026 Clínica Escola
+    </div>
+</aside>

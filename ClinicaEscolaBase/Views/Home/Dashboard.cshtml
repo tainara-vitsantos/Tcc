@@ -17,6 +17,42 @@
     </div>
 </div>
 
+<div class="card-saas p-3 mb-4 bg-white border rounded-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+        <div>
+            <h6 class="mb-0 fw-semibold text-dark">Visão Rápida</h6>
+            <small class="text-muted">Resumo consolidado dos principais KPIs</small>
+        </div>
+        <div class="w-100">
+            @{ 
+                var resumoPacientes = Model?.ProfessorData?.TotalPacientes ?? Model?.AlunoData?.MeusPacientes ?? 0;
+                var resumoAtendimentos = Model?.ProfessorData?.AtendimentosHoje ?? Model?.AlunoData?.MeusAtendimentosHoje ?? 0;
+                var resumoProntuarios = Model?.ProfessorData?.TotalProntuariosAtivos ?? 0;
+                var resumoTotal = resumoPacientes + resumoAtendimentos + resumoProntuarios;
+                Func<int,int> resumoPct = v => resumoTotal > 0 ? (int)Math.Round(v * 100.0 / resumoTotal) : 0;
+            }
+
+            <div class="d-flex align-items-center gap-3 mb-2 flex-wrap">
+                <div class="small text-muted">Pacientes <span class="fw-bold text-dark">@resumoPacientes</span></div>
+                <div class="small text-muted">Atendimentos Hoje <span class="fw-bold text-dark">@resumoAtendimentos</span></div>
+                <div class="small text-muted">Prontuários <span class="fw-bold text-dark">@resumoProntuarios</span></div>
+            </div>
+
+            <div class="progress" style="height:26px; border-radius:12px; overflow:hidden;">
+                <div class="progress-bar bg-primary" role="progressbar" style="width:@resumoPct(resumoPacientes)%;" aria-valuenow="@resumoPct(resumoPacientes)" aria-valuemin="0" aria-valuemax="100">@resumoPct(resumoPacientes)%</div>
+                <div class="progress-bar bg-info" role="progressbar" style="width:@resumoPct(resumoAtendimentos)%;" aria-valuenow="@resumoPct(resumoAtendimentos)" aria-valuemin="0" aria-valuemax="100">@resumoPct(resumoAtendimentos)%</div>
+                <div class="progress-bar bg-warning" role="progressbar" style="width:@resumoPct(resumoProntuarios)%;" aria-valuenow="@resumoPct(resumoProntuarios)" aria-valuemin="0" aria-valuemax="100">@resumoPct(resumoProntuarios)%</div>
+            </div>
+
+            <div class="d-flex justify-content-end mt-2 small text-muted">
+                <div class="me-3"><span class="badge bg-primary bg-opacity-10 text-primary">Pacientes</span></div>
+                <div class="me-3"><span class="badge bg-info bg-opacity-10 text-info">Atendimentos</span></div>
+                <div class="me-0"><span class="badge bg-warning bg-opacity-10 text-warning">Prontuários</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <section class="mb-4">
     <div class="row g-4">
         <div class="col-12 col-md-4">
