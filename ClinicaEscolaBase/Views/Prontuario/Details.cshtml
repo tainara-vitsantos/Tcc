@@ -44,6 +44,12 @@
                 <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-warning">
                     <i class="bi bi-pencil"></i> Editar Prontuário
                 </a>
+                @if (User.IsInRole("Professor"))
+                {
+                    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger">
+                        <i class="bi bi-trash"></i> Excluir
+                    </a>
+                }
                 <a asp-controller="Paciente" asp-action="Details" asp-route-id="@Model.PacienteId" class="btn btn-outline-secondary">
                     <i class="bi bi-arrow-left"></i> Voltar ao Paciente
                 </a>

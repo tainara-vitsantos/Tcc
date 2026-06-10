@@ -6,7 +6,7 @@
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold"><i class="bi bi-archive"></i> Arquivo de Prontuários</h2>
-        <a asp-action="Create" class="btn btn-primary">Abrir Novo Prontuário</a>
+        <a asp-action="Create" class="btn btn-primary"><i class="bi bi-folder-plus me-2"></i>Abrir Novo Prontuário</a>
     </div>
 
     <div class="table-responsive shadow-sm rounded">
@@ -32,8 +32,12 @@
                         </span>
                     </td>
                     <td class="text-end">
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning">Editar</a>
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info">Ver</a>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning me-1">Editar</a>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info me-1">Ver</a>
+                        @if (User.IsInRole("Professor"))
+                        {
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Excluir</a>
+                        }
                     </td>
                 </tr>
                 }

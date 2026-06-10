@@ -16,7 +16,7 @@ public class ProntuarioController(
     ApplicationDbContext context,
     IAuthService authorizationService,
     UserManager<ApplicationUser> userManager,
-    AuditService auditService) : Controller
+    IAuditService auditService) : Controller
 {
 
     // LISTAGEM GERAL

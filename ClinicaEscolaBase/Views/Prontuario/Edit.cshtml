@@ -5,20 +5,23 @@
 }
 <div class="container mt-4">
     <div class="card shadow-sm border-0">
-        <div class="card-header bg-warning text-dark fw-bold">Editar Prontuário</div>
+        <div class="card-header bg-primary text-white fw-bold">Editar Prontuário</div>
         <div class="card-body">
-            <form asp-action="Edit">
+            <form asp-action="Edit" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
                 <input type="hidden" asp-for="Id" />
                 <input type="hidden" asp-for="PacienteId" />
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label asp-for="NumeroProntuario" class="form-label fw-bold"></label>
+                        <label asp-for="NumeroProntuario" class="form-label fw-bold">Número do Prontuário</label>
                         <input asp-for="NumeroProntuario" class="form-control" />
+                        <span asp-validation-for="NumeroProntuario" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label asp-for="SituacaoProntuario" class="form-label fw-bold"></label>
+                        <label asp-for="SituacaoProntuario" class="form-label fw-bold">Situação</label>
                         <select asp-for="SituacaoProntuario" class="form-select" asp-items="Html.GetEnumSelectList<ClinicaEscolaBase.Enums.SituacaoProntuario>()"></select>
+                        <span asp-validation-for="SituacaoProntuario" class="text-danger"></span>
                     </div>
                 </div>
 
@@ -27,8 +30,8 @@
                     <textarea asp-for="ObservacoesGerais" class="form-control" rows="4"></textarea>
                 </div>
 
-                <button type="submit" class="btn btn-warning px-4">Salvar Alterações</button>
-                <a asp-action="Index" class="btn btn-outline-secondary">Voltar</a>
+                <button type="submit" class="btn btn-primary px-4">Salvar Alterações</button>
+                <a asp-controller="Paciente" asp-action="Details" asp-route-id="@Model.PacienteId" class="btn btn-outline-secondary">Voltar ao Paciente</a>
             </form>
         </div>
     </div>

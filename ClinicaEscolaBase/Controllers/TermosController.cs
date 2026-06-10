@@ -85,7 +85,7 @@ public class TermosController(
         if (!Directory.Exists(uploadsFolder))
             Directory.CreateDirectory(uploadsFolder);
 
-        var uniqueFileName = $"termo-psicoterapia-{Guid.NewGuid()}{Path.GetExtension(viewModel.Arquivo.FileName)}";
+        var uniqueFileName = $"termo-psicoterapia-{Guid.NewGuid()}{Path.GetExtension(viewModel.Arquivo!.FileName)}";
         var filePath = Path.Combine(uploadsFolder, uniqueFileName);
         await using (var fileStream = new FileStream(filePath, FileMode.Create))
         {
@@ -183,7 +183,7 @@ public class TermosController(
         if (!Directory.Exists(uploadsFolder))
             Directory.CreateDirectory(uploadsFolder);
 
-        var uniqueFileName = $"termo-autorizacao-menor-{Guid.NewGuid()}{Path.GetExtension(viewModel.Arquivo.FileName)}";
+        var uniqueFileName = $"termo-autorizacao-menor-{Guid.NewGuid()}{Path.GetExtension(viewModel.Arquivo!.FileName)}";
         var filePath = Path.Combine(uploadsFolder, uniqueFileName);
         await using (var fileStream = new FileStream(filePath, FileMode.Create))
         {

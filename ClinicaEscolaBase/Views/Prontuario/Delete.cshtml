@@ -1,4 +1,41 @@
+@model ClinicaEscolaBase.Models.Prontuario
+
 @{
-    ViewData["Title"] = "Excluir Prontuário Clínico";
+    ViewData["Title"] = "Excluir Prontuário";
     Layout = "_LayoutAdmin";
 }
+
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-danger text-white">
+            <h4>Excluir Prontuário</h4>
+        </div>
+
+        <div class="card-body">
+            <p>Tem certeza que deseja excluir este prontuário?</p>
+
+            <dl class="row">
+                <dt class="col-sm-3">Número</dt>
+                <dd class="col-sm-9">@Model.NumeroProntuario</dd>
+
+                <dt class="col-sm-3">Paciente</dt>
+                <dd class="col-sm-9">@Model.Paciente?.NomeCompleto</dd>
+
+                <dt class="col-sm-3">Situação</dt>
+                <dd class="col-sm-9">@Model.SituacaoProntuario</dd>
+            </dl>
+
+            <form asp-action="Delete" method="post">
+                <input type="hidden" asp-for="Id" />
+
+                <button type="submit" class="btn btn-danger">
+                    Confirmar Exclusão
+                </button>
+
+                <a asp-controller="Paciente" asp-action="Details" asp-route-id="@Model.PacienteId" class="btn btn-secondary">
+                    Cancelar
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
