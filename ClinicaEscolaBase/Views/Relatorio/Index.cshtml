@@ -1,0 +1,217 @@
+@{
+    ViewData["Title"] = "Central de Relatórios";
+    Layout = "_LayoutAdmin";
+}
+
+<div class="container-fluid">
+
+    <div class="mb-4">
+        <h2 class="fw-bold">
+            <i class="fas fa-chart-line me-2"></i>
+            Central de Relatórios
+        </h2>
+
+        <p class="text-muted">
+            Visualize indicadores, estatísticas e relatórios da Clínica Escola.
+        </p>
+    </div>
+
+    <!-- FILTROS -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+
+            <h5 class="fw-bold mb-3">
+                Filtros
+            </h5>
+
+            <div class="row">
+
+                <div class="col-md-4">
+                    <label class="form-label">Data Inicial</label>
+                    <input type="date" class="form-control">
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Data Final</label>
+                    <input type="date" class="form-control">
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Professor</label>
+                    <select class="form-select">
+                        <option>Todos</option>
+                    </select>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- CARDS -->
+    <div class="row g-4">
+
+        <div class="col-md-6 col-xl-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+
+                    <h6 class="text-muted">
+                        Atendimentos
+                    </h6>
+
+                    <h2 class="fw-bold">
+                        248
+                    </h2>
+
+                    <small class="text-success">
+                        Total realizados
+                    </small>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+
+                    <h6 class="text-muted">
+                        Pacientes Ativos
+                    </h6>
+
+                    <h2 class="fw-bold">
+                        87
+                    </h2>
+
+                    <small class="text-primary">
+                        Em acompanhamento
+                    </small>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+
+                    <h6 class="text-muted">
+                        Prontuários
+                    </h6>
+
+                    <h2 class="fw-bold">
+                        312
+                    </h2>
+
+                    <small class="text-info">
+                        Cadastrados
+                    </small>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+
+                    <h6 class="text-muted">
+                        Alunos
+                    </h6>
+
+                    <h2 class="fw-bold">
+                        42
+                    </h2>
+
+                    <small class="text-warning">
+                        Em estágio
+                    </small>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- RELATÓRIOS DISPONÍVEIS -->
+    <div class="card border-0 shadow-sm mt-4">
+
+        <div class="card-header bg-white">
+            <h5 class="fw-bold mb-0">
+                Relatórios Disponíveis
+            </h5>
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+                    <tr>
+                        <th>Relatório</th>
+                        <th>Descrição</th>
+                        <th width="180">Ações</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>Atendimentos</td>
+                        <td>Consultas realizadas por período.</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary">
+                                Visualizar
+                            </button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Pacientes</td>
+                        <td>Pacientes ativos e inativos.</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary">
+                                Visualizar
+                            </button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Prontuários</td>
+                        <td>Prontuários cadastrados e pendentes.</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary">
+                                Visualizar
+                            </button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Acadêmico</td>
+                        <td>Atividades de alunos e supervisores.</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary">
+                                Visualizar
+                            </button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Produtividade</td>
+                        <td>Indicadores de desempenho da clínica.</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary">
+                                Visualizar
+                            </button>
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

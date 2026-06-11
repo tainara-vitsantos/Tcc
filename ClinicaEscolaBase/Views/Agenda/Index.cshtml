@@ -1,0 +1,199 @@
+@{
+    ViewData["Title"] = "Agenda";
+    Layout = "_LayoutAdmin";
+}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold">
+                <i class="fas fa-calendar-alt text-primary me-2"></i>
+                Agenda de Atendimentos 10
+            </h2>
+            <p class="text-muted mb-0">
+                Gerencie consultas, supervisões e compromissos da clínica.
+            </p>
+        </div>
+
+        <button class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>
+            Novo Agendamento
+        </button>
+    </div>
+
+    <!-- Indicadores -->
+    <div class="row mb-4">
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <small class="text-muted">Hoje</small>
+                    <h3 class="fw-bold mb-0">18</h3>
+                    <small>Atendimentos</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <small class="text-muted">Confirmados</small>
+                    <h3 class="fw-bold text-success mb-0">15</h3>
+                    <small>Consultas</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <small class="text-muted">Pendentes</small>
+                    <h3 class="fw-bold text-warning mb-0">2</h3>
+                    <small>Aguardando confirmação</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <small class="text-muted">Cancelados</small>
+                    <h3 class="fw-bold text-danger mb-0">1</h3>
+                    <small>Agendamentos</small>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Filtros -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+
+            <h5 class="fw-bold mb-3">
+                Filtros
+            </h5>
+
+            <div class="row">
+
+                <div class="col-md-3">
+                    <label class="form-label">Data</label>
+                    <input type="date" class="form-control" />
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Paciente</label>
+                    <input type="text"
+                           class="form-control"
+                           placeholder="Pesquisar paciente..." />
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Aluno</label>
+                    <select class="form-select">
+                        <option>Todos</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Status</label>
+                    <select class="form-select">
+                        <option>Todos</option>
+                        <option>Confirmado</option>
+                        <option>Pendente</option>
+                        <option>Cancelado</option>
+                    </select>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Agenda do Dia -->
+    <div class="card shadow-sm border-0">
+
+        <div class="card-header bg-white">
+            <h5 class="fw-bold mb-0">
+                Atendimentos do Dia
+            </h5>
+        </div>
+
+        <div class="card-body p-0">
+
+            <table class="table table-hover mb-0">
+
+                <thead class="table-light">
+                    <tr>
+                        <th>Horário</th>
+                        <th>Paciente</th>
+                        <th>Aluno</th>
+                        <th>Supervisor</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>08:00</td>
+                        <td>Maria Silva</td>
+                        <td>João Santos</td>
+                        <td>Dra. Ana Costa</td>
+                        <td>
+                            <span class="badge bg-success">
+                                Confirmado
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary">
+                                Ver
+                            </button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>09:00</td>
+                        <td>Carlos Souza</td>
+                        <td>Pedro Lima</td>
+                        <td>Dra. Ana Costa</td>
+                        <td>
+                            <span class="badge bg-warning text-dark">
+                                Pendente
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary">
+                                Ver
+                            </button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>10:00</td>
+                        <td>Juliana Alves</td>
+                        <td>Fernanda Rocha</td>
+                        <td>Dr. Marcos Silva</td>
+                        <td>
+                            <span class="badge bg-danger">
+                                Cancelado
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary">
+                                Ver
+                            </button>
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

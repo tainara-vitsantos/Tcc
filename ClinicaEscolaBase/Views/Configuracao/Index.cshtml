@@ -1,0 +1,361 @@
+@{
+    ViewData["Title"] = "Configurações do Sistema";
+    Layout = "_LayoutAdmin";
+}
+
+<div class="container-fluid">
+
+    <div class="mb-4">
+        <h2 class="fw-bold">
+            <i class="fas fa-cogs me-2"></i>Configurações do Sistema
+        </h2>
+        <p class="text-muted">
+            Gerencie os parâmetros gerais da Clínica Escola de Psicologia.
+        </p>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+
+            <ul class="nav nav-tabs mb-4" id="configTabs" role="tablist">
+
+                <li class="nav-item">
+                    <button class="nav-link active"
+                            data-bs-toggle="tab"
+                            data-bs-target="#geral">
+                        Geral
+                    </button>
+                </li>
+
+                <li class="nav-item">
+                    <button class="nav-link"
+                            data-bs-toggle="tab"
+                            data-bs-target="#atendimento">
+                        Atendimento
+                    </button>
+                </li>
+
+                <li class="nav-item">
+                    <button class="nav-link"
+                            data-bs-toggle="tab"
+                            data-bs-target="#prontuario">
+                        Prontuário
+                    </button>
+                </li>
+
+                <li class="nav-item">
+                    <button class="nav-link"
+                            data-bs-toggle="tab"
+                            data-bs-target="#academico">
+                        Acadêmico
+                    </button>
+                </li>
+
+                <li class="nav-item">
+                    <button class="nav-link"
+                            data-bs-toggle="tab"
+                            data-bs-target="#seguranca">
+                        Segurança
+                    </button>
+                </li>
+
+                <li class="nav-item">
+                    <button class="nav-link"
+                            data-bs-toggle="tab"
+                            data-bs-target="#lgpd">
+                        LGPD
+                    </button>
+                </li>
+
+            </ul>
+
+            <div class="tab-content">
+
+                <!-- GERAL -->
+                <div class="tab-pane fade show active" id="geral">
+
+                    <h5 class="fw-bold mb-3">Informações da Instituição</h5>
+
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Nome da Clínica</label>
+                            <input type="text"
+                                   class="form-control"
+                                   value="Clínica Escola de Psicologia">
+                        </div>
+
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">CNPJ</label>
+                            <input type="text"
+                                   class="form-control">
+                        </div>
+
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Telefone</label>
+                            <input type="text"
+                                   class="form-control">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">E-mail Institucional</label>
+                            <input type="email"
+                                   class="form-control">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Endereço</label>
+                            <input type="text"
+                                   class="form-control">
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- ATENDIMENTO -->
+                <div class="tab-pane fade" id="atendimento">
+
+                    <h5 class="fw-bold mb-3">Regras de Atendimento</h5>
+
+                    <div class="row">
+
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">
+                                Duração padrão da sessão (min)
+                            </label>
+                            <input type="number"
+                                   class="form-control"
+                                   value="50">
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">
+                                Intervalo entre sessões
+                            </label>
+                            <input type="number"
+                                   class="form-control"
+                                   value="10">
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">
+                                Limite diário de atendimentos
+                            </label>
+                            <input type="number"
+                                   class="form-control"
+                                   value="8">
+                        </div>
+
+                    </div>
+
+                    <div class="form-check mb-2">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               checked>
+                        <label class="form-check-label">
+                            Permitir encaixes na agenda
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               type="checkbox">
+                        <label class="form-check-label">
+                            Permitir conflito de horário
+                        </label>
+                    </div>
+
+                </div>
+
+                <!-- PRONTUÁRIO -->
+                <div class="tab-pane fade" id="prontuario">
+
+                    <h5 class="fw-bold mb-3">Configurações de Prontuário</h5>
+
+                    <div class="form-check mb-2">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               checked>
+                        <label class="form-check-label">
+                            Gerar numeração automática
+                        </label>
+                    </div>
+
+                    <div class="form-check mb-2">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               checked>
+                        <label class="form-check-label">
+                            Exigir assinatura do supervisor
+                        </label>
+                    </div>
+
+                    <div class="form-check mb-2">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               checked>
+                        <label class="form-check-label">
+                            Exigir fechamento após atendimento
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               type="checkbox">
+                        <label class="form-check-label">
+                            Permitir edição após finalização
+                        </label>
+                    </div>
+
+                </div>
+
+                <!-- ACADÊMICO -->
+                <div class="tab-pane fade" id="academico">
+
+                    <h5 class="fw-bold mb-3">Configurações Acadêmicas</h5>
+
+                    <div class="row">
+
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Semestre Letivo</label>
+                            <input type="text"
+                                   class="form-control"
+                                   value="2026/1">
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Máximo de Pacientes por Aluno</label>
+                            <input type="number"
+                                   class="form-control"
+                                   value="5">
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Curso Vinculado</label>
+                            <input type="text"
+                                   class="form-control"
+                                   value="Psicologia">
+                        </div>
+
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               checked>
+                        <label class="form-check-label">
+                            Supervisão obrigatória
+                        </label>
+                    </div>
+
+                </div>
+
+                <!-- SEGURANÇA -->
+                <div class="tab-pane fade" id="seguranca">
+
+                    <h5 class="fw-bold mb-3">Segurança do Sistema</h5>
+
+                    <div class="row">
+
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">
+                                Tamanho mínimo da senha
+                            </label>
+                            <input type="number"
+                                   class="form-control"
+                                   value="8">
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">
+                                Tentativas antes do bloqueio
+                            </label>
+                            <input type="number"
+                                   class="form-control"
+                                   value="5">
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">
+                                Logout automático (min)
+                            </label>
+                            <input type="number"
+                                   class="form-control"
+                                   value="30">
+                        </div>
+
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               checked>
+                        <label class="form-check-label">
+                            Exigir caracteres especiais
+                        </label>
+                    </div>
+
+                </div>
+
+                <!-- LGPD -->
+                <div class="tab-pane fade" id="lgpd">
+
+                    <h5 class="fw-bold mb-3">Privacidade e LGPD</h5>
+
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">
+                                Tempo de retenção dos dados (anos)
+                            </label>
+                            <input type="number"
+                                   class="form-control"
+                                   value="20">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">
+                                Responsável pelo tratamento dos dados
+                            </label>
+                            <input type="text"
+                                   class="form-control">
+                        </div>
+
+                    </div>
+
+                    <div class="form-check mb-2">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               checked>
+                        <label class="form-check-label">
+                            Registrar auditoria de acesso aos prontuários
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               checked>
+                        <label class="form-check-label">
+                            Exigir aceite do termo de consentimento
+                        </label>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <hr />
+
+            <div class="text-end">
+                <button class="btn btn-primary">
+                    <i class="fas fa-save me-2"></i>
+                    Salvar Configurações
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+</div>
